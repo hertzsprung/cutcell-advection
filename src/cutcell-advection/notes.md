@@ -21,6 +21,9 @@ Demonstrate a new method of dealing with the 'small cell problem'
 Grids
 =====
 Describe grid generation method
+- move vertices below the surface up to the surface
+- remove cells that zero volume
+- remove zero area faces (where quads have been squashed into triangles)
 
 Advection scheme
 ================

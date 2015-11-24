@@ -6,6 +6,10 @@
 \begin{figure}
 	\centering
 	\includegraphics{../fig-grid-generation/fig-grid-generation.pdf}
+	%
+	\caption{Illustration of a slanted cell grid (a) before, and (b) after construction.
+	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by open circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
+	\label{fig:grid-generation}
 \end{figure}
 test
 \end{document}

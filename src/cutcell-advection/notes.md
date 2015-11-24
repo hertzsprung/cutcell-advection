@@ -38,6 +38,8 @@ The small cell problem is about timestep constraints, so we need to demonstrate:
 
 Pure advection tests -- same as Shaw&Weller2015?
 - push the timestep and see where accuracy drops off/results become unstable
+- what is the maximum 2D Courant number?
+- could we calculate 1D Courant numbers in the direction of flow?
 - compare with a more standard advection scheme? linear upwind?
 - compare variants of the advection scheme?
 - different resolutions/mountain heights?

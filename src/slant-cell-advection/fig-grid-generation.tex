@@ -1,0 +1,40 @@
+\documentclass[tikz]{standalone}
+\begin{document}
+\begin{tikzpicture}[
+  scale=0.25
+]
+\begin{scope}[shift={(0,22)}]
+\draw (0,0) rectangle (20, 20);
+\draw (10,0) -- (10,20);
+\draw (0,10) -- (20,10);
+\draw [dotted, ultra thick] plot [smooth] coordinates {(0,6) (6, 7) (10,12) (14,14) (20,15)};
+\draw [thick] (0,6) circle [radius=0.4];
+\draw [thick] (10,12) circle [radius=0.4] node [anchor=south east] {$v$};
+\draw [thick] (20,15) circle [radius=0.4];
+\node at (5,15) {$c_1$};
+\node at (15,16) {$c_2$};
+\node at (5,5) {$c_3$};
+\node at (15,5) {$c_4$};
+
+\node [below right] at (0,20) {(a)};
+\end{scope}
+
+\draw [dashed, gray] (0,0) rectangle (20, 20);
+\draw [dashed, gray] (10,0) -- (10,20);
+\draw [dashed, gray] (0,10) -- (20,10);
+
+\draw (0,6) -- (10,12) -- (0,10) -- (0,6);
+\draw (0,10) -- (0,20) -- (10,20) -- (10,12);
+\draw (10,20) -- (20,20) -- (20,15) -- (10,12);
+\draw [dotted, ultra thick] plot [smooth] coordinates {(0,6) (6, 7) (10,12) (14,14) (20,15)};
+\draw [thick] (0,6) circle [radius=0.4];
+\draw [thick] (10,12) circle [radius=0.4] node [anchor=south east] {$v$};
+\draw [thick] (20,15) circle [radius=0.4];
+\node at (5,15) {$c_1$};
+\node at (15,16.5) {$c_2$};
+\node at (3,9) {$c_3$};
+\node [gray] at (15,5) {$c_4$};
+
+\node [below right] at (0,20) {(b)};
+\end{tikzpicture}
+\end{document}

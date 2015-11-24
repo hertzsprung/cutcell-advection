@@ -19,4 +19,5 @@ $(ATMOSTESTS_DIR)/%:
 include $(MAKE_COMMON)/executables/Makefile
 include $(MAKE_COMMON)/templates/Makefile-FileSystem
 include $(MAKE_COMMON)/templates/Makefile-LaTeX
-include make/Makefile-CutCell-Advection
+include make/Makefile-Grid-Generation
+include make/Makefile-Slant-Cell-Advection

@@ -1,10 +1,7 @@
 Problem/Intro
 =============
 Cut cell grids result give rise to small cell problem
-Various approaches to alleviate the problem
-- Jebens semi-implicit
-- Steppeler thin walls
-- Yamazaki&Satomura cell merging
+Various approaches to alleviate the problem including cell merging, thin walls and implicit techniques
 What are the pros and cons of these techniques?
 
 What are the potential advantages of our technique?
@@ -28,6 +25,8 @@ Describe grid generation method
 Advection scheme
 ================
 Describe advection scheme
+- not monotonic
+- linear interp of values onto boundary (for Neumann BCs)
 
 Tests
 =====
@@ -40,6 +39,7 @@ Pure advection tests -- same as Shaw&Weller2015?
 - push the timestep and see where accuracy drops off/results become unstable
 - what is the maximum 2D Courant number?
 - could we calculate 1D Courant numbers in the direction of flow?
+- l2 error norms, min/max values?
 - compare with a more standard advection scheme? linear upwind?
 - compare variants of the advection scheme?
 - different resolutions/mountain heights?
@@ -47,4 +47,43 @@ Pure advection tests -- same as Shaw&Weller2015?
 - can we better explain why we get these stripey patterns of error through cut cells (as seen in figure 8 of TF/cut cell comparison article)
 - order-of-accuracy tests? (just because we're documenting an advection scheme)
 
-I don't think we should call these grids "cut cell grids" because they are not like grids created by cell shaving.  How about "slanting cell grid"?
+Other cut cell publications
+===========================
+Cell merging:
+  - clarke1986?
+  - quirk1994?
+  - yamazaki-satomura20[08/10/12]
+  - yamazaki2015
+
+Implicit methods:
+  - jebens2011
+  - leveque-shyue1996
+  - murman2003
+  - rosatti2005 (SISL method, fancy velocity reconstruction in cut cells)
+  - thomas2000
+
+Thin wall approximation:
+  - steppeler2002
+  - walko-avissar2008 (OLAM model, thin-wall style (?), found advection problems: oscillations in scalar and momentum fields near the surface, they increased upwind-bias in the lowest two model levels)
+
+Redistribute conservation error:
+  - pember1995
+
+Rotated grid methods:
+  - helzel2005
+
+Dimensional splitting:
+  - klein2009 (and well-balancing from botta2004)
+
+Other papers that talk about cut cells:
+  - lock2012 (don't address small cell problem)
+  - good2014 (use model from lock2012)
+  - jaehn2015 (ASAM model, linear-implicit Rosenbrock timestepping method for handling cut cells, similar to Jebens)
+  - ingram2003: review of cut cell developments
+
+Other techniques similar to cut cells:
+  - bonaventura2000: partial step/piecewise slope, height coords
+  - mesinger2012: slantwise transport, similar to bonaventura2000, but pressure coords
+  - immersed boundary (gattibono-collela2006, helzel2005, simon2012)
+  - boundary-fitted grids
+  - Chimera methods (takemura2015)

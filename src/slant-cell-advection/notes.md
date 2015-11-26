@@ -5,6 +5,7 @@ Various approaches to alleviate the problem including cell merging, thin walls a
 What are the pros and cons of these techniques?
 
 What are the potential advantages of our technique?
+- Grid is straightfoward to construct
 - Cells aligned in columns (potentially good for Dynamo and maybe others)
 - No special numerics required (unlike Jebens and Steppeler)
 - Advection scheme is less sensitive to thin cells (than what?)
@@ -24,9 +25,16 @@ Describe grid generation method
 
 Advection scheme
 ================
-Describe advection scheme
+- multidimensional
+- upwind-biased stencil
+- least squares polynomial fit
+- more points than coefficients (why?)
 - not monotonic
-- linear interp of values onto boundary (for Neumann BCs)
+- not flux-corrected
+- weights are precomputed
+- figure showing stencil, identifying two "exact" points either side of the face
+- behaviour with reduced stencil sizes
+- boundary treatment
 
 Tests
 =====

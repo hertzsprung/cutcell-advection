@@ -20,4 +20,5 @@ include $(MAKE_COMMON)/executables/Makefile
 include $(MAKE_COMMON)/templates/Makefile-FileSystem
 include $(MAKE_COMMON)/templates/Makefile-LaTeX
 include make/Makefile-Grid-Generation
+include make/Makefile-Upwind-Stencil
 include make/Makefile-Slant-Cell-Advection

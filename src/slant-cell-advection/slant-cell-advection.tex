@@ -1,5 +1,8 @@
 \documentclass{article}
 \usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{xcolor}
 
 \title{Multidimensional Cubic Upwind-Biased Advection of Slanted Cell Grids}
 
@@ -14,5 +17,25 @@
 	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by open circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge that joins those vertices is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
 	\label{fig:grid-generation}
 \end{figure}
-test
+
+A tracer with density $\phi$ is advected in flux form
+\begin{align}
+\partial \phi / \partial t + \nabla \cdot \left( \mathbf{u} \phi \right) = 0
+\end{align}
+where $\mathbf{u}$ is the velocity field.  Using the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$.  $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term is discretised using Gauss' divergence theorem:
+\begin{align}
+	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}} \sum_{f \in c} \phi_F \mathbf{u}_f \cdot \mathbf{S}_f
+\end{align}
+where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
+	%
+	\caption{\TODO{}}
+	\label{fig:upwind-stencil}
+\end{figure}
+
+The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).
+
 \end{document}

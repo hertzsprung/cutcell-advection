@@ -1,4 +1,5 @@
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection))
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
-  build/fig-grid-generation/fig-grid-generation.pdf
+  build/fig-grid-generation/fig-grid-generation.pdf \
+  build/fig-upwind-stencil/fig-upwind-stencil.pdf

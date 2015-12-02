@@ -36,19 +36,36 @@ where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell,
 	\label{fig:upwind-stencil}
 \end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics{../fig-pure-upwind/fig-pure-upwind.pdf}
-	%
-	\caption{\TODO{}}
-	\label{fig:pure-upwind}
-\end{figure}
-
 The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  In two dimensions, the values are fitted to the polynomial:
 \begin{align}
 	\phi = a + bx + cy + dx^2 + exy + dy^2 + gx^3 + h x^2 y + i x y^2
 \end{align}
 where $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.  The term involving $y^3$ is omitted.
+
+The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to a cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness' between faces $f$ and $g \in G$, defined as
+\begin{align}
+	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2}
+\end{align}
+where $\mathbf{S}_f$ and $\mathbf{S}_g$ are the surface normal vectors pointing outward from cell $c$ for faces $f$ and $g$ respectively.  Now, let $\mathrm{OF}$ be the set of faces opposing face $f$, which is defined as
+\begin{align}
+	\mathrm{OF} \equiv \{ g : \max(\mathrm{Opp}(f, g)) \} \cup \{ g : \mathrm{Opp}(f, g) \geq 0.5 \}
+\end{align}
+\TODO{can the opposed face be a boundary face?  I think this is desirable in order to find the upwind cell centre...}
+The stencil includes cells adjacent to the faces in $\mathrm{OF}$, and their vertex neighbours.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
+	%
+	\caption{\TODO{}}
+	\label{fig:double-upwind-stencil}
+\end{figure}
+
+Figure~\ref{fig:double-upwind-stencil} illustrates stencil construction for face $f$ and cell $c$.  
+
+% cell weightings
+% polynomial term weightings
+% SVD provides us with  
 
 % procedure:
 % for each face and for both orientations:
@@ -78,8 +95,6 @@ where $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.
 % need to define terminology for "weights":
 % - weights fed into SVD
 % - weights that come out of SVD
-
-% find the face(s) closest to F, find the cells shared by those face(s), then take the vertex neighbours of those central cells
 
 % linearLimitFactor documented in UpwindCorrFitScheme.H, is specified in fvSchemes, we have it set to 3
 

@@ -1,0 +1,44 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{plotmarks}
+\begin{document}
+\begin{tikzpicture}[
+  scale=0.25,
+  cpnt/.style={fill=gray},
+]
+\draw [white] (-1,-1.4) rectangle (-1,-1);
+\draw [thick, ->] (-1,-1) -- (4,-1) node [midway, anchor=south] {$\mathbf{u}$};
+\draw (10,5) -- (20,7) -- (18,12) -- (11,14);
+\draw [densely dashed, ultra thick] (11,14) -- (7,8) -- (10,5);
+\draw [ultra thick] (20,7) -- (18,12);
+\draw [thick] (19,9.5) circle [radius=0.35] node [anchor=west] {$f$};
+\path [cpnt] (13.3,9.5) circle [radius=0.4];
+
+% direct upwind cells
+\draw (10,5) -- (6,4) -- (3,7) -- (7,8);
+\path [cpnt] (6.5,6) circle [radius=0.4] node [anchor=west, black] {$c$};
+
+\draw (3,7) -- (5,15) -- (11,14);
+\path [cpnt] (6.3,11) circle [radius=0.4];
+
+\draw (20,7) -- (24,6) -- (25,13) -- (18,12);
+\draw (20,7) -- (19,3) -- (25,2) -- (24,6);
+\draw (19,3) -- (11,1) -- (10,5);
+\draw (11,14) -- (12,18) -- (16,18) -- (18,12);
+\draw (16,18) -- (21,19) -- (25,13);
+\draw (5,15) -- (7,19) -- (12,18);
+\draw (6,4) -- (5,0) -- (11,1);
+\draw (3,7) -- (0,6) -- (-2,14) -- (5,15);
+\draw (-2,14) -- (0,18) -- (7,19);
+\draw (0,6) -- (5,0);
+
+% vertices
+\node at (3,7) {\pgfuseplotmark{square*}};
+\node at (5,15) {\pgfuseplotmark{square*}};
+\node at (11,14) {\pgfuseplotmark{square*}};
+\node at (18,12) {\pgfuseplotmark{square*}};
+\node at (10,5) {\pgfuseplotmark{square*}};
+\node at (20,7) {\pgfuseplotmark{square*}};
+\node at (6,4) {\pgfuseplotmark{square*}};
+\node at (7,8) {\pgfuseplotmark{square*}};
+\end{tikzpicture}
+\end{document}

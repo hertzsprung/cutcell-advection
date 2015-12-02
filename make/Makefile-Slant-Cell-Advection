@@ -2,4 +2,11 @@ $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advectio
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-grid-generation/fig-grid-generation.pdf \
-  build/fig-upwind-stencil/fig-upwind-stencil.pdf
+  build/fig-upwind-stencil/fig-upwind-stencil.pdf \
+  build/fig-pure-upwind/fig-pure-upwind.pdf
+
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
+
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))
+
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-pure-upwind,fig-pure-upwind))

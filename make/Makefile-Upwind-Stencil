@@ -1,1 +1,0 @@
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))

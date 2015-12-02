@@ -36,6 +36,51 @@ where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell,
 	\label{fig:upwind-stencil}
 \end{figure}
 
-The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).
+\begin{figure}
+	\centering
+	\includegraphics{../fig-pure-upwind/fig-pure-upwind.pdf}
+	%
+	\caption{\TODO{}}
+	\label{fig:pure-upwind}
+\end{figure}
+
+The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  In two dimensions, the values are fitted to the polynomial:
+\begin{align}
+	\phi = a + bx + cy + dx^2 + exy + dy^2 + gx^3 + h x^2 y + i x y^2
+\end{align}
+where $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.  The term involving $y^3$ is omitted.
+
+% procedure:
+% for each face and for both orientations:
+% 1. find stencil
+% 2. are we pureUpwind? compare upwind/downwind vectors
+% 3. give upwind cell weighting of 1000
+% 4. if !pureUpwind, also give downwind cell weighting of 1000
+% 5. *1000 for 'a' and 'b' terms
+% (rescale and reorientate, probably not crucial to mention)
+% iterate up to 8 times (and at least once)
+%   SVD for "B"
+%   coeffsi[i] = 1000 * weight[i] * VSinvUt[0][i]
+%   test for good fit criteria:
+%   - mag(upwind cell weight correction) < linearLimitFactor
+%   - upwind weight > downwind weight
+%   - upwind weight > sum(other positive weights)
+%   - max(weight) < 1
+%   if good fit criteria are not met:
+%   - upwind input weight *= 10
+%   - if not pure upwind, remove downwind 1000 weighting (in wts and in B matrix) on the first iteration
+%   - multiply all upwind weights by 10 in the SVD matrix
+%   - multiply a and b polynomial terms by 10 for all cells
+% finally, if good fit criteria are still not met, revert to standard 'upwind': phi_F \approx phi_U
+
+% how do we find the contributing cells?
+% what do we do if there aren't enough cells?
+% need to define terminology for "weights":
+% - weights fed into SVD
+% - weights that come out of SVD
+
+% find the face(s) closest to F, find the cells shared by those face(s), then take the vertex neighbours of those central cells
+
+% linearLimitFactor documented in UpwindCorrFitScheme.H, is specified in fvSchemes, we have it set to 3
 
 \end{document}

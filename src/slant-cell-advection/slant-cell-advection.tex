@@ -31,12 +31,12 @@ A tracer with density $\phi$ is advected in flux form
 \begin{align}
 \partial \phi / \partial t + \nabla \cdot \left( \mathbf{u} \phi \right) = 0
 \end{align}
-where $\mathbf{u}$ is the velocity field.  Using the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$.  $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term is discretised using Gauss' divergence theorem:
+where $\mathbf{u}$ is the velocity field.  We use the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$, $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term is discretised using Gauss' divergence theorem:
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}} \sum_{f \in c} \phi_F \mathbf{u}_f \cdot \mathbf{S}_f
 \end{align}
 where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
-
+The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil.
 \begin{figure}
 	\centering
 	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
@@ -45,10 +45,8 @@ where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell,
 	\label{fig:upwind-stencil}
 \end{figure}
 
-The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil.
-
 \subsection{Stencil construction}
-The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to a cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness' between faces $f$ and $g \in G$, defined as
+The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to a cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
 \begin{align}
 	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2} \label{eqn:opp}
 \end{align}
@@ -57,7 +55,7 @@ Using the fact that $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}|\:|\mathbf{b}| \c
 \begin{align}
 	\mathrm{Opp}(f, g) = - \frac{|\mathbf{S}_g|}{|\mathbf{S}_f|} \cos(\theta)
 \end{align}
-where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the size of $g$ and how closely it parallels face $f$.
+where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$.
 
 Now, let $\mathrm{OF}$ be the set of faces opposing face $f$, which is defined as
 \begin{align}
@@ -82,43 +80,53 @@ In two dimensions, the polynomial is
 \begin{align}
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2
 \end{align}
-where $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.  The term involving $y^3$ is omitted.
+where $\mathbf{a} = [a_1, \ldots, a_n]^\intercal$ is the vector of unknown coefficients with $n=9$ in two dimensions.  A local coordinate system is established in which $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.
+\TODO{in 3D, how do we choose y and z? does it even matter?}
+The origin of the local coordinate system is fixed to be the target face centroid.
+Note that the term involving $y^3$ is omitted.
+
 A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
-	\mathbf{B} \mathbf{a} = \bm{\phi}
+	\mathbf{B} \mathbf{w_p} \mathbf{a} = \mathbf{w_c} \bm{\phi}
 \end{align}
-where $\mathbf{B}$ is a rectangular matrix with one row for each stencil cell and one column for each term in the polynomial, $\mathbf{a} = [a_1, \ldots, a_n]^\intercal$ with $n$ being the number of polynomial terms, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ where $m$ is the number of cells in the stencil.
-
+where $\mathbf{B}$ is a rectangular matrix with one row for each stencil cell and one column for each term in the polynomial, $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$ is the polynomial weight vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the stencil cell weights vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
 The matrix $\mathbf{B}$ takes the form
 \begin{align}
-	\mathbf{B} = \mathbf{W_P} \circ \mathbf{W_C} \circ \mathbf{\tilde{B}} 
+	\mathbf{B} = \left( \mathbf{W_P} \left( \mathbf{W_C} \mathbf{\tilde{B}} \right)^\intercal \right)^\intercal \label{eqn:B}
 \end{align}
-where $\circ$ denotes an element-wise product, $\mathbf{W_P}$ and $\mathbf{W_C}$ are $m \times n$ matrices of polynomial weights and stencil cell weights respectively.   $\mathbf{\tilde{B}}$ is a $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
+where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is a $n \times n$ matrix of polynomial weights and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is a $m \times m$ matrix of stencil cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding stencil cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
+
+$\mathbf{\tilde{B}}$ is a $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
 \begin{align}
 	\mathbf{\tilde{B}} = 
 	\begin{pmatrix}
-		1 & \mathbf{x}_1 \cdot \iunit & \mathbf{x}_1 \cdot \junit & \left( \mathbf{x}_1 \cdot \iunit \right)^2 & \left( \mathbf{x}_1 \cdot \iunit \right) \left( \mathbf{x}_1 \cdot \junit \right) & \cdots \\
+		1 & \mathbf{X}_{1,1} & \mathbf{X}_{1,1} & \mathbf{X}_{1,1}^2 & \mathbf{X}_{1,1} \mathbf{X}_{1,2} & \mathbf{X}_{1,2}^2 & \mathbf{X}_{1,1}^3 & \mathbf{X}_{1,1}^2 \mathbf{X}_{1,2} & \mathbf{X}_{1,1} \mathbf{X}_{1,2}^2 \\
+		\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+		1 & \mathbf{X}_{m,1} & \mathbf{X}_{m,1} & \mathbf{X}_{m,1}^2 & \mathbf{X}_{m,1} \mathbf{X}_{m,2} & \mathbf{X}_{m,2}^2 & \mathbf{X}_{m,1}^3 & \mathbf{X}_{m,1}^2 \mathbf{X}_{m,2} & \mathbf{X}_{m,1} \mathbf{X}_{m,2}^2 \\
+	\end{pmatrix}
+\end{align}
+where $\mathbf{X}$ is a matrix with $m$ rows and one column for each geometric dimension.  
+Each row of the $\mathbf{X}$ matrix contains the local coordinates of a cell centroid so that, in two dimensions, the matrix is
+\begin{align}
+	\mathbf{X} = 
+	\begin{pmatrix}
+		x_1 & y_1 \\
+		x_2 & y_2 \\
+		\vdots & \vdots \\
+		x_m & y_m
 	\end{pmatrix}
 \end{align}
 
-
-First, a local coordinate system is established in which $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.
-\TODO{in 3D, how do we choose y and z? does it even matter?}
-The origin is fixed to be the target face centroid. 
-
-A matrix equation is constructed
-The vectors from the target face centroid to each cell centroid are expressed in
-
-% cell weightings
-% polynomial term weightings
-% SVD provides us with  
+A singular value decomposition is used to calculate the pseudo-inverse of $\mathbf{B}$, $\mathbf{B}^+$, such that
+\begin{align}
+	\mathbf{B}^+ \mathbf{w_c} \bm{\phi} = \mathbf{w_p} \mathbf{a}
+\end{align}
+\TODO{this looks a bit wonky.  I was trying to capture mathematically the idea of re-multiplying by the stencil cell and polynomial weights to find $a_1$ like Hilary and I discussed on 2015-12-02}
 
 % procedure:
 % for each face and for both orientations:
 % 1. find stencil
-% 2. are we pureUpwind? compare upwind/downwind vectors
 % 3. give upwind cell weighting of 1000
-% 4. if !pureUpwind, also give downwind cell weighting of 1000
 % 5. *1000 for 'a' and 'b' terms
 % (rescale and reorientate, probably not crucial to mention)
 % iterate up to 8 times (and at least once)
@@ -131,7 +139,7 @@ The vectors from the target face centroid to each cell centroid are expressed in
 %   - max(weight) < 1
 %   if good fit criteria are not met:
 %   - upwind input weight *= 10
-%   - if not pure upwind, remove downwind 1000 weighting (in wts and in B matrix) on the first iteration
+%   - remove downwind 1000 weighting (in wts and in B matrix) on the first iteration
 %   - multiply all upwind weights by 10 in the SVD matrix
 %   - multiply a and b polynomial terms by 10 for all cells
 % finally, if good fit criteria are still not met, revert to standard 'upwind': phi_F \approx phi_U

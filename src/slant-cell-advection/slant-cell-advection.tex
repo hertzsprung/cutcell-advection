@@ -87,14 +87,14 @@ Note that the term involving $y^3$ is omitted.
 
 A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
-	\mathbf{B} \mathbf{w_p} \mathbf{a} = \mathbf{w_c} \bm{\phi}
+	\mathbf{B} \mathbf{w'_p} \mathbf{a} = \mathbf{w_c} \bm{\phi}
 \end{align}
-where $\mathbf{B}$ is a rectangular matrix with one row for each stencil cell and one column for each term in the polynomial, $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$ is the polynomial weight vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the stencil cell weights vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
+where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weights vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
 The matrix $\mathbf{B}$ takes the form
 \begin{align}
 	\mathbf{B} = \left( \mathbf{W_P} \left( \mathbf{W_C} \mathbf{\tilde{B}} \right)^\intercal \right)^\intercal \label{eqn:B}
 \end{align}
-where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is a $n \times n$ matrix of polynomial weights and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is a $m \times m$ matrix of stencil cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding stencil cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
+where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is a $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is a $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
 
 $\mathbf{\tilde{B}}$ is a $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
 \begin{align}
@@ -119,9 +119,15 @@ Each row of the $\mathbf{X}$ matrix contains the local coordinates of a cell cen
 
 A singular value decomposition is used to calculate the pseudo-inverse of $\mathbf{B}$, $\mathbf{B}^+$, such that
 \begin{align}
-	\mathbf{B}^+ \mathbf{w_c} \bm{\phi} = \mathbf{w_p} \mathbf{a}
+	\mathbf{B}^+ \mathbf{w_c} \bm{\phi} = \mathbf{w'_p} \mathbf{a}
+%
+\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$ to find the unknown polynomial coefficients:}
+%
+	\mathbf{a} = \mathbf{B}^+ \mathbf{w_c} \mathbf{w_p} \bm{\phi}
 \end{align}
-\TODO{this looks a bit wonky.  I was trying to capture mathematically the idea of re-multiplying by the stencil cell and polynomial weights to find $a_1$ like Hilary and I discussed on 2015-12-02}
+The expression $\mathbf{B}^+ \mathbf{w_c} \mathbf{w_p}$ can be calculated once because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
+
+\subsection{Iterative weight adjustment for upwind-biased fit}
 
 % procedure:
 % for each face and for both orientations:

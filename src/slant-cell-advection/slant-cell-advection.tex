@@ -41,7 +41,7 @@ The value of $\phi_F$ is interpolated using a least squares fit of cell centre v
 	\centering
 	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
 	%
-	\caption{\TODO{}}
+	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given greater weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
 	\label{fig:upwind-stencil}
 \end{figure}
 

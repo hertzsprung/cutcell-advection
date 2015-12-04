@@ -7,10 +7,14 @@
 ]
 \draw [white] (-1,-1.4) rectangle (-1,-1);
 \draw [thick, ->] (-1,-1) -- (4,-1) node [midway, anchor=south] {$\mathbf{u}$};
+
+\draw [thick, ->] (20.5,8.5) -- (19.5,11) node [at end, anchor=west] {$y$};
+\draw [thick, ->] (20.5,8.5) -- (22.9,9.35) node [at end, anchor=south] {$x$};
+
 \draw (10,5) -- (20,7) -- (18,12) -- (11,14);
 \draw [densely dashed, ultra thick] (11,14) -- (7,8) -- (10,5);
 \draw [ultra thick] (20,7) -- (18,12);
-\draw [thick] (19,9.5) circle [radius=0.35] node [anchor=west] {$f$};
+\draw [thick] (19,9.5) circle [radius=0.35] node [anchor=east] {$f$};
 \path [cpnt] (13.3,9.5) circle [radius=0.4] node [anchor=west, black] {$c$};
 
 % direct upwind cells

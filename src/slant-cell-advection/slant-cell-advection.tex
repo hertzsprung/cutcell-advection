@@ -30,19 +30,20 @@ See figure~\ref{fig:grid-generation}
 \section{Multidimensional upwind-biased advection scheme}
 A tracer with density $\phi$ is advected in flux form
 \begin{align}
-\partial \phi / \partial t + \nabla \cdot \left( \mathbf{u} \phi \right) = 0
+	\partial \phi / \partial t + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
-where $\mathbf{u}$ is the velocity field.  We use the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$, $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term is discretised using Gauss' divergence theorem:
+where $\mathbf{u}$ is the velocity field.  We use the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$, $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term in equation~\ref{eqn:advection} is discretised using Gauss' divergence theorem:
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}} \sum_{f \in c} \phi_F \mathbf{u}_f \cdot \mathbf{S}_f
 \end{align}
 where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
-The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil.
+The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  The upwind and downwind cell values, $\phi_U$ and $\phi_D$, are given a large weighting so that they lie almost exactly on the polynomial surface.  Weights are iteratively adjusted to achieve a fit that is upwind-biased.
+
 \begin{figure}
 	\centering
 	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
 	%
-	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given a large weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
+	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given a large weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
 	\label{fig:upwind-stencil}
 \end{figure}
 
@@ -69,7 +70,7 @@ The stencil includes cells adjacent to the faces in $\mathrm{OF}$, and their ver
 	\centering
 	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
 	%
-	\caption{A thirteen-cell, upwind-biased stencil for face $f$ belonging to a pentagonal cell, $c$.  The dashed lines denote the two faces of cell $c$ that oppose $f$, and grey circles mark the centroids of the cells neighbouring the two opposing faces.  The stencil is expanded outwards by including cells that neighbour the vertices of the three central cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular.}
+	\caption{A thirteen-cell, upwind-biased stencil for face $f$ belonging to a pentagonal cell, $c$.  The dashed lines denote the two faces of cell $c$ that oppose $f$, and grey circles mark the centroids of the cells neighbouring these two opposing faces.  The stencil is expanded outwards by including cells that neighbour the vertices of the three central cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular.}
 	\label{fig:double-upwind-stencil}
 \end{figure}
 
@@ -90,14 +91,14 @@ A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
 	\mathbf{B} \left(\mathbf{w'_p} \mathbf{a}\right) = \mathbf{w_c} \bm{\phi}
 \end{align}
-where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weighting vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
+where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weighting vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre values.
 The matrix $\mathbf{B}$ takes the form
 \begin{align}
 	\mathbf{B} = \left( \mathbf{W_C} \mathbf{\tilde{B}} \right)^\intercal \mathbf{W_P} \label{eqn:B}
 \end{align}
-where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is a $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is a $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
+where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is an $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is an $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
 
-$\mathbf{\tilde{B}}$ is a $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
+$\mathbf{\tilde{B}}$ is an $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
 \begin{align}
 	\mathbf{\tilde{B}} = 
 	\begin{pmatrix}
@@ -122,7 +123,7 @@ A singular value decomposition is used to calculate the pseudo-inverse of $\math
 \begin{align}
 	\mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right) = \mathbf{w'_p} \mathbf{a}
 %
-\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$ to find the unknown polynomial coefficients:}
+\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$, we find the unknown polynomial coefficients, $\mathbf{a}$:}
 %
 	\mathbf{a} = \mathbf{B}^+ \left( \mathbf{w_c} \mathbf{w_p} \bm{\phi} \right)
 \end{align}
@@ -134,8 +135,9 @@ where the cell value coefficients vector, $\mathbf{c} = \mathbf{B}^+_1 \left( \m
 $\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
 
 \subsection{Iterative weight adjustment for upwind-biased fit}
-The cell weight and polynomial weight vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that fit is upwind-biased.
-In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and the constant and linear terms in $x$, $a_1$ and $a_2$ respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
+The cell weight and polynomial weight vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that the fit is upwind-biased.
+In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and to the constant term and linear term in $x$ in the polynomial.  That is, $w_{cU} = w_{cD} = w_{p1} = w_{p2} = 1000$ where $U$ and $D$ are the upwind and downwind cell indexes respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
+
 The cell value coefficients, $\mathbf{c}$, must satisfy four criteria for the fit to be considered upwind-biased:
 \begin{align}
 	\left(\max(\mathbf{c}) < 1\right) \;\land 
@@ -145,7 +147,7 @@ The cell value coefficients, $\mathbf{c}$, must satisfy four criteria for the fi
 \end{align}
 where $U$ and $D$ are the indices of the upwind and downwind cells respectively, and the linear limit factor $l = 3$.  \TODO{what's the rationale for this linear limit factor?}
 
-If an upwind-biased fit is not found after the first iteration then three adjustments are made.  First, the upwind cell weighting, $w_{cU}$, is increased ten-fold, where $U$ is the index of the upwind cell.  Second, the weightings are increased ten-fold for the constant and linear term in $x$, $w_{p1}$ and $w_{p2}$ respectively.  Third, the large cell weighting is removed from the downwind cell so that $w_{cD} = 1$ where $D$ is the index of the downwind cell.
+If an upwind-biased fit is not found after the first iteration then three adjustments are made.  First, the upwind cell weighting, $w_{cU}$, is increased ten-fold.  Second, the weightings are increased ten-fold for the constant term and linear term in $x$, $w_{p1}$ and $w_{p2}$ respectively.  Third, the large cell weighting is removed from the downwind cell so that $w_{cD} = 1$.
 
 The adjustment procedure is executed up to seven times until the fit is upwind-biased.  If the fit is still not considered upwind-biased after these iterations, a pure upwind approximation is made so that $\phi_F = \phi_U$.
 \end{document}

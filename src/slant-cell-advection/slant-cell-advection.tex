@@ -25,6 +25,7 @@ See figure~\ref{fig:grid-generation}
 	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by open circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge that joins those vertices is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
 	\label{fig:grid-generation}
 \end{figure}
+\clearpage
 
 \section{Multidimensional upwind-biased advection scheme}
 A tracer with density $\phi$ is advected in flux form
@@ -41,7 +42,7 @@ The value of $\phi_F$ is interpolated using a least squares fit of cell centre v
 	\centering
 	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
 	%
-	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given greater weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
+	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given a large weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
 	\label{fig:upwind-stencil}
 \end{figure}
 
@@ -59,7 +60,7 @@ where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be 
 
 Now, let $\mathrm{OF}$ be the set of faces opposing face $f$, which is defined as
 \begin{align}
-	\mathrm{OF} \equiv \{ g : \max(\mathrm{Opp}(f, g)) \} \cup \{ g : \mathrm{Opp}(f, g) \geq 0.5 \}
+	\mathrm{OF}(f) \equiv \{ g : \max(\mathrm{Opp}(f, g)) \} \cup \{ g : \mathrm{Opp}(f, g) \geq 0.5 \}
 \end{align}
 \TODO{can the opposed face be a boundary face?  I think this is desirable in order to find the upwind cell centre...}
 The stencil includes cells adjacent to the faces in $\mathrm{OF}$, and their vertex neighbours.
@@ -89,10 +90,10 @@ A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
 	\mathbf{B} \mathbf{w'_p} \mathbf{a} = \mathbf{w_c} \bm{\phi}
 \end{align}
-where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weights vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
+where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weighting vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
 The matrix $\mathbf{B}$ takes the form
 \begin{align}
-	\mathbf{B} = \left( \mathbf{W_P} \left( \mathbf{W_C} \mathbf{\tilde{B}} \right)^\intercal \right)^\intercal \label{eqn:B}
+	\mathbf{B} = \left( \mathbf{W_C} \mathbf{\tilde{B}} \right)^\intercal \mathbf{W_P} \label{eqn:B}
 \end{align}
 where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is a $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is a $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
 
@@ -125,9 +126,17 @@ A singular value decomposition is used to calculate the pseudo-inverse of $\math
 %
 	\mathbf{a} = \mathbf{B}^+ \mathbf{w_c} \mathbf{w_p} \bm{\phi}
 \end{align}
-The expression $\mathbf{B}^+ \mathbf{w_c} \mathbf{w_p}$ can be calculated once because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
+Since the target face centroid is positioned at the origin of the local coordinate system, $\phi_F = a_1$, hence
+\begin{align}
+	\phi_F = \mathbf{c} \bm{\phi}
+\end{align}
+where the cell value coefficients vector, $\mathbf{c} = \left(\mathbf{B}^+_1\right)^\intercal \mathbf{w_c} \mathbf{w_p}$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
+$\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
 
 \subsection{Iterative weight adjustment for upwind-biased fit}
+The cell weights and polynomial weights vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that fit is upwind-biased.
+In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and the constant and linear terms in $x$, $a_1$ and $a_2$ respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
+
 
 % procedure:
 % for each face and for both orientations:
@@ -150,11 +159,6 @@ The expression $\mathbf{B}^+ \mathbf{w_c} \mathbf{w_p}$ can be calculated once b
 %   - multiply a and b polynomial terms by 10 for all cells
 % finally, if good fit criteria are still not met, revert to standard 'upwind': phi_F \approx phi_U
 
-% how do we find the contributing cells?
-% what do we do if there aren't enough cells?
-% need to define terminology for "weights":
-% - weights fed into SVD
-% - weights that come out of SVD
 
 % linearLimitFactor documented in UpwindCorrFitScheme.H, is specified in fvSchemes, we have it set to 3
 

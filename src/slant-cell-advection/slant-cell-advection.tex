@@ -134,32 +134,18 @@ where the cell value coefficients vector, $\mathbf{c} = \mathbf{B}^+_1 \left( \m
 $\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
 
 \subsection{Iterative weight adjustment for upwind-biased fit}
-The cell weights and polynomial weights vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that fit is upwind-biased.
+The cell weight and polynomial weight vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that fit is upwind-biased.
 In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and the constant and linear terms in $x$, $a_1$ and $a_2$ respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
+The cell value coefficients, $\mathbf{c}$, must satisfy four criteria for the fit to be considered upwind-biased:
+\begin{align}
+	\left(\max(\mathbf{c}) < 1\right) \;\land 
+	\left(\mathbf{c}_U \geq \mathbf{c}_D\right) \;\land 
+	\left(\mathbf{c}_U > \sum_{1 \leq i < m, \:i \neq U} \max(0, \mathbf{c}_i)\right) \land
+	\left(|\mathbf{c}_U - 1| < l\right)
+\end{align}
+where $U$ and $D$ are the indices of the upwind and downwind cells respectively, and the linear limit factor $l = 3$.  \TODO{what's the rationale for this linear limit factor?}
 
+If an upwind-biased fit is not found after the first iteration then three adjustments are made.  First, the upwind cell weighting, $w_{cU}$, is increased ten-fold, where $U$ is the index of the upwind cell.  Second, the weightings are increased ten-fold for the constant and linear term in $x$, $w_{p1}$ and $w_{p2}$ respectively.  Third, the large cell weighting is removed from the downwind cell so that $w_{cD} = 1$ where $D$ is the index of the downwind cell.
 
-% procedure:
-% for each face and for both orientations:
-% 1. find stencil
-% 3. give upwind cell weighting of 1000
-% 5. *1000 for 'a' and 'b' terms
-% (rescale and reorientate, probably not crucial to mention)
-% iterate up to 8 times (and at least once)
-%   SVD for "B"
-%   coeffsi[i] = 1000 * weight[i] * VSinvUt[0][i]
-%   test for good fit criteria:
-%   - mag(upwind cell weight correction) < linearLimitFactor
-%   - upwind weight > downwind weight
-%   - upwind weight > sum(other positive weights)
-%   - max(weight) < 1
-%   if good fit criteria are not met:
-%   - upwind input weight *= 10
-%   - remove downwind 1000 weighting (in wts and in B matrix) on the first iteration
-%   - multiply all upwind weights by 10 in the SVD matrix
-%   - multiply a and b polynomial terms by 10 for all cells
-% finally, if good fit criteria are still not met, revert to standard 'upwind': phi_F \approx phi_U
-
-
-% linearLimitFactor documented in UpwindCorrFitScheme.H, is specified in fvSchemes, we have it set to 3
-
+The adjustment procedure is executed up to seven times until the fit is upwind-biased.  If the fit is still not considered upwind-biased after these iterations, a pure upwind approximation is made so that $\phi_F = \phi_U$.
 \end{document}

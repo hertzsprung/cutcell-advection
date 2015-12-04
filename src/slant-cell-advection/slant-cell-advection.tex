@@ -88,7 +88,7 @@ Note that the term involving $y^3$ is omitted.
 
 A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
-	\mathbf{B} \mathbf{w'_p} \mathbf{a} = \mathbf{w_c} \bm{\phi}
+	\mathbf{B} \left(\mathbf{w'_p} \mathbf{a}\right) = \mathbf{w_c} \bm{\phi}
 \end{align}
 where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weighting vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre tracer densities.
 The matrix $\mathbf{B}$ takes the form
@@ -120,17 +120,17 @@ Each row of the $\mathbf{X}$ matrix contains the local coordinates of a cell cen
 
 A singular value decomposition is used to calculate the pseudo-inverse of $\mathbf{B}$, $\mathbf{B}^+$, such that
 \begin{align}
-	\mathbf{B}^+ \mathbf{w_c} \bm{\phi} = \mathbf{w'_p} \mathbf{a}
+	\mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right) = \mathbf{w'_p} \mathbf{a}
 %
 \shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$ to find the unknown polynomial coefficients:}
 %
-	\mathbf{a} = \mathbf{B}^+ \mathbf{w_c} \mathbf{w_p} \bm{\phi}
+	\mathbf{a} = \mathbf{B}^+ \left( \mathbf{w_c} \mathbf{w_p} \bm{\phi} \right)
 \end{align}
-Since the target face centroid is positioned at the origin of the local coordinate system, $\phi_F = a_1$, hence
+Since the target face centroid is positioned at the origin of the local coordinate system then $\phi_F = a_1$, hence
 \begin{align}
 	\phi_F = \mathbf{c} \bm{\phi}
 \end{align}
-where the cell value coefficients vector, $\mathbf{c} = \left(\mathbf{B}^+_1\right)^\intercal \mathbf{w_c} \mathbf{w_p}$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
+where the cell value coefficients vector, $\mathbf{c} = \mathbf{B}^+_1 \left( \mathbf{w_c} \mathbf{w_p} \right)$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
 $\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
 
 \subsection{Iterative weight adjustment for upwind-biased fit}

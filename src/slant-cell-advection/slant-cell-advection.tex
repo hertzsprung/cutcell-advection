@@ -22,7 +22,7 @@ See figure~\ref{fig:grid-generation}
 	\includegraphics{../fig-grid-generation/fig-grid-generation.pdf}
 	%
 	\caption{Illustration of a slanted cell grid (a) before, and (b) after construction.
-	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by open circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge that joins those vertices is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
+	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by filled circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge that joins those vertices is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
 	\label{fig:grid-generation}
 \end{figure}
 \clearpage
@@ -36,8 +36,8 @@ where $\mathbf{u}$ is the velocity field.  We use the notation that, for a field
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}} \sum_{f \in c} \phi_F \mathbf{u}_f \cdot \mathbf{S}_f
 \end{align}
-where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of the cell, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
-The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  The upwind and downwind cell values, $\phi_U$ and $\phi_D$, are given a large weighting so that they lie almost exactly on the polynomial surface.  Weights are iteratively adjusted to achieve a fit that is upwind-biased.
+where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of cell $c$, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
+The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  The upwind and downwind cell values, $\phi_U$ and $\phi_D$, are weighted in the least squares fit so that the fit is nearly exact at cell centres $U$ and $D$, and $\phi_U$ and $\phi_D$ lie almost exactly on the polynomial surface.  Weights are iteratively adjusted to achieve a fit that is upwind-biased.
 
 \begin{figure}
 	\centering
@@ -47,8 +47,10 @@ The value of $\phi_F$ is interpolated using a least squares fit of cell centre v
 	\label{fig:upwind-stencil}
 \end{figure}
 
+\TODO{also include a stencil for a small slanted cell (might have $< 12$ cells)}
+
 \subsection{Stencil construction}
-The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to a cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
+The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to the upwind cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
 \begin{align}
 	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2} \label{eqn:opp}
 \end{align}
@@ -83,9 +85,8 @@ In two dimensions, the polynomial is
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2
 \end{align}
 where $\mathbf{a} = [a_1, \ldots, a_n]^\intercal$ is the vector of unknown coefficients with $n=9$ in two dimensions.  A local coordinate system is established in which $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.
-\TODO{in 3D, how do we choose y and z? does it even matter?}
 The origin of the local coordinate system is fixed to be the target face centroid.
-Note that the term involving $y^3$ is omitted.
+Note that the term involving $y^3$ is omitted \TODO{because... accuracy is sufficient with this smaller stencil?}
 
 A matrix equation is constructed to calculate a least squares fit:
 \begin{align}
@@ -98,6 +99,7 @@ The matrix $\mathbf{B}$ takes the form
 \end{align}
 where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is an $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is an $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
 
+\TODO{this is not clear.  we could describe the method without weighting first?}
 $\mathbf{\tilde{B}}$ is an $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
 \begin{align}
 	\mathbf{\tilde{B}} = 
@@ -123,7 +125,7 @@ A singular value decomposition is used to calculate the pseudo-inverse of $\math
 \begin{align}
 	\mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right) = \mathbf{w'_p} \mathbf{a}
 %
-\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$, we find the unknown polynomial coefficients, $\mathbf{a}$:}
+\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$ \TODO{explain what we mean by reciprocal of a vector}, we find the unknown polynomial coefficients, $\mathbf{a}$:}
 %
 	\mathbf{a} = \mathbf{B}^+ \left( \mathbf{w_c} \mathbf{w_p} \bm{\phi} \right)
 \end{align}
@@ -138,10 +140,8 @@ $\mathbf{c}$ can be calculated once during model initialisation because it depen
 The cell weight and polynomial weight vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that the fit is upwind-biased.
 In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and to the constant term and linear term in $x$ in the polynomial.  That is, $w_{cU} = w_{cD} = w_{p1} = w_{p2} = 1000$ where $U$ and $D$ are the upwind and downwind cell indexes respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
 
-The cell value coefficients, $\mathbf{c}$, must satisfy four criteria for the fit to be considered upwind-biased:
+The cell value coefficients, $\mathbf{c}$, must satisfy two criteria for the fit to be considered upwind-biased: \TODO{either explain the AND symbol or don't use it}
 \begin{align}
-	\left(\max(\mathbf{c}) < 1\right) \;\land 
-	\left(\mathbf{c}_U \geq \mathbf{c}_D\right) \;\land 
 	\left(\mathbf{c}_U > \sum_{1 \leq i < m, \:i \neq U} \max(0, \mathbf{c}_i)\right) \land
 	\left(|\mathbf{c}_U - 1| < l\right)
 \end{align}

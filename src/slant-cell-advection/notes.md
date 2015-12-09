@@ -55,6 +55,16 @@ Pure advection tests -- same as Shaw&Weller2015?
 - can we better explain why we get these stripey patterns of error through cut cells (as seen in figure 8 of TF/cut cell comparison article)
 - order-of-accuracy tests? (just because we're documenting an advection scheme)
 
+Other least squares fit publications
+====================================
+- lashley2002
+- cueto2006
+- cueto2007
+- miura2007
+- weller2009
+- skamarock-menchaca2011
+- skamarock-gassmann2011
+
 Other cut cell publications
 ===========================
 Cell merging:

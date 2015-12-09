@@ -28,13 +28,15 @@ Advection scheme
 - multidimensional
 - upwind-biased stencil
 - least squares polynomial fit
-- more points than coefficients (why?)
+- typically more points than coefficients (why?)
 - not monotonic
 - not flux-corrected
 - weights are precomputed
 - figure showing stencil, identifying two "exact" points either side of the face
 - behaviour with reduced stencil sizes
-- boundary treatment
+- Hilary's talked about oscillations in the solution being damped by heavier weighting on constant and the linear term in x (see Runge's phenomenon)
+  - https://en.wikipedia.org/wiki/Runge%27s_phenomenon
+  - https://en.wikipedia.org/wiki/Multivariate_interpolation#Irregular_grid_.28scattered_data.29
 
 Tests
 =====

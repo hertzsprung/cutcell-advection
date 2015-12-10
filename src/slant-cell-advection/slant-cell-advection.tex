@@ -124,15 +124,15 @@ A singular value decomposition is used to calculate the pseudo-inverse of $\math
 \begin{align}
 	\mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right) = \mathbf{w'_p} \mathbf{a}
 %
-\shortintertext{and noting that $\mathbf{w'_p}$ is the reciprocal of $\mathbf{w_p}$ \TODO{explain what we mean by reciprocal of a vector}, we find the unknown polynomial coefficients, $\mathbf{a}$:}
+\shortintertext{\TODO{how do we justify the manipulation of $\mathbf{w'_p}$ to $\mathbf{W_P}$ mathematically?} we find the unknown polynomial coefficients, $\mathbf{a}$:}
 %
-	\mathbf{a} = \mathbf{B}^+ \left( \mathbf{w_c} \mathbf{w_p} \bm{\phi} \right)
+\mathbf{a} = \mathbf{W_P} \mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right)
 \end{align}
 Since the target face centroid is positioned at the origin of the local coordinate system then $\phi_F = a_1$, hence
 \begin{align}
 	\phi_F = \mathbf{c} \bm{\phi}
 \end{align}
-where the cell value coefficients vector, $\mathbf{c} = \mathbf{B}^+_1 \left( \mathbf{w_c} \mathbf{w_p} \right)$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
+where the cell value coefficients vector, $\mathbf{c} = w_{p1} \mathbf{B}^+_1 \mathbf{w_c}$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
 $\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
 
 \subsection{Iterative weight adjustment for upwind-biased fit}

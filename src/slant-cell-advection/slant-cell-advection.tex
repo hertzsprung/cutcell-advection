@@ -5,8 +5,10 @@
 \usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{bm}
+\usepackage{hyperref}
 
 \title{Multidimensional Cubic Upwind-Biased Advection of Slanted Cell Grids}
+\author{James Shaw}
 
 \newcommand{\iunit}{\boldsymbol{\hat \imath}}
 \newcommand{\junit}{\boldsymbol{\hat \jmath}}
@@ -14,6 +16,32 @@
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
 \begin{document}
 \maketitle
+\section{Aims}
+Our previous paper, ``Comparison of Terrain Following and Cut Cell Grids using a Non-Hydrostatic Model'', introduced a multidimensional, upwind-biased cubic advection scheme, and a new slanted cell grid generation method.  In combination, these offer a new approach to alleviate the `small cell problem' associated with cut cell grids: slanted cell grids have thin cells that are long in the direction of the flow so that no additional constraints are imposed on the Courant number; the advection scheme's upwind bias ensures stable advection through such thin cells.
+
+The previous paper also demonstrated that the advection scheme showed promising results where the flow was misaligned with the grid, but I'm not sure that should be a focus of this paper.
+
+\section{Things that need doing}
+\begin{itemize}
+	\item Simplify oppposedness logic so that only angles between faces are considered, not face area
+\end{itemize}
+
+\section{Candidate tests}
+Since we're proposing a way around the small cell problem, I think we must compare test results with real cut cell grids.  I already have most of the code I need for creating 2D cut cell grids in OpenFOAM (but much more work would be needed to make 3D cut cell grids and we've agreed not to pursue this).
+
+Hilary's also said that we must have dynamics tests, not just advection tests.
+
+\begin{itemize}
+	\item advection of a stratified thermal profile: tests advection through the thin slanted cells. but perhaps not novel enough because we already did it in our previous publication?
+\end{itemize}
+
+\section{Things that could be done}
+I'd prefer not to do too much (or any!) of this -- only what supervisors feel is most worthwhile.
+\begin{itemize}
+	\item Investigate optimal value for slanted cell grid generation "snapping" parameter (currently if point is within $\Delta z/5$ it is moved down to the surface)
+	\item Investigate sensitivity to opposedness technique
+	\item Investigate energy (variance) properties -- does it never increase?
+\end{itemize}
 
 \section{Slanted cell grids}
 See figure~\ref{fig:grid-generation}
@@ -59,7 +87,7 @@ Using the fact that $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}|\:|\mathbf{b}| \c
 \begin{align}
 	\mathrm{Opp}(f, g) = - \frac{|\mathbf{S}_g|}{|\mathbf{S}_f|} \cos(\theta)
 \end{align}
-where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$.
+where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$. \TODO{we should change this so it's only a measure of parellelism, not area}
 
 Now, let $\mathrm{OF}$ be the set of faces opposing face $f$, which is defined as
 \begin{align}
@@ -144,7 +172,7 @@ The cell value coefficients, $\mathbf{c}$, must satisfy two criteria for the fit
 	\left(\mathbf{c}_U > \sum_{1 \leq i < m, \:i \neq U} \max(0, \mathbf{c}_i)\right) \land
 	\left(|\mathbf{c}_U - 1| < l\right)
 \end{align}
-where $U$ and $D$ are the indices of the upwind and downwind cells respectively, and the linear limit factor $l = 3$.  \TODO{what's the rationale for this linear limit factor?}
+where $U$ and $D$ are the indices of the upwind and downwind cells respectively, and the linear limit factor $l = 3$.  \TODO{this linear limit factor is a misnomer.  really we just want to bound $\mathbf{c}_U$ from above (and maybe below, too).}
 
 If an upwind-biased fit is not found after the first iteration then three adjustments are made.  First, the upwind cell weighting, $w_{cU}$, is increased ten-fold.  Second, the weightings are increased ten-fold for the constant term and linear term in $x$, $w_{p1}$ and $w_{p2}$ respectively.  Third, the large cell weighting is removed from the downwind cell so that $w_{cD} = 1$.
 

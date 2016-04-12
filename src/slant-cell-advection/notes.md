@@ -1,14 +1,23 @@
 Problem/Intro
 =============
-Cut cell meshes give rise to small cell problem
-Various approaches to alleviate the problem including cell merging, thin walls and implicit techniques
-What are the pros and cons of these techniques?
+- Higher spatial resolutions resolve small-scale, steep slopes in terrain
+- Such steep slopes increase numerical errors associated with advection and pressure gradient calculations when TF coordinates are used, due to cancellation errors in metric terms or, equivalently, large non-orthogonality of TF meshes in Cartesian coordinates
+- A hydrostatic reference profile is often subtracted to mitigate these errors [klemp-wilhelmson1978, tomita-satoh2004], but this helps less with global domains [walko-avissar2008b]
+- Cut cell meshes reduce numerical errors because such meshes are orthogonal everywhere except in the lowest layer of cells
+- However, without special treatment, the cut cell method can create very small cells which constrain the timestep for explicit methods
+- Various approaches to alleviate the problem including cell merging, thin walls and implicit techniques
+- TODO: what are the pros and cons of these techniques?
 
-What are the potential advantages of our technique?
-- Mesh is straightfoward to construct
-- Cells are long in the direction of flow
+What are the potential advantages of our slanted cell mesh technique?
+- Mesh is straightforward to construct
+- Cells are long in the direction of flow (kirkpatrick2003 section 2.3.4 has a nice sentence on this w.r.t. CFL criterion)
 - Cells aligned in columns (potentially good for Dynamo and maybe others)
 - No special numerics required (unlike Jebens and Steppeler)
+
+Limitations of scope
+====================
+- it is difficult to maintain high vertical resolution about the ground at any surface elevation [y&s2010] which can be computationally expensive [walko-avissar2008b]; we are not going to address this issue here
+- some papers [find refs] say that it is too computationally expensive to use/difficult to parallelise arbitrarily structured meshes -- OpenFOAM seems to do a pretty good job, but we're not concerned with computational efficiency here
 
 Aim
 ===
@@ -18,7 +27,7 @@ Demonstrate a new method of dealing with the 'small cell problem'
 
 Mesh
 ====
-Describe mesh generation method (or just cite tf-cutcell-comparison?)
+Describe mesh generation method (or just cite Shaw & Weller 2016?)
 - justify choice of 'snap' tolerance (how close does a point have to be for it to be snapped to the surface?)
   - it might be nice to justify this using some real orography, maybe even 3D orography (to demonstrate that our technique extends to 3D)
 
@@ -60,7 +69,7 @@ Pure advection tests -- similar setup to the thermal advection tests from Shaw &
 
 
 Resting atmosphere test?
-- it would be nice to show that we have smaller KE errors with the slantedCell mesh versus cutCell or TF meshes
+- one of the often-cited advantages of cut cells over TF meshes are more accurate pressure gradients.  Hence, it would be nice to show that we have smaller KE errors with the slantedCell mesh versus cutCell or TF meshes.
 
 Other least squares fit publications
 ====================================
@@ -89,7 +98,7 @@ Implicit methods:
 
 Thin wall approximation:
   - steppeler2002
-  - walko-avissar2008 (OLAM model, thin-wall style (?), found advection problems: oscillations in scalar and momentum fields near the surface, they increased upwind-bias in the lowest two model levels)
+  - walko-avissar2008b (OLAM model, thin-wall style (?), found advection problems: oscillations in scalar and momentum fields near the surface, they increased upwind-bias in the lowest two model levels)
 
 Redistribute conservation error:
   - pember1995

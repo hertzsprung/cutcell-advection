@@ -1,8 +1,8 @@
 specifically, I'm looking at other methods of alleviating the small cell problem, their merits and drawbacks
 
 - combine cells
-  - yamazaki-satomura2008 (vertically), yamazaki-satomura2010 (verticall or horizontally) based on cell size
   - ye1999 combine vertically based on position of cell centre being above/below ground
+  - yamazaki-satomura2008 (vertically), yamazaki-satomura2010 (verticall or horizontally) based on cell size
   - timestep constrained by smallest remaining cell which, for y&s, is half the size of an uncut cell
   - it is no longer possible to separate horizontal/vertical gradient calculations [walko-avissar2008]
   - velocity points may not have pressure points on both sides [kirkpatrick2003]

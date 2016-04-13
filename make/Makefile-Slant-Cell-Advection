@@ -11,3 +11,8 @@ $(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-double-upwind-stencil,fig-double-upwind-stencil))
 
+$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,small-cell-avoidance))
+
+build/small-cell-avoidance/small-cell-avoidance.pdf: \
+  src/slant-cell-advection/ametsoc2014.bst \
+  src/slant-cell-advection/references.bib

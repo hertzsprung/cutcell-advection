@@ -11,6 +11,7 @@
 @STRING{AO        = "Atmos.--Ocean"}			% Atmosphere--Ocean, published by Canadian Meteorological Society (CMOS)
 @STRING{AR        = "Atmos.\ Res."}			% Atmospheric Research
 @STRING{ARFM      = "Annu.\ Rev.\ Fluid Mech."}
+@STRING{ASL       = "Atmos. Sci. Lett."}		% added by jshaw
 @STRING{AUMET     = "Aust.\ Meteor.\ Mag."}
 @STRING{BAMS      = "Bull.\ Amer.\ Meteor.\ Soc."}
 @STRING{CAP       = "Contrib.\ Atmos.\ Phys."}
@@ -52,6 +53,7 @@
 @STRING{JPO       = "J.\ Phys.\ Oceanogr."}
 @STRING{JOCEAN    = "J.\ Oceanogr."}			% Journal of Oceanography
 @STRING{JOSJ      = "J.\ Oceanogr.\ Soc.\ Japan"}
+@STRING{JSC       = "SIAM J.\ Sci.\ Comput."}   % added by jshaw
 @STRING{JSE       = "J.\ Struct.\ Eng."}	% Journal of Structural Engineering at ASCE
 @STRING{JTM       = "J.\ Tropical Meteor."}
 @STRING{JWEIA     = "J.\ Wind Eng.\ Ind.\ Aerodyn."}
@@ -87,8 +89,64 @@
 @STRING{WF        = "Wea.\ Forecasting"}
 @STRING{WMOB      = "WMO Bull."}
 
+@article{adcroft1997,
+	title={Representation of topography by shaved cells in a height coordinate ocean model},
+	author={Adcroft, Alistair and Hill, Chris and Marshall, John},
+	journal=MWR,
+	volume={125},
+	pages={2293--2315},
+	year={1997},
+	doi={10.1175/1520-0493(1997)125<2293:ROTBSC>2.0.CO;2}
+}
+
+@article{almgren1997,
+	title={A {Cartesian} grid projection method for the incompressible {Euler} equations in complex geometries},
+	author={Almgren, Ann S and Bell, John B and Colella, Phillip and Marthaler, Tyler},
+	journal=JSC,
+	volume={18},
+	pages={1289--1309},
+	year={1997},
+	publisher={SIAM},
+	doi={10.1137/S1064827594273730}
+}
+
+@article{calhoun-leveque2000,
+	title={A {Cartesian} grid finite-volume method for the advection-diffusion equation in irregular geometries},
+	author={Calhoun, Donna and LeVeque, Randall J},
+	journal=JCP,
+	volume={157},
+	pages={143--180},
+	year={2000},
+	publisher={Elsevier},
+	doi={10.1006/jcph.1999.6369}
+}
+
+@article{good2014,
+	author = {Good, Beth and Gadian, Alan and Lock, Sarah-Jane and Ross, Andrew},
+	title = {Performance of the cut-cell method of representing orography in idealized simulations},
+	Journal = ASL,
+	Year = {2014},
+	Volume = {15},
+	Pages = {44--49},
+	Month = {Jan},
+	DOI = {10.1002/asl2.465},
+	ISSN = {1530-261X},
+	Publisher = {John Wiley \& Sons, Ltd},
+}
+
+@article{jebens2011,
+	title={Partially implicit peer methods for the compressible {Euler} equations},
+	author={Jebens, Stefan and Knoth, Oswald and Weiner, R{\"u}diger},
+	journal=JCP,
+	volume={230},
+	pages={4955--4974},
+	year={2011},
+	publisher={Elsevier},
+	doi={10.1016/j.jcp.2011.03.015}
+}
+
 @article{kirkpatrick2003,
-	title={A representation of curved boundaries for the solution of the Navier--Stokes equations on a staggered three-dimensional Cartesian grid},
+	title={A representation of curved boundaries for the solution of the {Navier--Stokes} equations on a staggered three-dimensional {Cartesian} grid},
 	author={Kirkpatrick, MP and Armfield, SW and Kent, JH},
 	journal=JCP,
 	volume={184},
@@ -96,6 +154,14 @@
 	year={2003},
 	publisher={Elsevier},
 	doi={10.1016/S0021-9991(02)00013-X}
+}
+
+@article{shaw-weller2016,
+	title={Comparison of Terrain Following and Cut Cell Grids using a Non-Hydrostatic Model},
+	author={Shaw, James and Weller, Hilary},
+	journal=MWR,
+	year={2016},
+	doi={10.1175/MWR-D-15-0226.1}
 }
 
 @article{walko-avissar2008b,
@@ -115,6 +181,27 @@
 	year={2016},
 	publisher={Wiley Online Library},
 	doi={10.1002/qj.2736}
+}
+
+@article{yamazaki-satomura2008,
+	title={Vertically combined shaved cell method in a z-coordinate nonhydrostatic atmospheric model},
+	author={Yamazaki, Hiroe and Satomura, Takehiko},
+	journal=ASL,
+	volume={9},
+	pages={171--175},
+	year={2008},
+	publisher={Wiley Online Library},
+	doi={10.1002/asl.187}
+}
+
+@article{yamazaki-satomura2010,
+	title={Nonhydrostatic Atmospheric Modeling Using a Combined {Cartesian} Grid},
+	author={Yamazaki, Hiroe and Satomura, Takehiko},
+	journal=MWR,
+	volume={138},
+	pages={3932--3945},
+	year={2010},
+	doi={10.1175/2010MWR3252.1}
 }
 
 @article{ye1999,                                                                

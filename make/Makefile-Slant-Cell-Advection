@@ -1,9 +1,8 @@
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection))
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
-  build/fig-grid-generation/fig-grid-generation.pdf \
-  build/fig-upwind-stencil/fig-upwind-stencil.pdf \
-  build/fig-double-upwind-stencil/fig-double-upwind-stencil.pdf
+  src/slant-cell-advection/ametsoc2014.bst \
+  src/slant-cell-advection/references.bib
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
 
@@ -11,8 +10,3 @@ $(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-double-upwind-stencil,fig-double-upwind-stencil))
 
-$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,small-cell-avoidance))
-
-build/small-cell-avoidance/small-cell-avoidance.pdf: \
-  src/slant-cell-advection/ametsoc2014.bst \
-  src/slant-cell-advection/references.bib

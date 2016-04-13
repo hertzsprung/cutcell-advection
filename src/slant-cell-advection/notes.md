@@ -2,7 +2,7 @@ Problem/Intro
 =============
 - Higher spatial resolutions resolve small-scale, steep slopes in terrain
 - Such steep slopes increase numerical errors associated with advection and pressure gradient calculations when TF coordinates are used, due to cancellation errors in metric terms or, equivalently, large non-orthogonality of TF meshes in Cartesian coordinates
-- A hydrostatic reference profile is often subtracted to mitigate these errors [klemp-wilhelmson1978, tomita-satoh2004], but this helps less with global domains [walko-avissar2008b]
+- A hydrostatic reference profile is often subtracted to mitigate these errors [klemp-wilhelmson1978, tomita-satoh2004], but this helps less with global domains [walko-avissar2008b, jebens2011]
 - Cut cell meshes reduce numerical errors because such meshes are orthogonal everywhere except in the lowest layer of cells
 - However, without special treatment, the cut cell method can create very small cells which constrain the timestep for explicit methods
 - Various approaches to alleviate the problem including cell merging, thin walls and implicit techniques
@@ -10,7 +10,7 @@ Problem/Intro
 
 What are the potential advantages of our slanted cell mesh technique?
 - Mesh is straightforward to construct
-- Cells are long in the direction of flow (kirkpatrick2003 section 2.3.4 has a nice sentence on this w.r.t. CFL criterion)
+- Cells are long in the direction of flow (kirkpatrick2003 section 2.3.4 has a nice sentence on this w.r.t. CFL criterion, adcroft1997 also mentions this on p. 2313)
 - Cells aligned in columns (potentially good for Dynamo and maybe others)
 - No special numerics required (unlike Jebens and Steppeler)
 

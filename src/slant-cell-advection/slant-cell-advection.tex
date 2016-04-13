@@ -5,176 +5,97 @@
 \usepackage{mathtools}
 \usepackage{xcolor}
 \usepackage{bm}
-\usepackage{hyperref}
 
-\title{Multidimensional Cubic Upwind-Biased Advection of Slanted Cell Grids}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{doi}
+\usepackage{charter}
+\usepackage[bitstream-charter]{mathdesign}
+\usepackage[final,babel]{microtype}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{csquotes}
+\usepackage[T1]{fontenc}
+
+
+\title{Locally-accurate advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
 \author{James Shaw}
 
 \newcommand{\iunit}{\boldsymbol{\hat \imath}}
 \newcommand{\junit}{\boldsymbol{\hat \jmath}}
 \newcommand{\kunit}{\boldsymbol{\hat k}}
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
+
 \begin{document}
 \maketitle
-\section{Aims}
-Our previous paper, ``Comparison of Terrain Following and Cut Cell Grids using a Non-Hydrostatic Model'', introduced a multidimensional, upwind-biased cubic advection scheme, and a new slanted cell grid generation method.  In combination, these offer a new approach to alleviate the `small cell problem' associated with cut cell grids: slanted cell grids have thin cells that are long in the direction of the flow so that no additional constraints are imposed on the Courant number; the advection scheme's upwind bias ensures stable advection through such thin cells.
 
-The previous paper also demonstrated that the advection scheme showed promising results where the flow was misaligned with the grid, but I'm not sure that should be a focus of this paper.
+\section{Introduction}
 
-\section{Things that need doing}
-\begin{itemize}
-	\item Simplify oppposedness logic so that only angles between faces are considered, not face area
-\end{itemize}
+Increasing spatial resolution means that numerical weather prediction models are able to resolve smaller-scale, steep slopes in terrain.  A large majority of operational models use terrain-following coordinates to represent orography, but such models can suffer from increased numerical errors near steep slopes where the coordinate transformation becomes almost singular \TODO{citations}.  Such singularities can be avoided by using the cut-cell method, which has been proposed as an alternative to terrain-following coordinates.  The cut-cell method represents terrain using piecewise polynomial functions that intersect with an orthogonal, Cartesian mesh.  Several studies of idealised flows have found that cut-cell models produce results with an accuracy that is comparable to, or better than, terrain-following models \citep{yamazaki-satomura2008,good2014,shaw-weller2016}.
 
-\section{Candidate tests}
-Since we're proposing a way around the small cell problem, I think we must compare test results with real cut cell grids.  I already have most of the code I need for creating 2D cut cell grids in OpenFOAM (but much more work would be needed to make 3D cut cell grids and we've agreed not to pursue this).
+\TODO{however, cut cells bring their own problems: the small cell problem, and loss of accuracy near the lower boundary.  this paper is going to address these two issues\ldots hopefully!}
 
-Hilary's also said that we must have dynamics tests, not just advection tests.
+%Using the horizontal advection test case by \citet{schaer2002}, \citet{good2014} found that advection errors were smaller
 
-\begin{itemize}
-	\item advection of a stratified thermal profile: tests advection through the thin slanted cells. but perhaps not novel enough because we already did it in our previous publication?
-\end{itemize}
 
-\section{Things that could be done}
-I'd prefer not to do too much (or any!) of this -- only what supervisors feel is most worthwhile.
-\begin{itemize}
-	\item Investigate optimal value for slanted cell grid generation "snapping" parameter (currently if point is within $\Delta z/5$ it is moved down to the surface)
-	\item Investigate sensitivity to opposedness technique
-	\item Investigate energy (variance) properties -- does it never increase?
-\end{itemize}
+\TODO{first describe the cut cell method, which typically describes the terrain by a piecewise bilinear function (although higher-order functions have been tried, e.g. \citet{kirkpatrick2003}.}
 
-\section{Slanted cell grids}
-See figure~\ref{fig:grid-generation}
-\begin{figure}
-	\centering
-	\includegraphics{../fig-grid-generation/fig-grid-generation.pdf}
-	%
-	\caption{Illustration of a slanted cell grid (a) before, and (b) after construction.
-	The terrain surface, denoted by a heavy dotted line, intersects a uniform rectangular grid comprising four cells, $c_1$, $c_2$, $c_3$ and $c_4$.  The cell vertices, marked by open circles, are moved upwards to the points at which the terrain intersects vertical cell edges, marked by filled circles.  Cells that have no volume are removed.  Where a cell has two vertices occupying the same point, the zero-length edge that joins those vertices is removed.  In this illustration, cell $c_4$ is removed because it has no volume, and the zero-length edge at point $p$ is removed to create a triangular cell, $c_3$.}
-	\label{fig:grid-generation}
-\end{figure}
-\clearpage
+Explicit, finite volume advection schemes must satisfy the Courant--Friedrichs--Lewy (CFL) constraint in order to be stable.  The CFL constraint insists that the maximum timestep is proportional to the volume of the smallest cell.  The cut cell method can create arbitrarily small cells in the vicinity of the terrain that impose severe constraints on the timestep.
+\TODO{I need to talk about the CFL constraint w.r.t. flow direction, so maybe I should expand this discussion of CFL constraint.  \citet{adcroft1997} and \citet{kirkpatrick2003} both talk about this.}
 
-\section{Multidimensional upwind-biased advection scheme}
-A tracer with density $\phi$ is advected in flux form
-\begin{align}
-	\partial \phi / \partial t + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
-\end{align}
-where $\mathbf{u}$ is the velocity field.  We use the notation that, for a field $\psi$, $\psi_f$ denotes the value of $\psi$ at face $f$, $\psi_c$ denotes the value at the centroid of cell $c$, and $\psi_F$ is an interpolation onto a face from surrounding cell centre values.  The divergence term in equation~\ref{eqn:advection} is discretised using Gauss' divergence theorem:
-\begin{align}
-	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}} \sum_{f \in c} \phi_F \mathbf{u}_f \cdot \mathbf{S}_f
-\end{align}
-where $\mathcal{V}$ is the cell volume, $f \in c$ denotes the faces of cell $c$, and $\mathbf{S}_f$ is the outward-pointing normal vector for face $f$ with a magnitude equal to the face area.
-The value of $\phi_F$ is interpolated using a least squares fit of cell centre values from an upwind-biased stencil (figure~\ref{fig:upwind-stencil}).  The upwind and downwind cell values, $\phi_U$ and $\phi_D$, are weighted in the least squares fit so that the fit is nearly exact at cell centres $U$ and $D$, and $\phi_U$ and $\phi_D$ lie almost exactly on the polynomial surface.  Weights are iteratively adjusted to achieve a fit that is upwind-biased.
+There are a variety of techniques that alleviate the timestep constraint for cut cell meshes.  One technique is to combine small cells with neighbouring cells, so that the smallest cell volume and, hence, the maximum timestep, is increased.  \citet{ye1999} identified cells with cell centres below ground, and combined each of them with the cell above.  They applied the technique to a two-dimensional model of viscous incompressible flow.  The technique ensures that the smallest cell volume is at least half the volume of an uncut cell, hence the maximum timestep is also constrained to be at least half the maximum timestep for the equivalent mesh with no cut cells.
+\citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what?}
+
+\TODO{cell combining has disadvantages: velocity points may not have pressure points on both sides \citep{kirkpatrick2003}, so it is no longer possible to separate horizontal and vertical pressure gradient calculations \citep{walko-avissar2008b}.  \citet{kirkpatrick2003} also says that it is difficult to extend cell merging techniques to three dimensions, but \citet{yamazaki2016} shows this can be done reasonably straightforwardly.}
+
+Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{An example of the thin-wall approximation is shown in Fig.~\ref{fig:thin-wall}.}
 
 \begin{figure}
-	\centering
-	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
-	%
-	\caption{An upwind-biased stencil on a two-dimensional terrain-following grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_U$ and $\phi_D$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  These two cells are given a large weighting in the least squares fit so that their values lie almost exactly on the polynomial surface.}
-	\label{fig:upwind-stencil}
+	\caption{\TODO{an example diagram of a 3D cell with a bilinear terrain surface, highlighting face areas open to the air}}
+	\label{fig:thin-wall}
 \end{figure}
 
-\TODO{also include a stencil for a small slanted cell (might have $< 12$ cells)}
+By using computational volumes that are equally large for cut and uncut cells, the thin-wall approximation imposes no additional timestep constraints compared to an equivalent Cartesian mesh with no cut cells.  The cell-combination technique still constrains the timestep because smaller cell volumes still remain where cells are not combined.  Hence, the thin-wall technique should permit timesteps up to twice as large as those permitted by the cell-combination technique.
 
-\subsection{Stencil construction}
-The upwind-biased stencil is constructed by finding the opposing faces for a given face, $f$, belonging to the upwind cell, $c$.  Defining $G$ to be the set of other faces in cell $c$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
-\begin{align}
-	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2} \label{eqn:opp}
-\end{align}
-where $\mathbf{S}_f$ and $\mathbf{S}_g$ are the surface normal vectors pointing outward from cell $c$ for faces $f$ and $g$ respectively.
-Using the fact that $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}|\:|\mathbf{b}| \cos(\theta)$ we can rewrite equation~\ref{eqn:opp}:
-\begin{align}
-	\mathrm{Opp}(f, g) = - \frac{|\mathbf{S}_g|}{|\mathbf{S}_f|} \cos(\theta)
-\end{align}
-where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$. \TODO{we should change this so it's only a measure of parellelism, not area}
+\TODO{but thin-wall approximation also has difficulties: \citet{yamazaki-satomura2010} talk about ``internal inconsistency'' (presumably they mean that cell volumes are inconsistent with face areas, but I'll email Hiroe and check this).  \citet{walko-avissar2008b} provide a nice example of a thin-wall problem, possibly adapted from \citet{calhoun-leveque2000}, describing the retardation of a cold front in uniform horizontal flow along a flat surface that includes long, thin, rectangular cut cells.}
 
-Now, let $\mathrm{OF}$ be the set of faces opposing face $f$, which is defined as
-\begin{align}
-	\mathrm{OF}(f) \equiv \{ g : \max(\mathrm{Opp}(f, g)) \} \cup \{ g : \mathrm{Opp}(f, g) \geq 0.5 \}
-\end{align}
-The stencil includes cells adjacent to the faces in $\mathrm{OF}$, and their vertex neighbours.
+\TODO{as a slight aside, \citet{calhoun-leveque2000} talk about using ``capacity functions'' and talk about flow through porous media, but this technique seems to be somewhat (if not entirely) equivalent to the thin-wall approximation}
 
-\begin{figure}
-	\centering
-	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
-	%
-	\caption{A thirteen-cell, upwind-biased stencil for face $f$ belonging to a pentagonal cell, $c$.  The dashed lines denote the two faces of cell $c$ that oppose $f$, and grey circles mark the centroids of the cells neighbouring these two opposing faces.  The stencil is expanded outwards by including cells that neighbour the vertices of the three central cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular.}
-	\label{fig:double-upwind-stencil}
-\end{figure}
+\TODO{I should also discuss the partially implicit method of \citet{jebens2011}.  And perhaps other methods that I have yet to satisfactorily understand: a volume-of-fluid approach by \citet{almgren1997}, and the master--slave cell-linking approach by \citet{kirkpatrick2003}.}
 
-Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ and cell $c$.  The two opposing faces are denoted by thick dashed lines and the centres of the three neighbouring cells are marked by grey circles.  The stencil is extended outwards from the central cells by including the cells neighbouring the vertices marked by black squares.  The resultant stencil contains 13 cells.
+\TODO{what about existing work on unstructured/boundary fitted meshes?  \citet{almgren1997} has masses of citations for loads of different mesh techniques.}
 
-\subsection{Singular value decomposition}
-Once the stencil has been found, a multidimensional polynomial is fitted to the cell centre values.
-In two dimensions, the polynomial is
-\begin{align}
-	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2
-\end{align}
-where $\mathbf{a} = [a_1, \ldots, a_n]^\intercal$ is the vector of unknown coefficients with $n=9$ in two dimensions.  A local coordinate system is established in which $x$ is in the direction of $\mathbf{S}_f$ and $y$ is perpendicular to $x$.
-The origin of the local coordinate system is fixed to be the target face centroid.
-Note that the term involving $y^3$ is omitted \TODO{because... accuracy is sufficient with this smaller stencil?}
+\vspace*{2em}
 
-A matrix equation is constructed to calculate a least squares fit:
-\begin{align}
-	\mathbf{B} \left(\mathbf{w'_p} \mathbf{a}\right) = \mathbf{w_c} \bm{\phi}
-\end{align}
-where $\mathbf{B}$ is a rectangular matrix with one row for each cell in the stencil and one column for each term in the polynomial, $\mathbf{w'_p} = [w_{p1}^{-1}, \ldots, w_{pn}^{-1}]^\intercal$ is the polynomial weight reciprocal vector with $n$ being the number of polynomial terms,  $\mathbf{w_c} = [w_{c1}, \ldots, w_{cm}]^\intercal$ is the cell weighting vector with $m$ being the number of cells in the stencil, and $\bm{\phi} = [\phi_1, \ldots, \phi_m]^\intercal$ is the vector of cell centre values.
-The matrix $\mathbf{B}$ takes the form
-\begin{align}
-	\mathbf{B} = \mathbf{W_C} \mathbf{\tilde{B}} \mathbf{W_P} \label{eqn:B}
-\end{align}
-where $\mathbf{W_P} = \mathrm{diag}(\mathbf{w_p})$ is an $n \times n$ matrix of polynomial weights and $\mathbf{w_p} = [w_{p1}, \ldots, w_{pn}]^\intercal$, and $\mathbf{W_C} = \mathrm{diag}(\mathbf{w_c})$ is an $m \times m$ matrix of cell weights.  Equation~\ref{eqn:B} is constructed so that the rows of $\mathbf{\tilde{B}}$ are multiplied by the corresponding cell weights in $\mathbf{w_c}$, and the columns of $\mathbf{\tilde{B}}$ are multiplied by the corresponding polynomial weights in $\mathbf{w_p}$.
 
-\TODO{this is not clear.  we could describe the method without weighting first?}
-$\mathbf{\tilde{B}}$ is an $m \times n$ matrix of the geometric terms in the polynomial which, in two dimensions, is given by
-\begin{align}
-	\mathbf{\tilde{B}} = 
-	\begin{pmatrix}
-		1 & \mathbf{X}_{1,1} & \mathbf{X}_{1,2} & \mathbf{X}_{1,1}^2 & \mathbf{X}_{1,1} \mathbf{X}_{1,2} & \mathbf{X}_{1,2}^2 & \mathbf{X}_{1,1}^3 & \mathbf{X}_{1,1}^2 \mathbf{X}_{1,2} & \mathbf{X}_{1,1} \mathbf{X}_{1,2}^2 \\
-		\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-		1 & \mathbf{X}_{m,1} & \mathbf{X}_{m,2} & \mathbf{X}_{m,1}^2 & \mathbf{X}_{m,1} \mathbf{X}_{m,2} & \mathbf{X}_{m,2}^2 & \mathbf{X}_{m,1}^3 & \mathbf{X}_{m,1}^2 \mathbf{X}_{m,2} & \mathbf{X}_{m,1} \mathbf{X}_{m,2}^2 \\
-	\end{pmatrix}
-\end{align}
-where $\mathbf{X}$ is a matrix with $m$ rows and one column for each geometric dimension.  
-Each row of the $\mathbf{X}$ matrix contains the local coordinates of a cell centroid so that, in two dimensions, the matrix is
-\begin{align}
-	\mathbf{X} = 
-	\begin{pmatrix}
-		x_1 & y_1 \\
-		x_2 & y_2 \\
-		\vdots & \vdots \\
-		x_m & y_m
-	\end{pmatrix}
-\end{align}
+\TODO{The next topics to discuss are: loss of accuracy at the lower boundary (2nd order schemes often become only 1st-order accurate locally), then how our slanted cell mesh technique and \texttt{cubicUpwindCPCFit} advection scheme might be able to increase timesteps and increase local accuracy\ldots maybe!}
 
-A singular value decomposition is used to calculate the pseudo-inverse of $\mathbf{B}$, $\mathbf{B}^+$, such that
-\begin{align}
-	\mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right) = \mathbf{w'_p} \mathbf{a}
-%
-\shortintertext{\TODO{how do we justify the manipulation of $\mathbf{w'_p}$ to $\mathbf{W_P}$ mathematically?} we find the unknown polynomial coefficients, $\mathbf{a}$:}
-%
-\mathbf{a} = \mathbf{W_P} \mathbf{B}^+ \left( \mathbf{w_c} \bm{\phi} \right)
-\end{align}
-Since the target face centroid is positioned at the origin of the local coordinate system then $\phi_F = a_1$, hence
-\begin{align}
-	\phi_F = \mathbf{c} \bm{\phi}
-\end{align}
-where the cell value coefficients vector, $\mathbf{c} = w_{p1} \mathbf{B}^+_1 \mathbf{w_c}$ and $\mathbf{B}^+_1$ is the first row of $\mathbf{B}^+$.
-$\mathbf{c}$ can be calculated once during model initialisation because it depends only upon the cell weights, polynomial weights and grid geometry, which is assumed to be static.
+\section{Mesh generation}
+\TODO{describe how we construct a slanted cell mesh.  at some point in the paper we must justify the choice of 'tolerance', which was set to $2\Delta z/5$ in \citet{shaw-weller2016} without much justification.}
 
-\subsection{Iterative weight adjustment for upwind-biased fit}
-The cell weight and polynomial weight vectors, $\mathbf{w_c}$ and $\mathbf{w_p}$, are used in the least squares fit to control the weightings of the cells and polynomial terms respectively.  These weights are adjusted iteratively to ensure that the fit is upwind-biased.
-In the first iteration, a weighting of 1000 is given to the two cells sharing the target face, and to the constant term and linear term in $x$ in the polynomial.  That is, $w_{cU} = w_{cD} = w_{p1} = w_{p2} = 1000$ where $U$ and $D$ are the upwind and downwind cell indexes respectively.  All other entries in $\mathbf{w_c}$ and $\mathbf{w_p}$ are 1.
+\TODO{although we are only considering 2D idealised tests in this paper, it would be nice to show that our method extends to 3D -- why don't we try it out with some real digital surface model data?}
 
-The cell value coefficients, $\mathbf{c}$, must satisfy two criteria for the fit to be considered upwind-biased: \TODO{either explain the AND symbol or don't use it}
-\begin{align}
-	\left(\mathbf{c}_U > \sum_{1 \leq i < m, \:i \neq U} \max(0, \mathbf{c}_i)\right) \land
-	\left(|\mathbf{c}_U - 1| < l\right)
-\end{align}
-where $U$ and $D$ are the indices of the upwind and downwind cells respectively, and the linear limit factor $l = 3$.  \TODO{this linear limit factor is a misnomer.  really we just want to bound $\mathbf{c}_U$ from above (and maybe below, too).}
+\section{Multidimensional advection scheme}
+\TODO{describe the advection scheme}
 
-If an upwind-biased fit is not found after the first iteration then three adjustments are made.  First, the upwind cell weighting, $w_{cU}$, is increased ten-fold.  Second, the weightings are increased ten-fold for the constant term and linear term in $x$, $w_{p1}$ and $w_{p2}$ respectively.  Third, the large cell weighting is removed from the downwind cell so that $w_{cD} = 1$.
+\section{Results}
+\TODO{use the thermal advection test from \citet{shaw-weller2016}, but with steeper slopes.  compare with BTF meshes and cut cell meshes created using the ASAM mesh generator.  use Co close to 1 and report on the timesteps for each type of mesh.}
 
-The adjustment procedure is executed up to seven times until the fit is upwind-biased.  If the fit is still not considered upwind-biased after these iterations, a pure upwind approximation is made so that $\phi_F = \phi_U$.
+\TODO{report $\ell_2$ error norms, min/max values for BTF, slantedCell and cutCell meshes}
+
+\TODO{I haven't thought much about this yet, but there's a lot of literature that says ``2nd-order schemes become 1st-order at the lower boundary'', and talk about global accuracy versus local accuracy.  I'm not sure how to measure local order of accuracy, but I think I should examine order-of-accuracy for \texttt{cubicUpwindCPCFit}.  The work by \citet{ye1999} is quite similar to ours: they use polynomial stencils to interpolate onto boundaries, and test an explicit advection scheme which they show is 2nd order globally and locally.}
+
+\TODO{should we compare \texttt{cubicUpwindCPCFit} with a more standard scheme?  such as QUICK, maybe?  because it's well-known, fairly high-order, implemented in OpenFOAM, \citet{kirkpatrick2003} uses it\ldots  lower order schemes are more likely to be too diffusive or just unstable, especially on BTF meshes}
+
+\TODO{I don't think I want to go beyond advection scheme/advection tests in this paper because I think it will lose its focus.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations\ldots}
+
+\section{Conclusions}
+
+
+\section{Acknowledgements}
+\TODO{Supervisors, funding bodies.  ASAM group for the mesh generator---I should ask permission to use cut cell meshes in this paper}
+
+\bibliographystyle{ametsoc2014}
+\bibliography{references}
+
 \end{document}

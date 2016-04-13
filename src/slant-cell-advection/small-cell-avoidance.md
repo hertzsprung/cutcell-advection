@@ -7,7 +7,7 @@ specifically, I'm looking at other methods of alleviating the small cell problem
   - it is no longer possible to separate horizontal/vertical gradient calculations [walko-avissar2008]
   - velocity points may not have pressure points on both sides [kirkpatrick2003]
 - thin-wall approximation
-  - bonaventura uses vertical thin walls for modelling slanted terrain in the discretisation of the pressure equation
+  - bonaventura uses vertical thin walls for modelling slanted terrain in the discretisation of the pressure equation, but I don't *think* this alleviates the small cell problem?
   - steppeler2002 use vertical and horizontal thin walls
 - semi-implicit treatment
 
@@ -54,7 +54,7 @@ kirkpatrick2003
 - full Navier-Stokes (with viscosity)
 - 2nd order centred differencing, but uses third-order QUICK for advection, with tweaks to handle the non-uniform grid spacing at boundaries
 - criticise ye1999 for using a Wannier flow test which has no advection **TODO: check this**
-- says it is difficult to extend cell merging techniques into 3D **TODO: check that yamazaki2015 does it**
+- says it is difficult to extend cell merging techniques into 3D **but yamazaki2016 manages it**
 - face area and centroids are adjusted
 
 klein2009
@@ -69,6 +69,7 @@ almgren1997
 - **no additional CFL constraints whatsoever!**
 - says cell merging is only 1st order at boundary 
 - says that losing 2nd order accuracy at boundary should not be a problem for atmospheric flows over orography -- **do we think this is (still) true?**
+- lots of citations about other grid types
 
 
 lock2008 (phd thesis)
@@ -134,11 +135,14 @@ bonaventura2000
 
 - uses semi-Lagrangian advection to avoid timestep constraint
 - partial-step orography with slants accounted for in pressure equation discretisation using vertical thin walls
+- **I don't think this approximation alone will alleviate the small cell problem because the cell volume can be arbitrarily small with the partial step approach**
 - they identify a "bottom cell" in each column, beneath which there is no air
 - **authors say it has nothing in common with Mesinger's step-mountain coord** -- but Mesinger has a height-based coordinate and he also has slant-wise transport [mesinger2012] so I'd say this statement is no longer true
 
 adcroft1997
 -----------
+
+- adjust topography to avoid very small cells
 
 thomas2000
 ----------
@@ -149,3 +153,10 @@ berger-leveque1990
 ------------------
 
 - fluxes must be defined using more than just neighbouring cells -- **this sounds like what walko-avissar2008b describe w.r.t. [calhoun-leveque2000]**
+
+jebens2011
+----------
+
+- implicit advection and diffusion in cut cells, explicit elsewhere
+- third-order advection scheme
+- **but first-order upwinding in the implicit advection I think?  this paper is too mathematical for me**

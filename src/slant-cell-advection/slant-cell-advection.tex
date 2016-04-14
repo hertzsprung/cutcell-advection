@@ -37,23 +37,30 @@ Increasing spatial resolution means that numerical weather prediction models are
 
 %Using the horizontal advection test case by \citet{schaer2002}, \citet{good2014} found that advection errors were smaller
 
+The cut cell method intersects a terrain surface with an orthogonal, Cartesian mesh.
+Cells that are entirely above ground are unaltered, and cells that lie entirely beneath the ground are removed.
+Cells that are intersected by the terrain are called `cut cells'.  The terrain within each cut cell is represented by a polynomial surface.  This surface is is typically bilinear, and interpolates the four terrain elevations which are known at the cell edges (Fig.~\ref{fig:cut-cell}).  Higher order polynomials have also been tried, e.g. \citet{kirkpatrick2003}.
 
-\TODO{first describe the cut cell method, which typically describes the terrain by a piecewise bilinear function (although higher-order functions have been tried, e.g. \citet{kirkpatrick2003}.}
+\TODO{I suppose I should try to clear up the terminology mess: cut cells, shaved cells, immersed boundaries, embedded boundaries -- there's some literature that tries to clarify this, can't remember what, but I should read that first}
 
-Explicit, finite volume advection schemes must satisfy the Courant--Friedrichs--Lewy (CFL) constraint in order to be stable.  The CFL constraint insists that the maximum timestep is proportional to the volume of the smallest cell.  The cut cell method can create arbitrarily small cells in the vicinity of the terrain that impose severe constraints on the timestep.
-\TODO{I need to talk about the CFL constraint w.r.t. flow direction, so maybe I should expand this discussion of CFL constraint.  \citet{adcroft1997} and \citet{kirkpatrick2003} both talk about this.}
+\begin{figure}
+	\caption{\TODO{an example diagram of a 3D cell with a bilinear terrain surface, similar to Fig 4(top) in \cite{walko-avissar2008b}, highlighting face areas open to the air}}
+	\label{fig:cut-cell}
+\end{figure}
+
+Explicit, finite volume advection schemes must satisfy the Courant--Friedrichs--Lewy (CFL) criterion in order to be stable.  The multidimensional CFL criterion constrains the timestep, $\Delta t$, such that
+\begin{align}
+	\Delta t \leq \min_\mathrm{cells} \frac{2\mathcal{V}}{\sum_\mathrm{faces} F}
+\end{align}
+where $\mathcal{V}$ is the volume of a cell and $F$ is the flux across a face.  Hence, the maximum timestep is constrained by the largest fluxes through the smallest cells.  \TODO{we need to explain this further because it's important that we understand about large fluxes across small cell dimensions, but maybe that can wait until later.}
+The cut cell method can create arbitrarily small cells that impose severe constraints on the timestep.
 
 There are a variety of techniques that alleviate the timestep constraint for cut cell meshes.  One technique is to combine small cells with neighbouring cells, so that the smallest cell volume and, hence, the maximum timestep, is increased.  \citet{ye1999} identified cells with cell centres below ground, and combined each of them with the cell above.  They applied the technique to a two-dimensional model of viscous incompressible flow.  The technique ensures that the smallest cell volume is at least half the volume of an uncut cell, hence the maximum timestep is also constrained to be at least half the maximum timestep for the equivalent mesh with no cut cells.
 \citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what?}
 
 \TODO{cell combining has disadvantages: velocity points may not have pressure points on both sides \citep{kirkpatrick2003}, so it is no longer possible to separate horizontal and vertical pressure gradient calculations \citep{walko-avissar2008b}.  \citet{kirkpatrick2003} also says that it is difficult to extend cell merging techniques to three dimensions, but \citet{yamazaki2016} shows this can be done reasonably straightforwardly.}
 
-Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{An example of the thin-wall approximation is shown in Fig.~\ref{fig:thin-wall}.}
-
-\begin{figure}
-	\caption{\TODO{an example diagram of a 3D cell with a bilinear terrain surface, highlighting face areas open to the air}}
-	\label{fig:thin-wall}
-\end{figure}
+Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{I might need another figure to show the thin-wall approximation, or I might be able to refer back to Fig.~\ref{fig:cut-cell}.}
 
 By using computational volumes that are equally large for cut and uncut cells, the thin-wall approximation imposes no additional timestep constraints compared to an equivalent Cartesian mesh with no cut cells.  The cell-combination technique still constrains the timestep because smaller cell volumes still remain where cells are not combined.  Hence, the thin-wall technique should permit timesteps up to twice as large as those permitted by the cell-combination technique.
 

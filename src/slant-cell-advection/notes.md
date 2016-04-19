@@ -1,10 +1,12 @@
+**need to read gattibono-collela2006** (cited by klein2009)
+
 Problem/Intro
 =============
 - Higher spatial resolutions resolve small-scale, steep slopes in terrain
 - Such steep slopes increase numerical errors associated with advection and pressure gradient calculations when TF coordinates are used, due to cancellation errors in metric terms or, equivalently, large non-orthogonality of TF meshes in Cartesian coordinates
 - A hydrostatic reference profile is often subtracted to mitigate these errors [klemp-wilhelmson1978, tomita-satoh2004], but this helps less with global domains [walko-avissar2008b, jebens2011]
 - Cut cell meshes reduce numerical errors because such meshes are orthogonal everywhere except in the lowest layer of cells
-- However, without special treatment, the cut cell method can create very small cells which constrain the timestep for explicit methods
+- However, without special treatment, the cut cell method can create very small cells which constrain the timestep for explicit methods: almgren1997 says, "A standard finite-volume approach using conservative differencing requires division by the volume of each cell; this is unstable unless the time step is reduced proportionally to the volume."
 - Various approaches to alleviate the problem including cell merging, thin walls and implicit techniques
 - TODO: what are the pros and cons of these techniques?
 
@@ -85,16 +87,19 @@ Other cut cell publications
 ===========================
 Cell merging:
   - clarke1986?
+  - hirt1992?
   - quirk1994?
+  - ye1999
   - yamazaki-satomura20[08/10/12]
-  - yamazaki2015
+  - yamazaki2016
 
-Implicit methods:
+Implicit/semi-Lagrangian methods:
   - jebens2011
-  - leveque-shyue1996
-  - murman2003
-  - rosatti2005 (SISL method, fancy velocity reconstruction in cut cells)
+  - leveque-shyue1996 (not atmospheric, cut cells used to resolve shock fronts)
+  - murman2003 (for moving boundaries)
   - thomas2000
+  - rosatti2005 (SISL method, fancy velocity reconstruction in cut cells)
+  - bonaventura2000 (SISL method with partial-step cell volumes and thin-wall approximation for pressure equation)
 
 Thin wall approximation:
   - steppeler2002
@@ -102,6 +107,8 @@ Thin wall approximation:
 
 Redistribute conservation error:
   - pember1995
+
+Flux redistribution
 
 Rotated mesh methods:
   - helzel2005

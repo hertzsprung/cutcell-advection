@@ -9,7 +9,10 @@ specifically, I'm looking at other methods of alleviating the small cell problem
 - thin-wall approximation
   - bonaventura uses vertical thin walls for modelling slanted terrain in the discretisation of the pressure equation, but I don't *think* this alleviates the small cell problem?
   - steppeler2002 use vertical and horizontal thin walls
-- semi-implicit treatment
+- implicit/semi-implicit techniques
+  - jebens2011
+  - TODO: leveque-shyue1996
+  - TODO: murman2003
 
 yamazaki-satomura2008
 ---------------------
@@ -60,6 +63,24 @@ kirkpatrick2003
 klein2009
 ---------
 
+- **no additional CFL constraints**
+- 2D fully-compressible flows
+- flux stabilisation
+- dimensional splitting -- **does it suffer from splitting errors I wonder?**
+- first-order accurate near boundaries
+
+gattibono-collela2006
+---------------------
+
+- do not really address the small cell problem
+- they run with timesteps small enough for acoustic waves
+- but say they could use timesteps for advective Courant number if they treated acoustics implicitly
+- even then, they admit that their divergence operator will not be suitable for explicit schemes (p. 609)
+
+leveque-shyue1996
+-----------------
+
+- have smaller "cut" cells to better resolve shock fronts
 
 almgren1997
 -----------
@@ -104,7 +125,9 @@ calhoun-leveque2000
 - advection-diffusion equation
 - **talks about capacity functions, but appears to be the same/similar to the thin wall approximationof steppeler2002?**
 - **and again, talks about "slightly enlarging the cell's capacity" -- same as thin wall approximation**
+- **sounds plausible because yamazaki-satomura2010 say it suffers from the same internal inconsistency**
 - includes the same diagram as walko-avissar2008b of horizontal flow next to the lower boundary
+
 
 ye1999
 ------

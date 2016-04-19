@@ -31,11 +31,14 @@
 
 \section{Introduction}
 
-Increasing spatial resolution means that numerical weather prediction models are able to resolve smaller-scale, steep slopes in terrain.  A large majority of operational models use terrain-following coordinates to represent orography, but such models can suffer from increased numerical errors near steep slopes where the coordinate transformation becomes almost singular \TODO{citations}.  Such singularities can be avoided by using the cut-cell method, which has been proposed as an alternative to terrain-following coordinates.  The cut-cell method represents terrain using piecewise polynomial functions that intersect with an orthogonal, Cartesian mesh.  Several studies of idealised flows have found that cut-cell models produce results with an accuracy that is comparable to, or better than, terrain-following models \citep{yamazaki-satomura2008,good2014,shaw-weller2016}.
+Increasing spatial resolution means that numerical weather prediction models are able to resolve smaller-scale, steep slopes in terrain.  A large majority of operational models use terrain-following coordinates to represent orography, but such models can suffer from increased numerical errors near steep slopes where the coordinate transformation becomes almost singular \citep{nikiforakis2009}.  Such singularities can be avoided by using the cut-cell method, which has been proposed as an alternative to terrain-following coordinates.  The cut-cell method represents terrain using piecewise polynomial functions that intersect with an orthogonal, Cartesian mesh.  Several studies of idealised flows have found that cut-cell models produce results with an accuracy that is comparable to, or better than, terrain-following models \citep{yamazaki-satomura2008,good2014,shaw-weller2016}.
+
+%Using the horizontal advection test case by \citet{schaer2002}, \citet{good2014} found that advection errors were smaller
 
 \TODO{however, cut cells bring their own problems: the small cell problem, and loss of accuracy near the lower boundary.  this paper is going to address these two issues\ldots hopefully!}
 
-%Using the horizontal advection test case by \citet{schaer2002}, \citet{good2014} found that advection errors were smaller
+
+\TODO{I think I'm going into too much detail on cut cell meshes: slanted cell meshes are constructed differently from cut cell meshes which is why they don't suffer from the small cell problem}
 
 The cut cell method intersects a terrain surface with an orthogonal, Cartesian mesh.
 Cells that are entirely above ground are unaltered, and cells that lie entirely beneath the ground are removed.
@@ -56,19 +59,40 @@ where $\mathcal{V}$ is the volume of a cell and $F$ is the flux across a face.  
 The cut cell method can create arbitrarily small cells that impose severe constraints on the timestep.
 
 There are a variety of techniques that alleviate the timestep constraint for cut cell meshes.  One technique is to combine small cells with neighbouring cells, so that the smallest cell volume and, hence, the maximum timestep, is increased.  \citet{ye1999} identified cells with cell centres below ground, and combined each of them with the cell above.  They applied the technique to a two-dimensional model of viscous incompressible flow.  The technique ensures that the smallest cell volume is at least half the volume of an uncut cell, hence the maximum timestep is also constrained to be at least half the maximum timestep for the equivalent mesh with no cut cells.
-\citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what?}
+\citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what? they appear to get reasonable results but say nothing about their timesteps -- I've asked Hiroe about this}
 
-\TODO{cell combining has disadvantages: velocity points may not have pressure points on both sides \citep{kirkpatrick2003}, so it is no longer possible to separate horizontal and vertical pressure gradient calculations \citep{walko-avissar2008b}.  \citet{kirkpatrick2003} also says that it is difficult to extend cell merging techniques to three dimensions, but \citet{yamazaki2016} shows this can be done reasonably straightforwardly.}
+The cell-combining technique still requires smaller timesteps than the maximum timestep for an equivalent, uncut mesh.  This is because the technique does not combine cut cells whose volume is greater than half the volume of an uncut cell.
+\TODO{I don't think I need to say this in the present paper because we're not concerned with complete atmospheric models: Furthermore, for an atmospheric model that uses a C-grid staggering of pressure and velocity variables on a structured grid, \citet{kirkpatrick2003} notes that velocity points near cut cells may not have pressure points on both sides (Fig~\ref{fig:diagonal-pressure}), so it is no longer possible to separate horizontal and vertical pressure gradient calculations \citep{walko-avissar2008b}.}
 
-Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{I might need another figure to show the thin-wall approximation, or I might be able to refer back to Fig.~\ref{fig:cut-cell}.}
+Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut \citep{steppeler2002}.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{I might need another figure to show the thin-wall approximation, or I might be able to refer back to Fig.~\ref{fig:cut-cell}.}
 
-By using computational volumes that are equally large for cut and uncut cells, the thin-wall approximation imposes no additional timestep constraints compared to an equivalent Cartesian mesh with no cut cells.  The cell-combination technique still constrains the timestep because smaller cell volumes still remain where cells are not combined.  Hence, the thin-wall technique should permit timesteps up to twice as large as those permitted by the cell-combination technique.
+\TODO{\citet{bonaventura2000} use the thin-cell approximation in some places, but the cell volume can be any non-negative value.  so it seems that it is the semi-Lagrangian advection scheme that gets them around the small cell problem, not the thin-wall approximation}
 
-\TODO{but thin-wall approximation also has difficulties: \citet{yamazaki-satomura2010} talk about ``internal inconsistency'' (presumably they mean that cell volumes are inconsistent with face areas, but I'll email Hiroe and check this).  \citet{walko-avissar2008b} provide a nice example of a thin-wall problem, possibly adapted from \citet{calhoun-leveque2000}, describing the retardation of a cold front in uniform horizontal flow along a flat surface that includes long, thin, rectangular cut cells.}
+By using computational volumes that are equally large for cut and uncut cells, the thin-wall approximation imposes no additional timestep constraints compared to an equivalent Cartesian mesh with no cut cells.  The cell-combination technique still constrains the timestep because smaller cell volumes remain where cells are not combined.  Hence, the thin-wall technique should permit timesteps up to twice as large as those permitted by the cell-combination technique.
+
+\TODO{but thin-wall approximation also has difficulties: \citet{yamazaki-satomura2010} talk about ``internal inconsistency'' (mean that cell volumes are inconsistent with face areas).  \citet{walko-avissar2008b} provide a nice example of a thin-wall problem, possibly adapted from \citet{calhoun-leveque2000}, describing the retardation of a cold front in uniform horizontal flow along a flat surface that includes long, thin, rectangular cut cells.}
+
+\TODO{\citet{lock2008} uses a variant of the thin-wall approximation called the volume-expansion method which is also used in the COSMO-DE model.  The volume-expansion method rescales the cell volume so that it has a minimum of $3/8$ of the equivalent uncut cell.  She acknowledges that ``model solutions in the cut-cells are no longer true solutions to the problem initially specified by the orographic field''.}
 
 \TODO{as a slight aside, \citet{calhoun-leveque2000} talk about using ``capacity functions'' and talk about flow through porous media, but this technique seems to be somewhat (if not entirely) equivalent to the thin-wall approximation}
 
-\TODO{I should also discuss the partially implicit method of \citet{jebens2011}.  And perhaps other methods that I have yet to satisfactorily understand: a volume-of-fluid approach by \citet{almgren1997}, and the master--slave cell-linking approach by \citet{kirkpatrick2003}.}
+\TODO{There are a wealth of other techniques that I have yet to satisfactorily understand:
+\begin{itemize}
+	\item flux stabilisation with dimensional splitting \citep{klein2009}
+	\item a volume-of-fluid approach by \citet{almgren1997}
+	\item the master--slave cell-linking approach by \citet{kirkpatrick2003}
+\end{itemize}
+}
+
+\TODO{We can also avoid the small cell problem by avoiding explicit methods, instead using some sort of implicit scheme, or semi-Lagrangian advection.  \citet{jebens2011} has formulated a partially implicit method and applied it on cut cell meshes.  \citet{bonaventura2000} and \citet{rosatti2005} use SISL schemes with cut cell meshes.}
+
+\TODO{There are other mesh types applied to atmospheric flows besides typical terrain following meshes and cut cell meshes:
+\begin{itemize}
+	\item Chimera overlapping meshes \citep{takemura2015}
+	\item Orthogonal terrain following coordinates \citep{zou2016}
+\end{itemize}}
+
+\TODO{\citet{nikiforakis2009} says that cut cell meshes are a ``hybrid between structured and unstructured meshes''.  It seems to me that our slanted cell mesh has similarities with unstructured-structured meshes for aerospace.  \citet{almgren1997} has plenty of citations for meshes of this type applied to aerofoils and turbomachinery, but most are behind paywalls that I haven't managed to get past.  }
 
 \TODO{what about existing work on unstructured/boundary fitted meshes?  \citet{almgren1997} has masses of citations for loads of different mesh techniques.}
 
@@ -93,6 +117,9 @@ By using computational volumes that are equally large for cut and uncut cells, t
 \TODO{I haven't thought much about this yet, but there's a lot of literature that says ``2nd-order schemes become 1st-order at the lower boundary'', and talk about global accuracy versus local accuracy.  I'm not sure how to measure local order of accuracy, but I think I should examine order-of-accuracy for \texttt{cubicUpwindCPCFit}.  The work by \citet{ye1999} is quite similar to ours: they use polynomial stencils to interpolate onto boundaries, and test an explicit advection scheme which they show is 2nd order globally and locally.}
 
 \TODO{should we compare \texttt{cubicUpwindCPCFit} with a more standard scheme?  such as QUICK, maybe?  because it's well-known, fairly high-order, implemented in OpenFOAM, \citet{kirkpatrick2003} uses it\ldots  lower order schemes are more likely to be too diffusive or just unstable, especially on BTF meshes}
+
+\TODO{do the deformational flow on a plane (like Yumeng's paper) -- also could do it over orography}
+\TODO{look at Oswald Knoth washing machine test (possibly in GMD)}
 
 \TODO{I don't think I want to go beyond advection scheme/advection tests in this paper because I think it will lose its focus.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations\ldots}
 

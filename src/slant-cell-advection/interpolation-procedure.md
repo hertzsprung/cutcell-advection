@@ -9,6 +9,9 @@ The stencils points adjacent to the target face are called *central points*.  Th
 
 A least square fit is obtained by applying a singular value decomposition to the matrix.  This yields a vector of *coefficients* which is dotted with the stencil point values to obtain the interpolated value at the target face.  Note the distinction between *weights*, which are applied during the construction of the matrix, and *coefficients*, which are the output of the least squares fit.
 
+Stabilisation
+-------------
+
 In order to achieve numerical stability, the matrix may be manipulated for particular stencil geometries in two ways: by removing columns from the matrix, and by adjusting the stencil point weights.  For each flux direction through each face, the procedure is as follows:
 
 1. The matrix is constructed one column at a time.  The columns corresponding to the lowest order terms are appended first, and the columns corresponding to the highest order terms are appended last.  After each column is appended, the singular values are examined to determine if the matrix is full-rank.  If any singular value is smaller than the threshold value, the matrix is considered rank-deficient (at the time of writing, the threshold value is 1e-2).  If the matrix is full-rank then we append another column corresponding to the next lowest-order term.  Otherwise if matrix becomes rank-deficient having appended a column, then that column is removed from the matrix and another column is tried, corresponding to the next lowest-order term.

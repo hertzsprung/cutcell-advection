@@ -62,7 +62,7 @@ There are a variety of techniques that alleviate the timestep constraint for cut
 \citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what? they appear to get reasonable results but say nothing about their timesteps -- I've asked Hiroe about this}
 
 The cell-combining technique still requires smaller timesteps than the maximum timestep for an equivalent, uncut mesh.  This is because the technique does not combine cut cells whose volume is greater than half the volume of an uncut cell.
-\TODO{I don't think I need to say this in the present paper because we're not concerned with complete atmospheric models: Furthermore, for an atmospheric model that uses a C-grid staggering of pressure and velocity variables on a structured grid, \citet{kirkpatrick2003} notes that velocity points near cut cells may not have pressure points on both sides (Fig~\ref{fig:diagonal-pressure}), so it is no longer possible to separate horizontal and vertical pressure gradient calculations \citep{walko-avissar2008b}.}
+\TODO{\citet{kirkpatrick2003} and \citet{berger-helzel2012} both say cell-combining is hard in 3D, but \citet{yamazaki2016} managed it}
 
 Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut \citep{steppeler2002}.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{I might need another figure to show the thin-wall approximation, or I might be able to refer back to Fig.~\ref{fig:cut-cell}.}
 
@@ -78,9 +78,10 @@ By using computational volumes that are equally large for cut and uncut cells, t
 
 \TODO{There are a wealth of other techniques that I have yet to satisfactorily understand:
 \begin{itemize}
-	\item flux stabilisation with dimensional splitting \citep{klein2009}
+	\item flux stabilisation \citep{klein2009}, good explanation and other refs in \citet{berger-helzel2012}
 	\item a volume-of-fluid approach by \citet{almgren1997}
 	\item the master--slave cell-linking approach by \citet{kirkpatrick2003}
+	\item mirror-cell method for high-order accuracy at boundaries \citep{forrer-jeltsch1998}
 \end{itemize}
 }
 
@@ -94,7 +95,9 @@ By using computational volumes that are equally large for cut and uncut cells, t
 
 \TODO{\citet{nikiforakis2009} says that cut cell meshes are a ``hybrid between structured and unstructured meshes''.  It seems to me that our slanted cell mesh has similarities with unstructured-structured meshes for aerospace.  \citet{almgren1997} has plenty of citations for meshes of this type applied to aerofoils and turbomachinery, but most are behind paywalls that I haven't managed to get past.  }
 
-\TODO{what about existing work on unstructured/boundary fitted meshes?  \citet{almgren1997} has masses of citations for loads of different mesh techniques.}
+\TODO{what about existing work on unstructured/boundary fitted meshes?  \citet{almgren1997} has masses of citations for loads of different mesh techniques in the context of aeronautics.  I haven't seen much/anything of different meshes for atmospheric flows, except for \citet{smolarkiewicz-szmelter2011}.}
+
+\TODO{could the small cell problem exist with terrain-following coordinates, too?  if we have steep slopes then we could get highly-distorted cells with very small volumes\ldots}
 
 \vspace*{2em}
 
@@ -118,13 +121,14 @@ By using computational volumes that are equally large for cut and uncut cells, t
 
 \TODO{should we compare \texttt{cubicUpwindCPCFit} with a more standard scheme?  such as QUICK, maybe?  because it's well-known, fairly high-order, implemented in OpenFOAM, \citet{kirkpatrick2003} uses it\ldots  lower order schemes are more likely to be too diffusive or just unstable, especially on BTF meshes}
 
-\TODO{do the deformational flow on a plane (like Yumeng's paper) -- also could do it over orography}
-\TODO{look at Oswald Knoth washing machine test (possibly in GMD)}
+\TODO{Hilary suggested I could do the blob advection in an annulus test \citep{berger-helzel2012}}
 
-\TODO{I don't think I want to go beyond advection scheme/advection tests in this paper because I think it will lose its focus.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations\ldots}
+\TODO{do the deformational flow on a plane (like Yumeng's paper) -- also could do it over orography}
+
 
 \section{Conclusions}
 
+\TODO{Future work: I don't want to go beyond advection scheme/advection tests in this paper.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations in future.}
 
 \section{Acknowledgements}
 \TODO{Supervisors, funding bodies.  ASAM group for the mesh generator---I should ask permission to use cut cell meshes in this paper}

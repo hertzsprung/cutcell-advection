@@ -7,7 +7,7 @@ In two dimensions, the polynomial surface comprises nine terms, and a typical st
 
 The stencils points adjacent to the target face are called *central points*.  The central point that is upwind is called the *upwind point*, and the other is called the *downwind point*.  For a typical stencil geometry, the central points are given a large weighting in the least squares fit so that the polynomial surface passes almost exactly through these two points.  We refer to these collectively as the *central weights*, with the *upwind weight* and *downwind weight* applying to the upwind and downwind points individually.  At the time of writing, for typical stencil geometries, the central weights are 1000, and all other stencil points are given a weight of 1.
 
-A least square fit is obtained by applying a singular value decomposition to the matrix.  This yields a vector of *coefficients* which is dotted with the stencil point values to obtain the interpolated value at the target face.  Note the distinction between *weights*, which are applied during the construction of the matrix, and *coefficients*, which are the output of the least squares fit.
+A least squares fit is obtained by applying a singular value decomposition to the matrix.  This yields a vector of *coefficients* which is dotted with the stencil point values to obtain the interpolated value at the target face.  Note the distinction between *weights*, which are applied during the construction of the matrix, and *coefficients*, which are the output of the least squares fit.
 
 Stabilisation
 -------------

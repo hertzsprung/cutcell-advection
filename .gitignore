@@ -3,3 +3,4 @@ slant-cell-advection.pdf
 *.swp
 *#
 *~
+__pycache__

@@ -4,6 +4,8 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/ametsoc2014.bst \
   src/slant-cell-advection/references.bib
 
+$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build/stability-analysis,stability-analysis))
+
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))

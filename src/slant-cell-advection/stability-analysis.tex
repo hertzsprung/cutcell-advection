@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{bm}
+
+\newcommand{\iu}{{i\mkern1mu}}
+\newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
+
+\title{Von Neumann stability analysis for \texttt{cubicUpwindCPCFit} advection scheme}
+\author{James Shaw, Hilary Weller}
+
+\begin{document}
+\maketitle
+
+Start with the flux form equation, discretised in space, continuous in time:
+\begin{align}
+\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \\
+\phi_L &= \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
+\phi_R &= \beta_u \phi_j + \beta_d \phi_{j+1}
+\end{align}
+
+Von Neumann stability analysis with perfect time discretisation
+\begin{align}
+\phi_j^n &= A^n e^{ijk\Delta x} \\
+t &= n \Delta t \\
+\frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
+&= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
+\frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( \beta_u + \beta_d e^{ik\Delta x} - \alpha_u e^{-ik\Delta x} - \alpha_d \right) \\
+\ln A &= - c \left( \beta_u - \alpha_d + \beta_d e^{ik\Delta x} - \alpha_u e^{-ik\Delta x} \right) \\
+      &= -c \left( \beta_u - \alpha_d + \beta_d \cos k\Delta x + \iu \beta_d \sin k \Delta x - \alpha_u \cos k\Delta x - \iu \alpha_u \sin k\Delta x \right)
+%
+\intertext{let $\Re = \beta_u - \alpha_d + \beta_d \cos k\Delta x - \alpha_u \cos k\Delta x$ and
+%
+$\Im = \beta_d \sin k \Delta x - \alpha_u \sin k\Delta x$, then}
+\ln A &= -c \left( \Re + \iu \Im \right) \\
+A &= e^{-c \Re} e^{-\iu c \Im} \\
+|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \\
+\arg(A) &= -c \Im = -c \left( \beta_d + \alpha_u \right) \sin k\Delta x
+%
+\intertext{For stability we need $|A| \leq 1$ and $\arg(A) < 0$ for $c > 0$, so}
+%
+\beta_u - \alpha_d + \left( \beta_d - \alpha_u \right) \cos k\Delta x &\geq 0 \quad \forall k\Delta x \quad \text{and} \\
+\beta_d + \alpha_u &> 0 \label{eqn:arg-ineq}
+\end{align}
+\TODO{not sure what to make of these inequalities, Hilary got a little further but I didn't follow all of it.  But no matter, let's continue\ldots}
+
+Imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \beta_d$:
+\begin{align}
+|A| &= \exp \left( -c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) \right)
+%
+\intertext{and given $1 - \cos k\Delta x \geq 0$ for well-resolved waves}
+%
+\alpha_u - \alpha_d &\geq 0 \\
+\alpha_u &\geq \alpha_d
+%
+\intertext{and from eqn \eqref{eqn:arg-ineq}}
+%
+\alpha_d + \alpha_u &> 0 \\
+\alpha_u &> - \alpha_d \quad \text{hence} \\
+\alpha_u &> |\alpha_d| \label{eqn:lower-bound}
+\end{align}
+
+Additionally, we do not want more damping than an upwind scheme (where $\alpha_u = \beta_u = 1$, $\alpha_d = \beta_d = 0$), having an amplification factor, $A_\mathrm{up}$:
+\begin{align}
+|A_\mathrm{up}| &= \exp \left( -c \left(1 - \cos k\Delta x \right) \right)
+%
+\intertext{So we need $|A| \geq |A_\mathrm{up}|$:}
+%
+-c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) &\geq -c \left( 1- \cos k\Delta x \right) \\
+\alpha_u - \alpha_d &\leq 1 \\
+\alpha_u &\leq 1 + \alpha_d
+%
+\intertext{which provides an upper bound on $\alpha_u$.  Combining with eqn~\eqref{eqn:lower-bound} we can bound $\alpha_u$ on both sides:}
+%
+|\alpha_d| < \alpha_u \leq 1 + \alpha_d
+\end{align}
+Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
+\begin{align}
+	1 - \alpha_u < \alpha_u &\leq 1 + (1 - \alpha_u) \\
+	0.5 < \alpha_u &\leq 1
+%
+\intertext{we use only the lower bound \TODO{why?} to obtain}
+%
+|\alpha_d| < \alpha_u \leq 1 + \alpha_d\quad\text{and}\quad0.5 < \alpha_u
+\end{align}
+\end{document}

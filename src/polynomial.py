@@ -11,6 +11,7 @@ import sys
 import operator
 from sympy import *
 import logging
+import itertools
 
 x, y = symbols("x y")
 
@@ -82,6 +83,54 @@ class PolynomialFit:
 
         logging.debug("Best polynomial is %s", polynomial)
         return polynomial
+
+    def best_candidate(self, pts):
+        terms = self.subset_that_fits(pts)
+
+        stabilisable = None
+        for termCount in reversed(range(1,len(terms)+1)):
+            combinations = itertools.combinations(terms, termCount)
+            for c in combinations:
+                B = self.matrix(pts, c)
+                Binv = la.pinv(B)
+                coeffs = Binv[0]
+                if self.central_are_largest(coeffs):
+                    stabilisable = c
+            if stabilisable:
+                break
+
+        if not stabilisable:
+            raise UnfittableException("Cannot find combination of candidate terms which are stabilisable")
+
+        return stabilisable 
+
+    def find_stable_fit(self, pts):
+        terms = self.best_candidate(pts)
+
+        downwind_weight = 5
+        while downwind_weight > 2:
+            downwind_weight -= 1
+            B = self.matrix(pts, terms)
+            B[0] = B[0] * 5
+            B[1] = B[1] * downwind_weight
+            Binv = la.pinv(B)
+            Binv[0][0] = Binv[0][0] * 5
+            Binv[0][1] = Binv[0][1] * downwind_weight
+            coeffs = Binv[0]
+            if self.stable(coeffs):
+                return coeffs
+
+        raise UnfittableException("Cannot stabilise %s".format(terms))
+
+    def stable(self, coefficients):
+        upwind = coefficients[0]
+        downwind = coefficients[1]
+        return abs(downwind) < upwind and upwind <= 1 + downwind and upwind >= 0.5 and self.central_are_largest(coefficients)
+
+    def central_are_largest(self, coefficients):
+        smallest_central_coefficient = min(coefficients[:2])
+        large_peripheral_coefficients = [c for c in coefficients[2:] if c > smallest_central_coefficient]
+        return len(large_peripheral_coefficients) == 0
 
     def full_rank(self, B):
         u,s,v = la.svd(B)

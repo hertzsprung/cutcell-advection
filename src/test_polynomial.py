@@ -3,7 +3,7 @@ import numpy as np
 from sympy import Lambda, symbols
 import logging
 
-#logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def fit(pts):

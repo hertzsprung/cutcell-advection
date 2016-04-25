@@ -44,6 +44,17 @@ class Nomial:
     def __ne__(self, other):
         return not self.__eq__(other)
 
+class StabilisedFit:
+    def __init__(self, pts, terms, upwind_weight, downwind_weight, coeffs):
+        self.pts = pts
+        self.terms = terms
+        self.upwind_weight = upwind_weight
+        self.downwind_weight = downwind_weight
+        self.coeffs = coeffs
+
+    def __repr__(self):
+        return "StabilisedFit({coeffs}, upwind_weight={upwind_weight}, downwind_weight={downwind_weight}, terms={terms})".format(coeffs=self.coeffs, upwind_weight=self.upwind_weight, downwind_weight=self.downwind_weight, terms=self.terms)
+
 class PolynomialFit:
     default_polynomial= [ \
         Nomial(Lambda((x, y), 1.0), 0), \
@@ -86,8 +97,14 @@ class PolynomialFit:
 
     def best_candidate(self, pts):
         terms = self.subset_that_fits(pts)
+        stabilisable = self.find_stabilisable(pts, terms)
 
-        stabilisable = None
+        if not stabilisable:
+            raise UnfittableException("Cannot find combination of candidate terms which are stabilisable")
+
+        return list(stabilisable)
+
+    def find_stabilisable(self, pts, terms):
         for termCount in reversed(range(1,len(terms)+1)):
             combinations = itertools.combinations(terms, termCount)
             for c in combinations:
@@ -95,30 +112,26 @@ class PolynomialFit:
                 Binv = la.pinv(B)
                 coeffs = Binv[0]
                 if self.central_are_largest(coeffs):
-                    stabilisable = c
-            if stabilisable:
-                break
+                    logging.debug("Found stabilisable fit %s with unweighted coefficients %s", c, coeffs)
+                    return c
 
-        if not stabilisable:
-            raise UnfittableException("Cannot find combination of candidate terms which are stabilisable")
+        return None
 
-        return stabilisable 
 
-    def find_stable_fit(self, pts):
+    def stable_fit(self, pts, upwind_weight=5, downwind_weight=5):
         terms = self.best_candidate(pts)
 
-        downwind_weight = 5
         while downwind_weight > 2:
             downwind_weight -= 1
             B = self.matrix(pts, terms)
-            B[0] = B[0] * 5
+            B[0] = B[0] * upwind_weight
             B[1] = B[1] * downwind_weight
             Binv = la.pinv(B)
-            Binv[0][0] = Binv[0][0] * 5
+            Binv[0][0] = Binv[0][0] * upwind_weight
             Binv[0][1] = Binv[0][1] * downwind_weight
             coeffs = Binv[0]
             if self.stable(coeffs):
-                return coeffs
+                return StabilisedFit(pts, terms, upwind_weight, downwind_weight, coeffs)
 
         raise UnfittableException("Cannot stabilise %s".format(terms))
 

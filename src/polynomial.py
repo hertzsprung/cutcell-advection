@@ -131,6 +131,7 @@ class PolynomialFit:
             Binv[0][1] = Binv[0][1] * downwind_weight
             coeffs = Binv[0]
             if self.stable(coeffs):
+                logging.debug("Found stable fit with upwind weight %s and downwind weight %s: %s", upwind_weight, downwind_weight, coeffs)
                 return StabilisedFit(pts, terms, upwind_weight, downwind_weight, coeffs)
 
         raise UnfittableException("Cannot stabilise %s".format(terms))

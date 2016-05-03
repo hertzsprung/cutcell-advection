@@ -20,8 +20,9 @@ default_polynomial = [ \
 ]
 
 def invert(pts, polynomial=default_polynomial):
-
     B = PolynomialFit().matrix(pts, polynomial)
+    print("Polynomial", polynomial)
+    print("Matrix", B)
     return pinv(B)
 
 def print_diagnostics(pts, polynomial=default_polynomial):
@@ -67,9 +68,62 @@ print_diagnostics([ \
 
 ##############################################################################
 
-print("xxx\n xx\n xx")
-print_diagnostics([ \
+print("xxx\n x\n x")
+no_cross_term = [ \
+    Nomial(Lambda((x, y), 1.0), 0), \
+    Nomial(Lambda((x, y), x), 1), \
+    Nomial(Lambda((x, y), y), 1), \
+    Nomial(Lambda((x, y), x**2), 2), \
+    Nomial(Lambda((x, y), y**2), 2), \
+]
+
+first_order = [ \
+    Nomial(Lambda((x, y), 1.0), 0), \
+    Nomial(Lambda((x, y), x), 1), \
+    Nomial(Lambda((x, y), y), 1), \
+]
+
+pts = [ \
+    (-1, 0), \
+    (-1, 1), (1, 1), (-2, 1), \
+    (-1, -1), \
+]
+
+print_diagnostics(pts)
+print_diagnostics(pts, no_cross_term)
+print_diagnostics(pts, first_order)
+
+##############################################################################
+
+print("xxx\n xx\n x")
+no_cross_term = [ \
+    Nomial(Lambda((x, y), 1.0), 0), \
+    Nomial(Lambda((x, y), x), 1), \
+    Nomial(Lambda((x, y), y), 1), \
+    Nomial(Lambda((x, y), x**2), 2), \
+    Nomial(Lambda((x, y), y**2), 2), \
+]
+
+first_order = [ \
+    Nomial(Lambda((x, y), 1.0), 0), \
+    Nomial(Lambda((x, y), x), 1), \
+    Nomial(Lambda((x, y), y), 1), \
+]
+
+first_order_with_cross_term = [ \
+    Nomial(Lambda((x, y), 1.0), 0), \
+    Nomial(Lambda((x, y), x), 1), \
+    Nomial(Lambda((x, y), y), 1), \
+    Nomial(Lambda((x, y), x*y), 2), \
+]
+
+pts = [ \
     (-1, 0), (1, 0), \
     (-1, 1), (1, 1), (-2, 1), \
-    (-1, -1), (1, -1), \
-])
+    (-1, -1), \
+]
+
+print_diagnostics(pts)
+print_diagnostics(pts, no_cross_term)
+print_diagnostics(pts, first_order)
+print_diagnostics(pts, first_order_with_cross_term)

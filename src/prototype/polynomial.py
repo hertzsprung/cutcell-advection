@@ -107,6 +107,11 @@ class PolynomialFit:
     def find_stabilisable(self, pts, terms):
         for termCount in reversed(range(1,len(terms)+1)):
             combinations = itertools.combinations(terms, termCount)
+            # FIXME: we ought to improve this algorithm so that, when
+            # there are several stabilisable the same number of terms
+            # we should prefer the combination that has more low-order terms
+            # this seems to happen anyway with the itertool implementation
+            # but I'm not sure that we should rely on it
             for c in combinations:
                 B = self.matrix(pts, c)
                 Binv = la.pinv(B)
@@ -116,7 +121,6 @@ class PolynomialFit:
                     return c
 
         return None
-
 
     def stable_fit(self, pts, upwind_weight=5, downwind_weight=5):
         terms = self.best_candidate(pts)

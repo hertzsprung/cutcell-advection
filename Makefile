@@ -18,5 +18,6 @@ $(ATMOSTESTS_DIR)/%:
 
 include $(MAKE_COMMON)/executables/Makefile
 include $(MAKE_COMMON)/templates/Makefile-FileSystem
+include $(MAKE_COMMON)/templates/Makefile-Gnuplot
 include $(MAKE_COMMON)/templates/Makefile-LaTeX
 include make/Makefile-Slant-Cell-Advection

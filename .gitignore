@@ -1,6 +1,7 @@
 build
 slant-cell-advection.pdf
 stability-analysis.pdf
+uniform-cubic-stability-analysis.pdf
 *.swp
 *#
 *~

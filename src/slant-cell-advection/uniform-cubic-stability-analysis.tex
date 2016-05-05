@@ -1,8 +1,8 @@
-\documentclass{article}
-\usepackage{fullpage}
+\documentclass{article} \usepackage{fullpage}
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{bm}
+\usepackage{mathtools}
 
 \newcommand{\iu}{{i\mkern1mu}}
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
@@ -13,7 +13,6 @@
 \begin{document}
 \maketitle
 
-
 We will perform two stability analyses: the first assuming perfect timestepping and the second using forward Euler timestepping.
 The spatial discretisation is the same in both analyses so we will consider it first.
 
@@ -22,7 +21,7 @@ Start with the flux form equation, discretised in space, continuous in time:
 \frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \\
 \phi_L &= 0.06 \phi_{j-3} - 0.31 \phi_{j-2} + 0.94 \phi_{j-1} + 0.31 \phi_j \\
 \phi_R &= 0.06 \phi_{j-2} - 0.31 \phi_{j-1} + 0.94 \phi_j + 0.31 \phi_{j+1} \\
-\frac{\partial \phi_j}{\partial t} &= - \frac{u}{\Delta x} \left( 0.06 \phi_{j-3} - 0.25 \phi_{j-2} + 0.63 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right)
+\frac{\partial \phi_j}{\partial t} &= - \frac{u}{\Delta x} \left( 0.06 \phi_{j-3} - 0.25 \phi_{j-2} + 0.63 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \label{eqn:continuous-time}
 \end{align}
 
 \section*{Perfect timestepping}
@@ -47,7 +46,6 @@ A &= e^{-c \Re} e^{-\iu c \Im} \\
 0.06 \cos 3 k \Delta x - 0.25 \cos 2 k \Delta x + 0.94 \cos k \Delta x + 1.25
 \right) \right)
 \end{align}
-
 Realising that $\cos(\cdot) \in [-1, +1]$ then
 \begin{align}
 \exp \left( -c \left( 1.25 + 0.94 + 0.25 + 0.06 \right) \right) &\leq |A| \leq \exp \left( -c \left( 1.25 - 0.94 - 0.25 - 0.06 \right) \right) \\
@@ -55,6 +53,31 @@ Realising that $\cos(\cdot) \in [-1, +1]$ then
 \end{align}
 Hence the scheme is unconditionally stable.
 
-
 \section*{Forward Euler}
+We now discretise time using the forward Euler method.  Continuing from equation~\eqref{eqn:continuous-time}:
+\begin{align}
+\phi_j^{(n+1)} &= \phi_j^{(n)} - c \left( 0.06 \phi_{j-3} - 0.25 \phi_{j-2} + 0.63 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \\
+A &= 1 - c \left( 0.06 e^{-3\iu k \Delta x} - 0.25 e^{-2\iu k \Delta x} + 0.63 e^{-\iu k \Delta x} + 1.25 + 0.31 e^{\iu k \Delta x} \right)
+%
+\shortintertext{Let}
+%
+\Re &= 1 - c \left( \underbrace{0.06 \cos 3 k \Delta x - 0.25 \cos 2 k \Delta x + 0.94 \cos k \Delta x + 1.25}_{= \alpha} \right) \quad \text{and} \\ 
+\Im &= -c \left( \underbrace{-0.06 \cos 3 k \Delta x + 0.25 \sin 2 k \Delta x - 0.32 \sin k \Delta x}_{= \beta} \right)
+%
+\shortintertext{then}
+%
+|A|^2 &= \Re^2 + \Im^2 \\
+      &= (1-\alpha c)^2 + \beta^2 c^2 \\
+      &= 1 - 2 \alpha c + (\alpha^2 + \beta^2) c^2
+\end{align}
+We know that we want $|A|^2 \leq 1$ and figure~\ref{fig:forward-euler} shows that this condition is met for all wavenumbers using $c \leq 1$.
+
+\begin{figure}
+	\centering
+	\input{../fig-uniform-cubic-stability-amplification/uniform-cubic-stability-amplification}
+	%
+	\caption{Amplification factor as a function of $k \Delta x$ with forward Euler timestepping with a selection of Courant numbers, $\mathrm{Co}$.}
+	\label{fig:forward-euler}
+\end{figure}
+
 \end{document}

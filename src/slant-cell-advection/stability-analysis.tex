@@ -28,11 +28,11 @@ t &= n \Delta t \\
 &= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
 \frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( \beta_u + \beta_d e^{ik\Delta x} - \alpha_u e^{-ik\Delta x} - \alpha_d \right) \\
 \ln A &= - c \left( \beta_u - \alpha_d + \beta_d e^{ik\Delta x} - \alpha_u e^{-ik\Delta x} \right) \\
-      &= -c \left( \beta_u - \alpha_d + \beta_d \cos k\Delta x + \iu \beta_d \sin k \Delta x - \alpha_u \cos k\Delta x - \iu \alpha_u \sin k\Delta x \right)
+      &= -c \left( \beta_u - \alpha_d + \beta_d \cos k\Delta x + \iu \beta_d \sin k \Delta x - \alpha_u \cos k\Delta x + \iu \alpha_u \sin k\Delta x \right)
 %
 \intertext{let $\Re = \beta_u - \alpha_d + \beta_d \cos k\Delta x - \alpha_u \cos k\Delta x$ and
 %
-$\Im = \beta_d \sin k \Delta x - \alpha_u \sin k\Delta x$, then}
+$\Im = \beta_d \sin k \Delta x + \alpha_u \sin k\Delta x$, then}
 \ln A &= -c \left( \Re + \iu \Im \right) \\
 A &= e^{-c \Re} e^{-\iu c \Im} \\
 |A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \\

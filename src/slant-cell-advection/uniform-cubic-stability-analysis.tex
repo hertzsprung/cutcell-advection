@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{bm}
+
+\newcommand{\iu}{{i\mkern1mu}}
+\newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
+
+\title{Von Neumann stability analysis for \texttt{cubicUpwindCPCFit} advection scheme on a uniform mesh}
+\author{James Shaw}
+
+\begin{document}
+\maketitle
+
+
+We will perform two stability analyses: the first assuming perfect timestepping and the second using forward Euler timestepping.
+The spatial discretisation is the same in both analyses so we will consider it first.
+
+Start with the flux form equation, discretised in space, continuous in time:
+\begin{align}
+\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \\
+\phi_L &= 0.06 \phi_{j-3} - 0.31 \phi_{j-2} + 0.94 \phi_{j-1} + 0.31 \phi_j \\
+\phi_R &= 0.06 \phi_{j-2} - 0.31 \phi_{j-1} + 0.94 \phi_j + 0.31 \phi_{j+1} \\
+\frac{\partial \phi_j}{\partial t} &= - \frac{u}{\Delta x} \left( 0.06 \phi_{j-3} - 0.25 \phi_{j-2} + 0.63 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right)
+\end{align}
+
+\section*{Perfect timestepping}
+\begin{align}
+\phi_j^n &= A^n e^{ijk\Delta x} \\
+t &= n \Delta t \\
+\frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
+&= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
+\frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( 0.06 \phi_{j-3} - 0.25 \phi_{j-2} + 0.63 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \\
+\ln A &= -c \left( 0.06 e^{-3\iu k \Delta x} - 0.25 e^{-2\iu k \Delta x} + 0.63 e^{-\iu k \Delta x} + 1.25 + 0.31 e^{\iu k \Delta x} \right) \\
+%
+\intertext{Let}
+%
+\Re &= 0.06 \cos 3 k \Delta x - 0.25 \cos 2 k \Delta x + \left( 0.63+0.31 \right) \cos k \Delta x + 1.25 \quad \text{and} \\
+\Im &= - 0.06 \sin 3 k \Delta x+ 0.25 \sin 2 k \Delta x + \left( 0.31 - 0.63 \right) \sin k \Delta x
+%
+\intertext{then}
+%
+\ln A &= -c \left( \Re + \iu \Im \right) \\
+A &= e^{-c \Re} e^{-\iu c \Im} \\
+|A| &= e^{-c \Re} = \exp \left( -c \left(
+0.06 \cos 3 k \Delta x - 0.25 \cos 2 k \Delta x + 0.94 \cos k \Delta x + 1.25
+\right) \right)
+\end{align}
+
+Realising that $\cos(\cdot) \in [-1, +1]$ then
+\begin{align}
+\exp \left( -c \left( 1.25 + 0.94 + 0.25 + 0.06 \right) \right) &\leq |A| \leq \exp \left( -c \left( 1.25 - 0.94 - 0.25 - 0.06 \right) \right) \\
+\exp \left( -2.5c \right) &\leq |A| \leq 1
+\end{align}
+Hence the scheme is unconditionally stable.
+
+
+\section*{Forward Euler}
+\end{document}

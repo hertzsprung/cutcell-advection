@@ -6,6 +6,8 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
 
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build/stability-analysis,stability-analysis))
 
+$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build/uniform-cubic-stability-analysis,uniform-cubic-stability-analysis))
+
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))

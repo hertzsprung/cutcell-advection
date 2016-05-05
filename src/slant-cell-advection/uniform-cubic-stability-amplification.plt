@@ -1,4 +1,4 @@
-set term epslatex color size 4,2.5
+set term epslatex color size 4,3
 
 alpha(kdx) = -0.06*cos(3*kdx) + 0.37*cos(2*kdx) - 0.94*cos(kdx) + 0.63
 beta(kdx) = 0.06*sin(3*kdx) - 0.37*sin(2*kdx) + 0.56*sin(kdx)
@@ -11,12 +11,9 @@ set ylabel "$|A|^2$"
 set xrange [0:2*PI]
 set yrange [0:1.2]
 
-unset key
+set key outside above
 
-set label "$\\mathrm{Co} = 1.5$" at 2,1.1
-set label "$\\mathrm{Co} = 1$" at 2.5,0.7
-set label "$\\mathrm{Co} = 0.5$" at 3.9,0.2
-
-plot f(x, 1.5), \
-     f(x, 1), \
-     f(x, 0.5)
+plot f(x, 1.5) title "$\\mathrm{Co} = 1.5$", \
+     f(x, 1) title "$\\mathrm{Co} = 1$", \
+     f(x, 0.5) title "$\\mathrm{Co} = 0.5$", \
+     f(x, 0.05) title "$\\mathrm{Co} = 0.05$"

@@ -21,7 +21,7 @@ Start with the flux form equation, discretised in space, continuous in time:
 \frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \\
 \phi_L &= 0.06 \phi_{j-3} - 0.31 \phi_{j-2} + 0.94 \phi_{j-1} + 0.31 \phi_j \\
 \phi_R &= 0.06 \phi_{j-2} - 0.31 \phi_{j-1} + 0.94 \phi_j + 0.31 \phi_{j+1} \\
-\frac{\partial \phi_j}{\partial t} &= - \frac{u}{\Delta x} \left( -0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \label{eqn:continuous-time}
+\frac{\partial \phi_j}{\partial t} &= - \frac{u}{\Delta x} \left( -0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 0.63 \phi_j + 0.31 \phi_{j+1} \right) \label{eqn:continuous-time}
 \end{align}
 
 \section*{Perfect timestepping}
@@ -30,12 +30,12 @@ Start with the flux form equation, discretised in space, continuous in time:
 t &= n \Delta t \\
 \frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
 &= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
-\frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( - 0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \\
-\ln A &= -c \left( -0.06 e^{-3\iu k \Delta x} + 0.37 e^{-2\iu k \Delta x} - 1.25 e^{-\iu k \Delta x} + 1.25 + 0.31 e^{\iu k \Delta x} \right) \\
+\frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( - 0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 0.63 \phi_j + 0.31 \phi_{j+1} \right) \\
+\ln A &= -c \left( -0.06 e^{-3\iu k \Delta x} + 0.37 e^{-2\iu k \Delta x} - 1.25 e^{-\iu k \Delta x} + 0.63 + 0.31 e^{\iu k \Delta x} \right) \\
 %
 \intertext{Let}
 %
-\Re &= -0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x + \left( -1.25 + 0.31 \right) \cos k \Delta x + 1.25 \quad \text{and} \\
+\Re &= -0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x + \left( -1.25 + 0.31 \right) \cos k \Delta x + 0.63 \quad \text{and} \\
 \Im &= 0.06 \sin 3 k \Delta x - 0.37 \sin 2 k \Delta x + \left( 1.25 + 0.31 \right) \sin k \Delta x
 %
 \intertext{then}
@@ -43,34 +43,34 @@ t &= n \Delta t \\
 \ln A &= -c \left( \Re + \iu \Im \right) \\
 A &= e^{-c \Re} e^{-\iu c \Im} \\
 |A| &= e^{-c \Re} = \exp \left( -c \left(
--0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x - 0.94 \cos k \Delta x + 1.25
+-0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x - 0.94 \cos k \Delta x + 0.63
 \right) \right)
 \end{align}
 Realising that $\cos(\cdot) \in [-1, +1]$ then
 \begin{align}
-\exp \left( -c \left( 1.25 + 0.06 + 0.37 + 0.94 \right) \right) &\leq |A| \leq \exp \left( -c \left( 1.25 - 0.06 - 0.37 - 0.94 \right) \right) \\
-\exp \left( -2.62c \right) &\leq |A| \leq \exp \left( 0.12 c \right)
+\exp \left( -c \left( 0.63 + 0.06 + 0.37 + 0.94 \right) \right) &\leq |A| \leq \exp \left( -c \left( 0.63 - 0.06 - 0.37 - 0.94 \right) \right) \\
+\exp \left( -2c \right) &\leq |A| \leq \left( -0.74 c \right)
 \end{align}
-Hence the scheme is weakly unstable for some wavenumbers.
+Hence the scheme is unconditionally stable.
 
 \section*{Forward Euler}
 We now discretise time using the forward Euler method.  Continuing from equation~\eqref{eqn:continuous-time}:
 \begin{align}
-\phi_j^{(n+1)} &= \phi_j^{(n)} - c \left( - 0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 1.25 \phi_j + 0.31 \phi_{j+1} \right) \\
-A &= 1 - c \left( -0.06 e^{-3\iu k \Delta x} + 0.37 e^{-2\iu k \Delta x} - 1.25 e^{-\iu k \Delta x} + 1.25 + 0.31 e^{\iu k \Delta x} \right)
+\phi_j^{(n+1)} &= \phi_j^{(n)} - c \left( - 0.06 \phi_{j-3} + 0.37 \phi_{j-2} - 1.25 \phi_{j-1} + 0.63 \phi_j + 0.31 \phi_{j+1} \right) \\
+A &= 1 - c \left( -0.06 e^{-3\iu k \Delta x} + 0.37 e^{-2\iu k \Delta x} - 1.25 e^{-\iu k \Delta x} + 0.63 + 0.31 e^{\iu k \Delta x} \right)
 %
 \shortintertext{Let}
 %
-\Re &= 1 - c \left( \underbrace{-0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x - 0.94 \cos k \Delta x + 1.25}_{= \alpha} \right) \quad \text{and} \\ 
-\Im &= -c \left( \underbrace{0.06 \sin 3 k \Delta x - 0.37 \sin 2 k \Delta x + 0.94 \sin k \Delta x}_{= \beta} \right)
+\Re &= 1 - c \left( \underbrace{-0.06 \cos 3 k \Delta x + 0.37 \cos 2 k \Delta x - 0.94 \cos k \Delta x + 0.63}_{= \alpha} \right) \quad \text{and} \\ 
+\Im &= -c \left( \underbrace{0.06 \sin 3 k \Delta x - 0.37 \sin 2 k \Delta x + 0.56 \sin k \Delta x}_{= \beta} \right)
 %
 \shortintertext{then}
 %
 |A|^2 &= \Re^2 + \Im^2 \\
       &= (1-\alpha c)^2 + \beta^2 c^2 \\
-|A|   &= \sqrt{1 - 2 \alpha c + (\alpha^2 + \beta^2) c^2}
+      &= 1 - 2 \alpha c + (\alpha^2 + \beta^2) c^2
 \end{align}
-We know that we want $|A| \leq 1$ and figure~\ref{fig:forward-euler} shows that this condition is met for all wavenumbers using $c < 0.75$, approximately.
+We know that we want $|A|^2 \leq 1$ and figure~\ref{fig:forward-euler} shows that this condition is met for all wavenumbers using $c \leq 1$.
 
 \begin{figure}
 	\centering

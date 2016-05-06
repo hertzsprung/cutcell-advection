@@ -17,12 +17,12 @@ set multiplot
 
 set object 1 rectangle from 0,0.99 to 0.5,1.01 front fillstyle empty
 
-plot f(x, 1.5) title "$\\mathrm{Co} = 1.5$", \
-     f(x, 1) title "$\\mathrm{Co} = 1$", \
-     f(x, 0.5) title "$\\mathrm{Co} = 0.5$", \
-     f(x, 0.2) title "$\\mathrm{Co} = 0.2$", \
-     f(x, 0.1) title "$\\mathrm{Co} = 0.1$", \
-     f(x, 0.05) title "$\\mathrm{Co} = 0.05$"
+plot f(x, 1.5) title "$\\mathrm{Co} = 1.5$" lw 2, \
+     f(x, 1) title "$\\mathrm{Co} = 1$" lw 2, \
+     f(x, 0.5) title "$\\mathrm{Co} = 0.5$" lw 2, \
+     f(x, 0.2) title "$\\mathrm{Co} = 0.2$" lw 2, \
+     f(x, 0.1) title "$\\mathrm{Co} = 0.1$" lw 2, \
+     f(x, 0.05) title "$\\mathrm{Co} = 0.05$" lw 2
 
 
 set size 0.35,0.4
@@ -40,10 +40,10 @@ set yrange [0.99:1.01]
 set xtics 0.25
 set ytics 0.01
 
-plot f(x, 1.5) title "$\\mathrm{Co} = 1.5$", \
-     f(x, 1) title "$\\mathrm{Co} = 1$", \
-     f(x, 0.5) title "$\\mathrm{Co} = 0.5$", \
-     f(x, 0.2) title "$\\mathrm{Co} = 0.2$", \
-     f(x, 0.1) title "$\\mathrm{Co} = 0.1$", \
-     f(x, 0.05) title "$\\mathrm{Co} = 0.05$"
+plot f(x, 1.5) title "$\\mathrm{Co} = 1.5$" lw 2, \
+     f(x, 1) title "$\\mathrm{Co} = 1$" lw 2, \
+     f(x, 0.5) title "$\\mathrm{Co} = 0.5$" lw 2, \
+     f(x, 0.2) title "$\\mathrm{Co} = 0.2$" lw 2, \
+     f(x, 0.1) title "$\\mathrm{Co} = 0.1$" lw 2, \
+     f(x, 0.05) title "$\\mathrm{Co} = 0.05$" lw 2
 

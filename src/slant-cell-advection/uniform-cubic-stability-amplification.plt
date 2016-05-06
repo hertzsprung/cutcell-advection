@@ -37,9 +37,6 @@ unset object 1
 set xrange [0:0.5]
 set yrange [0.99:1.01]
 
-set yzeroaxis
-set xzeroaxis
-
 set xtics 0.25
 set ytics 0.01
 

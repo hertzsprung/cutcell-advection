@@ -3,11 +3,11 @@ set term epslatex color size 4,3
 alpha(kdx) = -0.06*cos(3*kdx) + 0.37*cos(2*kdx) - 0.94*cos(kdx) + 1.25
 beta(kdx) = 0.06*sin(3*kdx) - 0.37*sin(2*kdx) + 0.94*sin(kdx)
 
-f(kdx, Co) = 1 + Co**2 * (alpha(kdx)**2 + beta(kdx)**2) - 2*Co*alpha(kdx)
+f(kdx, Co) = sqrt(1 + Co**2 * (alpha(kdx)**2 + beta(kdx)**2) - 2*Co*alpha(kdx))
 PI=3.14
 
 set xlabel "$k \\Delta x$"
-set ylabel "$|A|^2$"
+set ylabel "$|A|$"
 set xrange [0:2*PI]
 set yrange [0:1.2]
 

@@ -8,7 +8,8 @@ cubicUpwindCPCFit
 -----------------
 - using a multidimensional scheme avoids splitting errors (present evidence that splitting errors cause problems in atmospheric models)
 - the scheme is computationally cheap (compared to what?)
-- why is an Eulerian scheme desirable?  because it straightfowardly conserves the dependent variable?
+- accurate on arbitrary meshes: insensitive to choice of terrain representation
+- why is an Eulerian scheme desirable?  because it straightfowardly conserves the dependent variable?  or is this 
 
 slanted cell mesh
 -----------------

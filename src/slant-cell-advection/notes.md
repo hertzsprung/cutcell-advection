@@ -2,6 +2,24 @@
 
 Problem/Intro
 =============
+We want to present two pieces of work: the cubicUpwindCPCFit advection scheme and the slanted cell mesh.  What problems do each of these pieces of work address?
+
+cubicUpwindCPCFit
+-----------------
+- using a multidimensional scheme avoids splitting errors (present evidence that splitting errors cause problems in atmospheric models)
+- the scheme is computationally cheap (compared to what?)
+- why is an Eulerian scheme desirable?  because it straightfowardly conserves the dependent variable?
+
+slanted cell mesh
+-----------------
+- we hope to reduce pressure gradient errors while avoiding the small cell problem associated with the cut cell method (there are already several ways of doing this, what advantages can we offer?)
+- compared to cut cell meshes, slanted cell meshes are more straightfoward to construct
+- apart from the cut cell method, no other type of hybrid structured/unstructured mesh has been tried in an atmospheric model before
+
+
+detailed intro
+--------------
+
 - Higher spatial resolutions resolve small-scale, steep slopes in terrain
 - Such steep slopes increase numerical errors associated with advection and pressure gradient calculations when TF coordinates are used, due to cancellation errors in metric terms or, equivalently, large non-orthogonality of TF meshes in Cartesian coordinates
 - A hydrostatic reference profile is often subtracted to mitigate these errors [klemp-wilhelmson1978, tomita-satoh2004], but this helps less with global domains [walko-avissar2008b, jebens2011]

@@ -1,4 +1,4 @@
-Polynomial fit interpolation
+Polynomial fit approximation
 ============================
 
 Here we explain how an interpolated value is obtained at a target face by fitting a polynomial surface onto a stencil of points.  In particular, this document focuses on the stabilisation procedure.

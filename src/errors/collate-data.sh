@@ -17,17 +17,29 @@ cat \
 | tr "\n" " " >> convergence.dat
 }
 
-printf "24x10x2.5 833.33 " >> convergence.dat
+printf "24x10 833.33 " >> convergence.dat
 testSet 24x10
 
-printf "\n48x20x2.5 416.66 " >> convergence.dat
+printf "32x15 625 " >> convergence.dat
+testSet 24x10
+
+printf "\n48x20 416.66 " >> convergence.dat
 testSet 48x20
 
-printf "\n96x40x2.5 208.33 " >> convergence.dat
+printf "\n72x30 312.5 " >> convergence.dat
+testSet 72x30
+
+printf "\n96x40 208.33 " >> convergence.dat
 testSet 96x40
 
-printf "\n192x80x2.5 104.16 " >> convergence.dat
+printf "\n144x60 156.25 " >> convergence.dat
+testSet 144x60
+
+printf "\n192x80 104.16 " >> convergence.dat
 testSet 192x80
 
-printf "\n384x160x1.5 52.08 " >> convergence.dat
+printf "\n288x120 78.12 " >> convergence.dat
+testSet 288x120
+
+printf "\n384x160 52.08 " >> convergence.dat
 testSet 384x160

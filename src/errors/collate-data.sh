@@ -29,5 +29,5 @@ testSet 96x40
 printf "\n192x80x2.5 104.16 " >> convergence.dat
 testSet 192x80
 
-printf "\n384x160x1.5 104.16 " >> convergence.dat
+printf "\n384x160x1.5 52.08 " >> convergence.dat
 testSet 384x160

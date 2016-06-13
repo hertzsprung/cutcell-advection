@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-make -C $ATMOSTESTS_DIR build/thermalAdvection-{slantedCell,btf}-{cubic,linear}Upwind-{24x10,48x20,96x40,192x80,384x160}/4000/l{2,inf}errorT.txt
+make -C $ATMOSTESTS_DIR build/thermalAdvection-{slantedCell,btf}-{cubic,linear}Upwind-{24x10,32x15,48x20,72x30,96x40,144x60,192x80,288x120,384x160}/4000/l{2,inf}errorT.txt
 
 cat /dev/null > convergence.dat
 
@@ -20,8 +20,8 @@ cat \
 printf "24x10 833.33 " >> convergence.dat
 testSet 24x10
 
-printf "32x15 625 " >> convergence.dat
-testSet 24x10
+printf "\n32x15 625 " >> convergence.dat
+testSet 32x15
 
 printf "\n48x20 416.66 " >> convergence.dat
 testSet 48x20

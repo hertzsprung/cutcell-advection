@@ -13,7 +13,7 @@ set format y "10^{%L}"
 set multiplot layout 1,2
 
 set xrange [30:1000]
-set yrange [1e-7:1e-1]
+set yrange [1e-9:1e-1]
 
 set title "l2"
 

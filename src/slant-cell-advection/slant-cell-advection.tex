@@ -18,7 +18,7 @@
 \usepackage[T1]{fontenc}
 
 
-\title{Locally-accurate advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
+\title{Advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
 \author{James Shaw}
 
 \newcommand{\iunit}{\boldsymbol{\hat \imath}}
@@ -107,12 +107,25 @@ By using computational volumes that are equally large for cut and uncut cells, t
 \section{Mesh generation}
 \TODO{describe how we construct a slanted cell mesh.  at some point in the paper we must justify the choice of 'tolerance', which was set to $2\Delta z/5$ in \citet{shaw-weller2016} without much justification.}
 
-\TODO{although we are only considering 2D idealised tests in this paper, it would be nice to show that our method extends to 3D -- why don't we try it out with some real digital surface model data?}
+\TODO{do analysis to find the smallest dimensions of a cell}
 
 \section{Multidimensional advection scheme}
-\TODO{describe the advection scheme}
+\begin{itemize}
+	\item how stencils are constructed
+	\item polynomial fit procedure and associated numerical analysis
+	\item demonstrate procedure as applied to interior of a 2D quadrilateral mesh, and applied near boundary of a slanted cell mesh
+\end{itemize}
+
+\TODO{I could plot polynomialTerm counts on faces of a slanted cell mesh, and heatmaps of stencil weights}
 
 \section{Results}
+
+\subsection{3D slanted cell mesh of real terrain}
+\begin{itemize}
+	\item shows that the slanted cell method generalises to 3D and is applicable to real terrain
+	\item measure smallest cell sizes between different mesh types
+	\item could we compare with BTF and ASAM cut cells?
+\end{itemize}
 
 \subsection{Thermal advection over steep slopes}
 \begin{itemize}
@@ -138,9 +151,6 @@ By using computational volumes that are equally large for cut and uncut cells, t
 \TODO{I haven't thought much about this yet, but there's a lot of literature that says ``2nd-order schemes become 1st-order at the lower boundary'', and talk about global accuracy versus local accuracy.  I'm not sure how to measure local order of accuracy, but I think I should examine order-of-accuracy for \texttt{cubicUpwindCPCFit}.  The work by \citet{ye1999} is quite similar to ours: they use polynomial stencils to interpolate onto boundaries, and test an explicit advection scheme which they show is 2nd order globally and locally.}
 
 \TODO{Hilary suggested I could do the blob advection in an annulus test \citep{berger-helzel2012}}
-
-\TODO{do the deformational flow on a plane (like Yumeng's paper) -- also could do it over orography}
-
 
 \section{Conclusions}
 

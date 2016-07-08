@@ -113,13 +113,29 @@ By using computational volumes that are equally large for cut and uncut cells, t
 \TODO{describe the advection scheme}
 
 \section{Results}
-\TODO{use the thermal advection test from \citet{shaw-weller2016}, but with steeper slopes.  compare with BTF meshes and cut cell meshes created using the ASAM mesh generator.  use Co close to 1 and report on the timesteps for each type of mesh.}
 
-\TODO{report $\ell_2$ error norms, min/max values for BTF, slantedCell and cutCell meshes}
+\subsection{Thermal advection over steep slopes}
+\begin{itemize}
+	\item use the thermal advection test from \citet{shaw-weller2016}, but with steeper slopes
+	\item compare BTF, slanted cells, and cut cell meshes created with the ASAM mesh generator
+	\item compare cubicUpwindCPCFit with OpenFOAM's built-in linearUpwind scheme
+	\item Use Courant numbers close to 1 and report the timesteps for each mesh type
+	\item cubicUpwindCPCFit is 3rd order accurate in the l2 norm on BTF meshes
+	\item cubicUpwindCPCFit is 1st order accurate in the linf norm on slanted cell meshes
+	\item cubicUpwindCPCFit is 2nd order accurate in the l2 norm on slanted cell meshes
+	\item cubicUpwindCPCFit is better than 2nd order accurate in the linf norm on BTF meshes
+	\item linearUpwind is 2nd order accurate in all cases, except for 1st order accuracy in the linf norm on slanted cell meshes
+	\item hence, cubicUpwindCPCFit is more accurate than linearUpwind
+\end{itemize}
+
+\subsection{Deformational flow on a plane}
+\begin{itemize}
+	\item test case from \citet{lauritzen2012}
+	\item demonstrates that cubicUpwindCPCFit is suitable for complex flows on arbitrary meshes
+	\item compare results on quadrilateral, triangular, hexagonal meshes \TODO{diamond meshes might be easiest to create, though}
+\end{itemize}
 
 \TODO{I haven't thought much about this yet, but there's a lot of literature that says ``2nd-order schemes become 1st-order at the lower boundary'', and talk about global accuracy versus local accuracy.  I'm not sure how to measure local order of accuracy, but I think I should examine order-of-accuracy for \texttt{cubicUpwindCPCFit}.  The work by \citet{ye1999} is quite similar to ours: they use polynomial stencils to interpolate onto boundaries, and test an explicit advection scheme which they show is 2nd order globally and locally.}
-
-\TODO{should we compare \texttt{cubicUpwindCPCFit} with a more standard scheme?  such as QUICK, maybe?  because it's well-known, fairly high-order, implemented in OpenFOAM, \citet{kirkpatrick2003} uses it\ldots  lower order schemes are more likely to be too diffusive or just unstable, especially on BTF meshes}
 
 \TODO{Hilary suggested I could do the blob advection in an annulus test \citep{berger-helzel2012}}
 
@@ -127,6 +143,15 @@ By using computational volumes that are equally large for cut and uncut cells, t
 
 
 \section{Conclusions}
+
+\begin{itemize}
+	\item Slanted cell meshes are more straightforward to construct than cut cell meshes
+	\item The slanted cell method avoids creating very small cells, instead creating thin cells that are long in the direction of flow
+	\item The slanted cell method generalises to 3D
+	\item cubicUpwindCPCFit is computationally cheap at runtime, with expensive computations depending only on the mesh
+	\item cubicUpwindCPCFit is suitable for arbitrary meshes, including terrain following, slanted and cut cell meshes, triangular and hexagonal meshes
+	\item cubicUpwindCPCFit is more accurate than linearUpwind
+\end{itemize}
 
 \TODO{Future work: I don't want to go beyond advection scheme/advection tests in this paper.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations in future.}
 

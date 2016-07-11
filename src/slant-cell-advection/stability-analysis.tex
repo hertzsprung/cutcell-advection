@@ -13,16 +13,18 @@
 \begin{document}
 \maketitle
 
+
+\section*{Two-point analysis}
 Start with the flux form equation, discretised in space, continuous in time:
 \begin{align}
-\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \\
+\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \label{eqn:advection} \\
 \phi_L &= \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
 \phi_R &= \beta_u \phi_j + \beta_d \phi_{j+1}
 \end{align}
 
 Von Neumann stability analysis with perfect time discretisation
 \begin{align}
-\phi_j^n &= A^n e^{ijk\Delta x} \\
+\phi_j^n &= A^n e^{ijk\Delta x} \label{eqn:vn} \\
 t &= n \Delta t \\
 \frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
 &= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
@@ -84,4 +86,36 @@ Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
 %
 |\alpha_d| < \alpha_u \leq 1 + \alpha_d\quad\text{and}\quad0.5 < \alpha_u
 \end{align}
+
+\section*{Three-point analysis}
+Starting again from equation~\eqref{eqn:advection}, but this time approximating $\phi_L$ and $\phi_R$ using three points:
+\begin{align}
+	\phi_L &= \alpha_{uu} \phi_{j-2} + \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
+	\phi_R &= \alpha_{uu} \phi_{j-1} + \alpha_u \phi_j + \alpha_d \phi_{j+1}
+%
+\intertext{Using equation~\eqref{eqn:vn}}
+%
+\frac{\ln A}{\Delta t} &= -\frac{u }{\Delta x} \left( \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right) \\
+A &= \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
+%
+\intertext{Stability requires $|A| \leq 1$.  Let $z = \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right)$ and $\Re$ and $\Im$ are the real and imaginary parts of $z$ respectively, then}
+%
+| e^{-c z}| &\leq 1 \\
+| e^{-c \left( \Re + i \Im \right)}| &\leq 1 \\
+| e^{-c \Re} e^{-i \Im} | &\leq 1 \\
+| e^{-c \Re} | &\leq 1 
+\end{align}
+So $\Re \geq 0$, then
+\begin{align}
+\alpha_{uu} \left( \cos k\Delta x - \cos 2k\Delta x \right) + \alpha_u \left( 1 - \cos k \Delta x \right) + \alpha_d \left( \cos k\Delta x - 1 \right) &\geq 0 \\
+\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x &\geq 0
+\end{align}
+Now we want to find inequalities that constrain $\alpha_u$, $\alpha_{uu}$ and $\alpha_d$, so we choose combinations of $\cos k\Delta x$ and $\cos 2k\Delta x$:
+\begin{align}
+\text{if } \cos k\Delta x = -1 \text{ and } \cos 2k\Delta x = 1 \text{ then } \alpha_u &\geq \alpha_{uu} + \alpha_d \\
+\text{if } \cos k\Delta x = 1 \text{ and } \cos 2k\Delta x = -1 \text{ then } \alpha_{uu} &\geq 0
+\end{align}
+So we have two constraints: $\alpha_u \geq \alpha_{uu} + \alpha_d$ and $\alpha_{uu} \geq 0$.
+
+\TODO{Hilary derived a more general constraint, $\alpha_u \geq \sum_{i \neq u}{|\alpha_i|}$, but this seems like quite a leap}
 \end{document}

@@ -3,7 +3,10 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage{bm}
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx}
 
+\newcommand{\vect}{\bm}
 \newcommand{\iu}{{i\mkern1mu}}
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
 
@@ -13,8 +16,117 @@
 \begin{document}
 \maketitle
 
+The stabilisation procedure for the \texttt{cubicUpwindCPCFit} advection scheme comprises several steps.  One of the steps selects a suitable subset of polynomial terms using a constraint
+\begin{align}
+	-c_p + 0.01 \leq \min(c_u, c_d) \forall p
+\end{align}
+where $c_i$ is the coefficient associated with cell $i$, $c_u$ is the upwind coeficient, $c_d$ is the downwind coefficient, and $p$ is set of peripheral cells.  Collectively, the upwind coefficient and downwind coefficient are called the central coefficients.  This constraint ensures that peripheral cells do not have very negative values.  The magic constant \num{0.01} was found to improve accuracy for a few particular stencils near the lower boundary of BTF meshes.
 
-\section*{Two-point analysis}
+This constraint is present in the current codebase\footnote{\url{https://github.com/hertzsprung/AtmosFOAM/commit/ffaf71}} and supercedes a previous, stronger constraint\footnote{\url{https://github.com/hertzsprung/AtmosFOAM/commit/208899}}:
+\begin{align}
+	|c_p| \leq \min(c_u, c_d)
+\end{align}
+This constraint ensures that peripheral coefficients are smaller than any central coefficient.
+
+This document presents two analyses that begin to justify these constraints.  Section~\ref{sec:matrix} analyses the matrix inverse for a one-dimensional quadratic equation.  Section~\ref{sec:neumann} performs a von Neumann analysis of a one-dimensional linear advection scheme with three points.  Finally, we show how these two analyses are in some sense equivalent.
+
+\section{Matrix inversion of a quadratic equation}
+\label{sec:matrix}
+An interpolating quadratic equation, $\phi = a_1 + a_2 x + a_3 x^2$, is found for three data, $\phi_{uu}, \phi_{u}, \phi_{d}$, that are known at points $x_{uu}, x_{u}, x_{d}$.  This forms a matrix equation
+\begin{align}
+\underbrace{
+\begin{bmatrix}
+1 & x_{uu} & x_{uu}^2 \\
+1 & x_u & x_u^2 \\
+1 & x_d & x_d^2
+\end{bmatrix}}_{\vect{B}}
+\underbrace{
+\begin{bmatrix}
+a_1 \\
+a_2 \\
+a_3
+\end{bmatrix}}_{\vect{a}}
+= 
+\underbrace{
+\begin{bmatrix}
+\phi_{uu} \\
+\phi_{u} \\
+\phi_{d}
+\end{bmatrix}
+}_{\vect{\phi}}
+\end{align}
+which can be inverted to solve for $\vect{a}$, that is $\vect{a} = \vect{B^{-1}} \vect{\phi}$.
+In fact, we only need to calculate $a_1$:
+\begin{align}
+a_1 = 
+\begin{bmatrix}
+\underbrace{\dfrac{x_u x_d^2 - x_u^2 x_d}{\det \vect{B}}}_{c_{uu}} &
+\underbrace{\dfrac{x_{uu}^2 x_d - x_{uu} x_d^2}{\det \vect{B}}}_{c_u} &
+\underbrace{\dfrac{x_{uu} x_u^2 - x_{uu}^2 x_u}{\det \vect{B}}}_{c_d}
+\end{bmatrix}
+\begin{bmatrix}
+\phi_{uu} \\
+\phi_{u} \\
+\phi_{d}
+\end{bmatrix}
+\end{align}
+We choose $x_{uu}, x_u, x_d$ such that $x_{uu} < x_u < 0$ and $x_d > 0$ and we wish to find the constraint involving $x_{uu}$, $x_u$ and $x_d$ such that $c_{uu} \leq c_u$ and $c_{uu} \leq c_d$.
+To do so, we choose four different values for $x_{uu}$ between \num{-2} and \num{-1}, and allow $-1 < x_u < 0$ and $0 < x_d < 1$.  Figure~\ref{fig:matrix} highlights in orange those regions in which the constraint is satisfied.  By inspection, we find that the constraint is
+\begin{align}
+	x_u - x_d \geq x_{uu} \label{eqn:matrix-constraint}
+\end{align}
+
+\begin{figure}
+	\centering
+	\input{../fig-matrix-constraint/matrix-constraint}
+	%
+	\caption{Regions in which $c_{uu} < c_u$ and $c_{uu} < c_d$}
+	\label{fig:matrix}
+\end{figure}
+
+\section{Von Neumann analysis of a three-point, 1D linear advection scheme}
+\label{sec:neumann}
+
+Start with the flux form equation, discretised in space, continuous in time:
+\begin{align}
+\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \label{eqn:advection} \\
+	\phi_L &= \alpha_{uu} \phi_{j-2} + \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
+	\phi_R &= \alpha_{uu} \phi_{j-1} + \alpha_u \phi_j + \alpha_d \phi_{j+1}
+\end{align}
+We perform a Von Neumann stability analysis with perfect time discretisation
+\begin{align}
+\phi_j^n &= A^n e^{ijk\Delta x} \label{eqn:vn} \\
+t &= n \Delta t \\
+\frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
+&= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
+\frac{\ln A}{\Delta t} &= -\frac{u }{\Delta x} \left( \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right) \\
+A &= \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
+%
+\intertext{Stability requires $|A| \leq 1$.  Let $z = \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right)$ and $\Re$ and $\Im$ are the real and imaginary parts of $z$ respectively, then}
+%
+| e^{-c z}| &\leq 1 \\
+| e^{-c \left( \Re + i \Im \right)}| &\leq 1 \\
+| e^{-c \Re} e^{-i \Im} | &\leq 1 \\
+| e^{-c \Re} | &\leq 1 
+\end{align}
+So $\Re \geq 0$, then
+\begin{align}
+\alpha_{uu} \left( \cos k\Delta x - \cos 2k\Delta x \right) + \alpha_u \left( 1 - \cos k \Delta x \right) + \alpha_d \left( \cos k\Delta x - 1 \right) &\geq 0 \\
+\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x &\geq 0
+\end{align}
+Now we want to find inequalities that constrain $\alpha_u$, $\alpha_{uu}$ and $\alpha_d$.
+If $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ then $\alpha_u \geq \alpha_{uu} + \alpha_d$.
+So we have the constraint
+\begin{align}
+\alpha_u - \alpha_d \geq \alpha_{uu}
+\end{align}
+This is the same constraint as equation~\eqref{eqn:matrix-constraint}.
+
+\newpage
+
+\section{Von Neumann analysis of a two-point, 1D linear advection scheme}
+This analysis is used to generate constraints that are used for other stabilisation steps.
+
 Start with the flux form equation, discretised in space, continuous in time:
 \begin{align}
 \frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \label{eqn:advection} \\
@@ -87,35 +199,4 @@ Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
 |\alpha_d| < \alpha_u \leq 1 + \alpha_d\quad\text{and}\quad0.5 < \alpha_u
 \end{align}
 
-\section*{Three-point analysis}
-Starting again from equation~\eqref{eqn:advection}, but this time approximating $\phi_L$ and $\phi_R$ using three points:
-\begin{align}
-	\phi_L &= \alpha_{uu} \phi_{j-2} + \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
-	\phi_R &= \alpha_{uu} \phi_{j-1} + \alpha_u \phi_j + \alpha_d \phi_{j+1}
-%
-\intertext{Using equation~\eqref{eqn:vn}}
-%
-\frac{\ln A}{\Delta t} &= -\frac{u }{\Delta x} \left( \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right) \\
-A &= \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
-%
-\intertext{Stability requires $|A| \leq 1$.  Let $z = \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right)$ and $\Re$ and $\Im$ are the real and imaginary parts of $z$ respectively, then}
-%
-| e^{-c z}| &\leq 1 \\
-| e^{-c \left( \Re + i \Im \right)}| &\leq 1 \\
-| e^{-c \Re} e^{-i \Im} | &\leq 1 \\
-| e^{-c \Re} | &\leq 1 
-\end{align}
-So $\Re \geq 0$, then
-\begin{align}
-\alpha_{uu} \left( \cos k\Delta x - \cos 2k\Delta x \right) + \alpha_u \left( 1 - \cos k \Delta x \right) + \alpha_d \left( \cos k\Delta x - 1 \right) &\geq 0 \\
-\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x &\geq 0
-\end{align}
-Now we want to find inequalities that constrain $\alpha_u$, $\alpha_{uu}$ and $\alpha_d$, so we choose combinations of $\cos k\Delta x$ and $\cos 2k\Delta x$:
-\begin{align}
-\text{if } \cos k\Delta x = -1 \text{ and } \cos 2k\Delta x = 1 \text{ then } \alpha_u &\geq \alpha_{uu} + \alpha_d \\
-\text{if } \cos k\Delta x = 1 \text{ and } \cos 2k\Delta x = -1 \text{ then } \alpha_{uu} &\geq 0
-\end{align}
-So we have two constraints: $\alpha_u \geq \alpha_{uu} + \alpha_d$ and $\alpha_{uu} \geq 0$.
-
-\TODO{Hilary derived a more general constraint, $\alpha_u \geq \sum_{i \neq u}{|\alpha_i|}$, but this seems like quite a leap}
 \end{document}

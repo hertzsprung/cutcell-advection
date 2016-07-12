@@ -5,6 +5,10 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/references.bib
 
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,stability-analysis))
+$(eval $(call MakeDir,build/fig-matrix-constraint))
+$(eval $(call Gnuplot,build/fig-matrix-constraint,matrix-constraint.tex,src/slant-cell-advection/matrix-constraint.plt))
+build/stability-analysis/stability-analysis.pdf: \
+  build/fig-matrix-constraint/matrix-constraint.tex
 
 
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,uniform-cubic-stability-analysis))

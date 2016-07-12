@@ -6,6 +6,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{siunitx}
 
+\newcommand{\Co}{C}
 \newcommand{\vect}{\bm}
 \newcommand{\iu}{{i\mkern1mu}}
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
@@ -18,9 +19,10 @@
 
 The stabilisation procedure for the \texttt{cubicUpwindCPCFit} advection scheme comprises several steps.  One of the steps selects a suitable subset of polynomial terms using a constraint
 \begin{align}
-	-c_p + 0.01 \leq \min(c_u, c_d) \forall p
+	-c_p + 0.01 \leq \min(c_u, c_d)\:\forall\:p
 \end{align}
-where $c_i$ is the coefficient associated with cell $i$, $c_u$ is the upwind coeficient, $c_d$ is the downwind coefficient, and $p$ is set of peripheral cells.  Collectively, the upwind coefficient and downwind coefficient are called the central coefficients.  This constraint ensures that peripheral cells do not have very negative values.  The magic constant \num{0.01} was found to improve accuracy for a few particular stencils near the lower boundary of BTF meshes.
+where $c_i$ is the coefficient associated with cell $i$, $c_u$ is the upwind coeficient, $c_d$ is the downwind coefficient, and $p$ is the set of peripheral points.  Collectively, the upwind and downwind points are called the central points, and the upwind and downwind coefficients are called the central coefficients.  Peripheral points are those points that are not central points.
+This constraint ensures that peripheral cells do not have very negative values.  The magic constant \num{0.01} was found to improve accuracy for a few particular stencils near the lower boundary of BTF meshes.
 
 This constraint is present in the current codebase\footnote{\url{https://github.com/hertzsprung/AtmosFOAM/commit/ffaf71}} and supercedes a previous, stronger constraint\footnote{\url{https://github.com/hertzsprung/AtmosFOAM/commit/208899}}:
 \begin{align}
@@ -100,14 +102,14 @@ t &= n \Delta t \\
 \frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} \\
 &= \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
 \frac{\ln A}{\Delta t} &= -\frac{u }{\Delta x} \left( \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right) \\
-A &= \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
+A &= \exp\left( -\Co \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
 %
-\intertext{Stability requires $|A| \leq 1$.  Let $z = \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right)$ and $\Re$ and $\Im$ are the real and imaginary parts of $z$ respectively, then}
+\intertext{where $\Co = u \Delta t / \Delta x$ is the Courant number.  Stability requires $|A| \leq 1$.  Let $z = \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right)$ and $\Re$ and $\Im$ are the real and imaginary parts of $z$ respectively, then}
 %
-| e^{-c z}| &\leq 1 \\
-| e^{-c \left( \Re + i \Im \right)}| &\leq 1 \\
-| e^{-c \Re} e^{-i \Im} | &\leq 1 \\
-| e^{-c \Re} | &\leq 1 
+| e^{-\Co z}| &\leq 1 \\
+| e^{-\Co \left( \Re + i \Im \right)}| &\leq 1 \\
+| e^{-\Co \Re} e^{-i \Im} | &\leq 1 \\
+| e^{-\Co \Re} | &\leq 1 
 \end{align}
 So $\Re \geq 0$, then
 \begin{align}
@@ -120,12 +122,14 @@ So we have the constraint
 \begin{align}
 \alpha_u - \alpha_d \geq \alpha_{uu}
 \end{align}
-This is the same constraint as equation~\eqref{eqn:matrix-constraint}.
+This is the same constraint as equation~\eqref{eqn:matrix-constraint}.  Hence, we might conclude that having central coefficients larger than peripheral coefficients is necessary for stability.
 
+%%%
 \newpage
+%%%
 
-\section{Von Neumann analysis of a two-point, 1D linear advection scheme}
-This analysis is used to generate constraints that are used for other stabilisation steps.
+\section*{Von Neumann analysis of a two-point, 1D linear advection scheme}
+\TODO{This analysis is used to generate constraints that are used for other stabilisation steps.  No need to read this right now}
 
 Start with the flux form equation, discretised in space, continuous in time:
 \begin{align}

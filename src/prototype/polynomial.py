@@ -110,11 +110,6 @@ class PolynomialFit:
 
         for termCount in reversed(range(1,len(terms))):
             combinations = itertools.combinations(terms[1:], termCount)
-            # FIXME: we ought to improve this algorithm so that, when
-            # there are several stabilisable the same number of terms
-            # we should prefer the combination that has more low-order terms
-            # this seems to happen anyway with the itertool implementation
-            # but I'm not sure that we should rely on it
             for c in combinations:
                 c = [terms[0]] + list(c)
                 B = self.matrix(pts, c)
@@ -129,10 +124,10 @@ class PolynomialFit:
 
         return stabilisable
 
-    def stable_fit(self, pts, upwind_weight=5, downwind_weight=5):
+    def stable_fit(self, pts, upwind_weight=1000, downwind_weight=1001):
         terms = self.best_candidate(pts)
 
-        while downwind_weight > 2:
+        while downwind_weight > 1:
             downwind_weight -= 1
             B = self.matrix(pts, terms)
             B[0] = B[0] * upwind_weight
@@ -150,15 +145,16 @@ class PolynomialFit:
     def stable(self, coefficients):
         upwind = coefficients[0]
         downwind = coefficients[1]
-        return abs(downwind) < upwind and upwind <= 1 + downwind and upwind >= 0.5 and self.central_are_largest(coefficients)
+        
+        return abs(downwind) < upwind and downwind <= 0.5
 
     def central_are_largest(self, coefficients):
         smallest_central_coefficient = min(coefficients[:2])
-        large_peripheral_coefficients = [c for c in coefficients[2:] if -c > smallest_central_coefficient]
+        large_peripheral_coefficients = [c for c in coefficients[2:] if -c + 0.01 > smallest_central_coefficient]
         return len(large_peripheral_coefficients) == 0
 
     def full_rank(self, B):
-        u,s,v = la.svd(B)
+#        u,s,v = la.svd(B)
         return la.matrix_rank(B, self.full_rank_tol) == B.shape[1]
 
     def matrix(self, pts, polynomial):

@@ -12,6 +12,7 @@ import operator
 from sympy import *
 import logging
 import itertools
+from termcolor import *
 
 x, y = symbols("x y")
 
@@ -105,22 +106,28 @@ class PolynomialFit:
         return list(stabilisable)
 
     def find_stabilisable(self, pts, terms):
-        for termCount in reversed(range(1,len(terms)+1)):
-            combinations = itertools.combinations(terms, termCount)
+        stabilisable = None
+
+        for termCount in reversed(range(1,len(terms))):
+            combinations = itertools.combinations(terms[1:], termCount)
             # FIXME: we ought to improve this algorithm so that, when
             # there are several stabilisable the same number of terms
             # we should prefer the combination that has more low-order terms
             # this seems to happen anyway with the itertool implementation
             # but I'm not sure that we should rely on it
             for c in combinations:
+                c = [terms[0]] + list(c)
                 B = self.matrix(pts, c)
                 Binv = la.pinv(B)
                 coeffs = Binv[0]
-                if self.central_are_largest(coeffs):
+                s = False
+                if self.central_are_largest(coeffs) and stabilisable is None:
                     logging.debug("Found stabilisable fit %s with unweighted coefficients %s", c, coeffs)
-                    return c
+                    stabilisable = c
+                    s = True
+#                print(sum([abs(e) for e in coeffs]), coeffs, colored("stabilisable", "green") if s else "", c)
 
-        return None
+        return stabilisable
 
     def stable_fit(self, pts, upwind_weight=5, downwind_weight=5):
         terms = self.best_candidate(pts)
@@ -147,7 +154,7 @@ class PolynomialFit:
 
     def central_are_largest(self, coefficients):
         smallest_central_coefficient = min(coefficients[:2])
-        large_peripheral_coefficients = [c for c in coefficients[2:] if c > smallest_central_coefficient]
+        large_peripheral_coefficients = [c for c in coefficients[2:] if -c > smallest_central_coefficient]
         return len(large_peripheral_coefficients) == 0
 
     def full_rank(self, B):

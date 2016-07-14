@@ -1,6 +1,9 @@
 from polynomial import Nomial, PolynomialFit, x, y
 import numpy.linalg as la
 from sympy import Lambda, symbols
+import numpy as np
+
+np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def stable_fit(pts):
     return PolynomialFit(full_rank_tol=1e-3).stable_fit(pts)

@@ -94,6 +94,7 @@ def test_eight_points_with_diagonal():
         Nomial(Lambda((x, y), x*y)), \
         Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x**3)), \
     ]
 
     assert stable_fit(pts) == expected

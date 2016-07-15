@@ -113,12 +113,12 @@ class PolynomialFit:
         const, \
         X, \
         Y, \
-        XX, \
         XY, \
+        XX, \
         YY, \
-        XXX, \
         XXY, \
         XYY, \
+        XXX, \
     ]
 
     default_combinations = [ \
@@ -138,13 +138,14 @@ class PolynomialFit:
         [const, X, Y, XY, XX, YY], \
         [const, X, Y, XY, XX, XXY], \
         [const, X, Y, XY, YY, XYY], \
-        [const, X, Y, XY, XX, YY, XXY], \
-        [const, X, Y, XY, XX, YY, XYY], \
-        [const, X, Y, XY, XX, YY, XXX], \
-        [const, X, Y, XY, XX, YY, XXY, XYY], \
-        [const, X, Y, XY, XX, YY, XXY, XXX], \
-        [const, X, Y, XY, XX, YY, XYY, XXX], \
-        [const, X, Y, XY, XX, YY, XXY, XYY, XXX], \
+        [const, X, Y, XY, XX, YY,  XXY], \
+        [const, X, Y, XY, XX, YY,  XYY], \
+        [const, X, Y, XY, XX, YY,  XXX], \
+        [const, X, Y, XY, XX, XXY, XXX], \
+        [const, X, Y, XY, XX, YY,  XXY, XYY], \
+        [const, X, Y, XY, XX, YY,  XXY, XXX], \
+        [const, X, Y, XY, XX, YY,  XYY, XXX], \
+        [const, X, Y, XY, XX, YY,  XXY, XYY, XXX], \
     ]
 
     def __init__(self, nomials = default_polynomial, full_rank_tol=1e-9):
@@ -183,7 +184,7 @@ class PolynomialFit:
             B = self.matrix(pts, candidate)
             Binv = la.pinv(B)
             coeffs = Binv[0]
-            if coeffs[0] > 0 and coeffs[1] >= -1e-12:
+            if coeffs[0] > 0 and coeffs[1] > -1e-14:
                 logging.debug("Found stabilisable fit %s with unweighted coefficients %s", candidate, coeffs)
                 candidates.append(candidate)
             else:
@@ -198,7 +199,7 @@ class PolynomialFit:
         for candidate in stabilisable_candidates:
             stable = False
             downwind_weight = default_downwind_weight
-            while not stable and downwind_weight >= 0:
+            while not stable and downwind_weight > 0:
                 B = self.matrix(pts, candidate)
                 B[0] = B[0] * upwind_weight
                 B[1] = B[1] * downwind_weight

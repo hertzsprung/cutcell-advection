@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def fit(pts):
-    return PolynomialFit(full_rank_tol=0.5).stable_fit(pts).terms.terms
+    return PolynomialFit(full_rank_tol=0.2).stable_fit(pts).terms.terms
 
 def test_too_close_for_x_squared():
     pts = [(0, 0), (1, 0), (0, 3), (0, 5) , (1.000001, 0)]
@@ -45,15 +45,18 @@ def test_twelve_points_in_two_rows():
         Nomial(Lambda((x, y), y)), \
         Nomial(Lambda((x, y), x*y)), \
         Nomial(Lambda((x, y), x**2)), \
-        Nomial(Lambda((x, y), x**3)), \
         Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x**3)), \
     ]
     assert fit(pts) == expected
 
 def test_twelve_points_large_aspect_ratio():
-    pts = [(0, 0), (1e6, 0), (2e6, 0), (3e6, 0), \
-                (0, 1), (1e6, 1), (2e6, 1), (3e6, 1), \
-                (0, 1), (1e6, 2), (2e6, 2), (3e6, 2)]
+    pts = [ \
+        (-0.5e4, 0), (0.5e4, 0), \
+        (-2.5e4, 1), (-1.5e4, 1), (-0.5e4, 1), (0.5e4, 1), \
+        (-2.5e4, 0), (-1.5e4, 0),  \
+        (-2.5e4, -1), (-1.5e4, -1), (-0.5e4, -1), (0.5e4, -1) \
+    ]
     assert fit(pts) == PolynomialFit.default_polynomial
 
 
@@ -67,8 +70,8 @@ def test_twelve_points_in_two_close_rows():
         Nomial(Lambda((x, y), y)), \
         Nomial(Lambda((x, y), x*y)), \
         Nomial(Lambda((x, y), x**2)), \
-        Nomial(Lambda((x, y), x**3)), \
         Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x**3)), \
     ]
     assert fit(pts) == expected
 
@@ -120,6 +123,5 @@ def test_three_points_in_diagonal_line():
     expected = [ \
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
-        Nomial(Lambda((x, y), x**2)), \
     ]
     assert fit(pts) == expected

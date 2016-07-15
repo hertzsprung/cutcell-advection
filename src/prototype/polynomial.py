@@ -13,8 +13,36 @@ from sympy import *
 import logging
 import itertools
 from termcolor import *
+from collections import Counter
+from functools import total_ordering
 
 x, y = symbols("x y")
+
+@total_ordering
+class FullRank:
+    def __init__(self, B, threshold=1e-3):
+        u,s,v = la.svd(B)
+        self.min_singular_value = min(s)
+        self.threshold = threshold
+
+    def __bool__(self):
+        return bool(self.min_singular_value > self.threshold)
+
+    def __repr__(self):
+        return "min_singular={s:.4g}".format(s=self.min_singular_value)
+
+    def __eq__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+        return self.min_singular_value == other.min_singular_value
+
+    def __lt__(self, other):
+        if not self._is_valid_operand(other):
+            return NotImplemented
+        return self.min_singular_value < other.min_singular_value
+
+    def _is_valid_operand(self, other):
+        return hasattr(other, "min_singular_value")
 
 class UnfittableException(Exception):
     def __init__(self, msg):
@@ -44,7 +72,22 @@ class Nomial:
     def __ne__(self, other):
         return not self.__eq__(other)
 
-class StabilisedFit:
+class FullRankPolynomial:
+    def __init__(self, terms, full_rank):
+        self.terms = terms
+        self.full_rank = full_rank
+
+    def __iter__(self):
+        for term in self.terms:
+            yield term
+
+    def __repr__(self):
+        return "({terms}, {full_rank})".format(terms=self.terms, full_rank=self.full_rank)
+
+    def __len__(self):
+        return len(self.terms)
+
+class StableFit:
     def __init__(self, pts, terms, upwind_weight, downwind_weight, coeffs):
         self.pts = pts
         self.terms = terms
@@ -53,108 +96,134 @@ class StabilisedFit:
         self.coeffs = coeffs
 
     def __repr__(self):
-        return "StabilisedFit({coeffs}, upwind_weight={upwind_weight}, downwind_weight={downwind_weight}, terms={terms})".format(coeffs=self.coeffs, upwind_weight=self.upwind_weight, downwind_weight=self.downwind_weight, terms=self.terms)
+        return "({coeffs}, up_weight={upwind_weight}, down_weight={downwind_weight}, {terms})".format(coeffs=self.coeffs, upwind_weight=self.upwind_weight, downwind_weight=self.downwind_weight, terms=self.terms)
 
 class PolynomialFit:
+    const = Nomial(Lambda((x, y), 1.0))
+    X = Nomial(Lambda((x, y), x))
+    Y = Nomial(Lambda((x, y), y))
+    XY = Nomial(Lambda((x, y), x*y))
+    XX = Nomial(Lambda((x, y), x**2))
+    YY = Nomial(Lambda((x, y), y**2))
+    XXX = Nomial(Lambda((x, y), x**3))
+    XXY = Nomial(Lambda((x, y), x**2*y))
+    XYY = Nomial(Lambda((x, y), x*y**2))
+
     default_polynomial= [ \
-        Nomial(Lambda((x, y), 1.0)), \
-        Nomial(Lambda((x, y), x)), \
-        Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
-        Nomial(Lambda((x, y), x*y)), \
-        Nomial(Lambda((x, y), y**2)), \
-        Nomial(Lambda((x, y), x**3)), \
-        Nomial(Lambda((x, y), x**2*y)), \
-        Nomial(Lambda((x, y), x*y**2)), \
+        const, \
+        X, \
+        Y, \
+        XX, \
+        XY, \
+        YY, \
+        XXX, \
+        XXY, \
+        XYY, \
     ]
 
-    def __init__(self, nomials = default_polynomial, full_rank_tol=None):
+    default_combinations = [ \
+        [const, X], \
+        [const, Y], \
+        [const, X, Y], \
+        [const, X, XX], \
+        [const, Y, YY], \
+        [const, X, Y, XY], \
+        [const, X, Y, XX], \
+        [const, X, Y, YY], \
+        [const, X, XX, XXX], \
+        [const, X, Y, XY, XX], \
+        [const, X, Y, XY, YY], \
+        [const, X, Y, XX, XXX], \
+        [const, X, Y, XY, XX, XXX], \
+        [const, X, Y, XY, XX, YY], \
+        [const, X, Y, XY, XX, XXY], \
+        [const, X, Y, XY, YY, XYY], \
+        [const, X, Y, XY, XX, YY, XXY], \
+        [const, X, Y, XY, XX, YY, XYY], \
+        [const, X, Y, XY, XX, YY, XXX], \
+        [const, X, Y, XY, XX, YY, XXY, XYY], \
+        [const, X, Y, XY, XX, YY, XXY, XXX], \
+        [const, X, Y, XY, XX, YY, XYY, XXX], \
+        [const, X, Y, XY, XX, YY, XXY, XYY, XXX], \
+    ]
+
+    def __init__(self, nomials = default_polynomial, full_rank_tol=1e-9):
         self.nomials = nomials
         self.full_rank_tol = full_rank_tol
 
     def subset_that_fits(self, pts):
         polynomial = []
-        target_length = max(len(self.nomials), len(pts))
+        target_length = min(len(self.nomials), len(pts))
 
-        for nomial in self.nomials:
-            candidate_polynomial = list(polynomial)
-            candidate_polynomial.append(nomial)
-
-            logging.debug("Candidate %s", candidate_polynomial)
-
+        full_rank_candidates = []
+        for candidate_polynomial in [p for p in self.default_combinations if len(p) <= target_length]:
             B = self.matrix(pts, candidate_polynomial)
-            if self.full_rank(B):
-                polynomial = candidate_polynomial
+            full_rank = FullRank(B, self.full_rank_tol)
+            if full_rank:
+                logging.debug("Candidate %s is full rank", candidate_polynomial)
+                full_rank_candidates.append(FullRankPolynomial(candidate_polynomial, full_rank))
             else:
-                logging.debug("Discarding %s because the matrix would become rank-deficient", nomial)
+                logging.debug("%s is rank-deficient with min_singular_value=%s", candidate_polynomial, full_rank.min_singular_value)
 
-            if B.shape[1] == target_length:
-                logging.debug("Best polynomial is %s", polynomial)
-                return polynomial
+        return full_rank_candidates
 
-        logging.debug("Best polynomial is %s", polynomial)
-        return polynomial
-
-    def best_candidate(self, pts):
-        terms = self.subset_that_fits(pts)
-        stabilisable = self.find_stabilisable(pts, terms)
+    def stabilisable_candidates(self, pts):
+        candidates = self.subset_that_fits(pts)
+        stabilisable = self.find_stabilisable(pts, candidates)
 
         if not stabilisable:
-            raise UnfittableException("Cannot find combination of candidate terms which are stabilisable")
-
-        return list(stabilisable)
-
-    def find_stabilisable(self, pts, terms):
-        stabilisable = None
-
-        for termCount in reversed(range(1,len(terms))):
-            combinations = itertools.combinations(terms[1:], termCount)
-            for c in combinations:
-                c = [terms[0]] + list(c)
-                B = self.matrix(pts, c)
-                Binv = la.pinv(B)
-                coeffs = Binv[0]
-                s = False
-                if self.central_are_largest(coeffs) and stabilisable is None:
-                    logging.debug("Found stabilisable fit %s with unweighted coefficients %s", c, coeffs)
-                    stabilisable = c
-                    s = True
-#                print(sum([abs(e) for e in coeffs]), coeffs, colored("stabilisable", "green") if s else "", c)
+            raise UnfittableException("Cannot find a polynomial which is stabilisable")
 
         return stabilisable
 
-    def stable_fit(self, pts, upwind_weight=1000, downwind_weight=1001):
-        terms = self.best_candidate(pts)
+    def find_stabilisable(self, pts, full_rank_candidates):
+        candidates = []
 
-        while downwind_weight > 1:
-            downwind_weight -= 1
-            B = self.matrix(pts, terms)
-            B[0] = B[0] * upwind_weight
-            B[1] = B[1] * downwind_weight
+        for candidate in full_rank_candidates:
+            B = self.matrix(pts, candidate)
             Binv = la.pinv(B)
-            Binv[0][0] = Binv[0][0] * upwind_weight
-            Binv[0][1] = Binv[0][1] * downwind_weight
             coeffs = Binv[0]
-            if self.stable(coeffs):
-                logging.debug("Found stable fit with upwind weight %s and downwind weight %s: %s", upwind_weight, downwind_weight, coeffs)
-                return StabilisedFit(pts, terms, upwind_weight, downwind_weight, coeffs)
+            if coeffs[0] > 0 and coeffs[1] >= -1e-12:
+                logging.debug("Found stabilisable fit %s with unweighted coefficients %s", candidate, coeffs)
+                candidates.append(candidate)
+            else:
+                logging.debug("Unstabilisable fit %s with unweighted coefficients %s", candidate, coeffs)
 
-        raise UnfittableException("Cannot stabilise %s".format(terms))
+        return candidates
+
+    def stable_fit(self, pts, upwind_weight=1000, default_downwind_weight=1000):
+        stabilisable_candidates = self.stabilisable_candidates(pts)
+        candidates = []
+    
+        for candidate in stabilisable_candidates:
+            stable = False
+            downwind_weight = default_downwind_weight
+            while not stable and downwind_weight >= 0:
+                B = self.matrix(pts, candidate)
+                B[0] = B[0] * upwind_weight
+                B[1] = B[1] * downwind_weight
+                Binv = la.pinv(B)
+                Binv[0][0] = Binv[0][0] * upwind_weight
+                Binv[0][1] = Binv[0][1] * downwind_weight
+                coeffs = Binv[0]
+                if self.stable(coeffs):
+                    candidates.append(StableFit(pts, candidate, upwind_weight, downwind_weight, coeffs))
+                    stable = True
+                downwind_weight -= 1
+
+        candidates.sort(key=lambda x: (len(x.terms), x.terms.full_rank))
+        print(np.array(candidates))
+
+        if len(candidates) == 0:
+            raise UnfittableException("Cannot find stable polynomial")
+
+        return candidates[-1]
 
     def stable(self, coefficients):
         upwind = coefficients[0]
         downwind = coefficients[1]
         
         return abs(downwind) < upwind and downwind <= 0.5
-
-    def central_are_largest(self, coefficients):
-        smallest_central_coefficient = min(coefficients[:2])
-        large_peripheral_coefficients = [c for c in coefficients[2:] if -c + 0.01 > smallest_central_coefficient]
-        return len(large_peripheral_coefficients) == 0
-
-    def full_rank(self, B):
-#        u,s,v = la.svd(B)
-        return la.matrix_rank(B, self.full_rank_tol) == B.shape[1]
 
     def matrix(self, pts, polynomial):
         return np.array([[n(x, y) for n in polynomial] for (x, y) in pts], dtype=float)

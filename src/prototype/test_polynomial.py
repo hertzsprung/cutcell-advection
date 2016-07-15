@@ -7,7 +7,7 @@ logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def fit(pts):
-    return PolynomialFit(full_rank_tol=1e-3).subset_that_fits(pts)
+    return PolynomialFit(full_rank_tol=0.5).stable_fit(pts).terms.terms
 
 def test_too_close_for_x_squared():
     pts = [(0, 0), (1, 0), (0, 3), (0, 5) , (1.000001, 0)]
@@ -43,8 +43,8 @@ def test_twelve_points_in_two_rows():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x**3)), \
         Nomial(Lambda((x, y), x**2*y)), \
     ]
@@ -65,8 +65,8 @@ def test_twelve_points_in_two_close_rows():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x**3)), \
         Nomial(Lambda((x, y), x**2*y)), \
     ]
@@ -80,8 +80,8 @@ def test_nine_points():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), y**2)), \
         Nomial(Lambda((x, y), x**2*y)), \
         Nomial(Lambda((x, y), x*y**2)), \
@@ -96,8 +96,8 @@ def test_nine_points2():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), y**2)), \
         Nomial(Lambda((x, y), x**2*y)), \
         Nomial(Lambda((x, y), x*y**2)), \

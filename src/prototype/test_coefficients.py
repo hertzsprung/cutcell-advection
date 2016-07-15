@@ -9,10 +9,17 @@ logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def stable_fit(pts):
-    return PolynomialFit(full_rank_tol=1e-3).stable_fit(pts)
+    return PolynomialFit(full_rank_tol=0.5).stable_fit(pts).terms.terms
 
 def test_six_points_with_diagonal():
-    pts = [(-1, 0.0330314), (0.907926, -2.64e-14), (-1.13441, 3.05716), (-0.87524, -2.99221), (0.907926, 3.02642), (0.907926, -3.02642)]
+    pts = [ \
+        (-1, 0.0330314), \
+        (0.907926, -2.64e-14), \
+        (-1.13441, 3.05716), \
+        (-0.87524, -2.99221), \
+        (0.907926, 3.02642), \
+        (0.907926, -3.02642) \
+    ]
 
     expected = [ \
         Nomial(Lambda((x, y), 1.0)), \
@@ -21,7 +28,7 @@ def test_six_points_with_diagonal():
         Nomial(Lambda((x, y), x*y)), \
         Nomial(Lambda((x, y), y**2)) \
     ]
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
 
 def test_nine_points_with_diagonal():
     pts = [ \
@@ -40,17 +47,16 @@ def test_nine_points_with_diagonal():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), y**2)), \
         Nomial(Lambda((x, y), x**2*y)), \
         Nomial(Lambda((x, y), x*y**2)) \
     ]
 
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
     
 
-@pytest.mark.skipif(True, reason="needs smarter polynomial term selection routine")
 def test_three_downwind_two_upwind():
     pts = [ \
         (-0.318132398309, 1), \
@@ -64,10 +70,10 @@ def test_three_downwind_two_upwind():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)), \
     ]
 
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
 
 def test_eight_points_with_diagonal():
     pts = [ \
@@ -85,14 +91,13 @@ def test_eight_points_with_diagonal():
         Nomial(Lambda((x, y), 1.0)), \
         Nomial(Lambda((x, y), x)), \
         Nomial(Lambda((x, y), y)), \
-        Nomial(Lambda((x, y), x**2)), \
         Nomial(Lambda((x, y), x*y)), \
-        Nomial(Lambda((x, y), x**3)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), x**2*y)), \
     ]
 
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
 
-@pytest.mark.skipif(True, reason="full rank check is discarding terms and including undesired terms")
 def test_two_by_three_very_small_diagonal():
     pts = [ \
         (-1, -0.000810356386742), \
@@ -112,9 +117,8 @@ def test_two_by_three_very_small_diagonal():
         Nomial(Lambda((x, y), x*y**2)), \
     ]
 
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
 
-@pytest.mark.skipif(True, reason="full rank check is discarding terms and including undesired terms")
 def test_two_by_three_diagonal():
     pts = [ \
         (-1, 0.0149698735917), \
@@ -134,6 +138,5 @@ def test_two_by_three_diagonal():
         Nomial(Lambda((x, y), x*y**2)), \
     ]
 
-    print(stable_fit(pts))
-    assert stable_fit(pts).terms == expected
+    assert stable_fit(pts) == expected
 

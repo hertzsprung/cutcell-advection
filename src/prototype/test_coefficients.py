@@ -15,11 +15,11 @@ def test_six_points_with_diagonal():
     pts = [(-1, 0.0330314), (0.907926, -2.64e-14), (-1.13441, 3.05716), (-0.87524, -2.99221), (0.907926, 3.02642), (0.907926, -3.02642)]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), y**2), 2) \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)) \
     ]
     assert stable_fit(pts).terms == expected
 
@@ -37,14 +37,14 @@ def test_nine_points_with_diagonal():
     ]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x**2), 2), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), y**2), 2), \
-        Nomial(Lambda((x, y), x**2*y), 3), \
-        Nomial(Lambda((x, y), x*y**2), 3) \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)), \
+        Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x*y**2)) \
     ]
 
     assert stable_fit(pts).terms == expected
@@ -61,10 +61,10 @@ def test_three_downwind_two_upwind():
     ]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x*y), 2), \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
     ]
 
     assert stable_fit(pts).terms == expected
@@ -82,12 +82,12 @@ def test_eight_points_with_diagonal():
     ]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x**2), 2), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), x**3), 3), \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**3)), \
     ]
 
     assert stable_fit(pts).terms == expected
@@ -104,12 +104,12 @@ def test_two_by_three_very_small_diagonal():
     ]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), y**2), 2), \
-        Nomial(Lambda((x, y), x*y**2), 3), \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)), \
+        Nomial(Lambda((x, y), x*y**2)), \
     ]
 
     assert stable_fit(pts).terms == expected
@@ -126,12 +126,12 @@ def test_two_by_three_diagonal():
     ]
 
     expected = [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), y**2), 2), \
-        Nomial(Lambda((x, y), x*y**2), 3), \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)), \
+        Nomial(Lambda((x, y), x*y**2)), \
     ]
 
     print(stable_fit(pts))

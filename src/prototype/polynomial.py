@@ -24,9 +24,8 @@ class UnfittableException(Exception):
         return repr(self.msg)
 
 class Nomial:
-    def __init__(self, func, degree):
+    def __init__(self, func):
         self.func = func
-        self.degree = degree
 
     def __call__(self, *pargs, **kargs):
         return self.func(*pargs, **kargs)
@@ -58,15 +57,15 @@ class StabilisedFit:
 
 class PolynomialFit:
     default_polynomial= [ \
-        Nomial(Lambda((x, y), 1.0), 0), \
-        Nomial(Lambda((x, y), x), 1), \
-        Nomial(Lambda((x, y), y), 1), \
-        Nomial(Lambda((x, y), x**2), 2), \
-        Nomial(Lambda((x, y), x*y), 2), \
-        Nomial(Lambda((x, y), y**2), 2), \
-        Nomial(Lambda((x, y), x**3), 3), \
-        Nomial(Lambda((x, y), x**2*y), 3), \
-        Nomial(Lambda((x, y), x*y**2), 3), \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), y**2)), \
+        Nomial(Lambda((x, y), x**3)), \
+        Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x*y**2)), \
     ]
 
     def __init__(self, nomials = default_polynomial, full_rank_tol=None):

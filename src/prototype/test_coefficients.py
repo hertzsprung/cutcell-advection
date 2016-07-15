@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def stable_fit(pts):
-    return PolynomialFit(full_rank_tol=0.5).stable_fit(pts).terms.terms
+    return PolynomialFit(full_rank_tol=0.6).stable_fit(pts).terms.terms
 
 def test_six_points_with_diagonal():
     pts = [ \
@@ -75,6 +75,24 @@ def test_three_downwind_two_upwind():
 
     assert stable_fit(pts) == expected
 
+def test_three_downwind_two_upwind2():
+    pts = [ \
+        (-0.375692991674, 1), \
+        (2.04670349731, 0.151415600652), \
+        (2.68167823645, -5.90562193016), \
+        (1.48171410264, 6.45067028153), \
+        (-1.05780329301, 6.2993205546) \
+    ]
+
+    expected = [ \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), y**2)), \
+    ]
+
+    assert stable_fit(pts) == expected
+
 def test_eight_points_with_diagonal():
     pts = [ \
         (-1, 0.0425922049484), \
@@ -84,7 +102,31 @@ def test_eight_points_with_diagonal():
         (-5.17064352149, 1.10939830377), \
         (-3.1023861129, 1.10939830377), \
         (-1.0341287043, 1.10939830377), \
-        (1.0341287043, 1.10939830377), \
+        (1.0341287043, 1.10939830377) \
+    ]
+
+    expected = [ \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x**3)), \
+    ]
+
+    assert stable_fit(pts) == expected
+
+def test_eight_points_with_diagonal2():
+    pts = [ \
+        (-1, -0.0669388588762), \
+        (0.833644437615, 0.0794066407836), \
+        (-4.75714056459, -0.217550549489), \
+        (-2.8731750957, -0.165967824541), \
+        (-4.74883733854, 0.906972333924), \
+        (-2.84930240312, 0.906972333924), \
+        (-0.949767467708, 0.906972333924), \
+        (0.949767467708, 0.906972333924) \
     ]
 
     expected = [ \

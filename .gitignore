@@ -6,3 +6,4 @@ uniform-cubic-stability-analysis.pdf
 *#
 *~
 __pycache__
+.cache

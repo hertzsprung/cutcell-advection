@@ -151,7 +151,26 @@ class PolynomialFit:
         self.nomials = nomials
         self.full_rank_tol = full_rank_tol
 
-    def subset_that_fits(self, pts, candidates):
+    def stable_fit(self, pts, upwind_weight=1000, default_downwind_weight=1000):
+        stable_polynomial = None
+        target_length = min(len(pts), len(self.default_combinations))
+
+        while not stable_polynomial and target_length > 0:
+            all_candidates = [p for p in self.default_combinations if len(p) == target_length]
+            full_rank_candidates = self.retain_full_rank(pts, all_candidates)
+            stabilisable_candidates = self.retain_positive_central_coefficients(pts, full_rank_candidates)
+            stable_polynomials = self.retain_stable(pts, stabilisable_candidates)
+            if len(stable_polynomials) > 0:
+                stable_polynomial = stable_polynomials[-1]
+
+            target_length -= 1
+            
+        if target_length == 0 and not stable_polynomial:
+            raise UnfittableException("Cannot find stable polynomial")
+
+        return stable_polynomial
+
+    def retain_full_rank(self, pts, candidates):
         polynomial = []
 
         full_rank_candidates = []
@@ -166,22 +185,22 @@ class PolynomialFit:
 
         return full_rank_candidates
 
-    def find_stabilisable(self, pts, full_rank_candidates):
+    def retain_positive_central_coefficients(self, pts, full_rank_candidates):
         candidates = []
 
         for candidate in full_rank_candidates:
             B = self.matrix(pts, candidate)
             Binv = la.pinv(B)
-            coeffs = Binv[0]
-            if coeffs[0] > 0 and coeffs[1] > -1e-14:
-                logging.debug("Found stabilisable fit %s with unweighted coefficients %s", candidate, coeffs)
+            coefficients = Binv[0]
+            if self.central_are_positive(coefficients):
+                logging.debug("Found stabilisable fit %s with unweighted coefficients %s", candidate, coefficients)
                 candidates.append(candidate)
             else:
-                logging.debug("Unstabilisable fit %s with unweighted coefficients %s", candidate, coeffs)
+                logging.debug("Unstabilisable fit %s with unweighted coefficients %s", candidate, coefficients)
 
         return candidates
 
-    def find_stable(self, pts, stabilisable_candidates, upwind_weight=1000, default_downwind_weight=1000):
+    def retain_stable(self, pts, stabilisable_candidates, upwind_weight=1000, default_downwind_weight=1000):
         candidates = []
     
         for candidate in stabilisable_candidates:
@@ -205,24 +224,8 @@ class PolynomialFit:
 
         return candidates
 
-    def stable_fit(self, pts, upwind_weight=1000, default_downwind_weight=1000):
-        stable_polynomial = None
-        target_length = min(len(pts), len(self.default_combinations))
-
-        while not stable_polynomial and target_length > 0:
-            all_candidates = [p for p in self.default_combinations if len(p) == target_length]
-            full_rank_candidates = self.subset_that_fits(pts, all_candidates)
-            stabilisable_candidates = self.find_stabilisable(pts, full_rank_candidates)
-            stable_polynomials = self.find_stable(pts, stabilisable_candidates)
-            if len(stable_polynomials) > 0:
-                stable_polynomial = stable_polynomials[-1]
-
-            target_length -= 1
-            
-        if target_length == 0 and not stable_polynomial:
-            raise UnfittableException("Cannot find stable polynomial")
-
-        return stable_polynomial
+    def central_are_positive(self, coefficients):
+        return coefficients[0] > 0 and coefficients[1] > -1e-14
 
     def stable(self, coefficients):
         upwind = coefficients[0]

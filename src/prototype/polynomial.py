@@ -12,7 +12,6 @@ import operator
 from sympy import *
 import logging
 import itertools
-from termcolor import *
 from collections import Counter
 from functools import total_ordering
 

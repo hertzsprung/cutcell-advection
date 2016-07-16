@@ -151,12 +151,11 @@ class PolynomialFit:
         self.nomials = nomials
         self.full_rank_tol = full_rank_tol
 
-    def subset_that_fits(self, pts):
+    def subset_that_fits(self, pts, candidates):
         polynomial = []
-        target_length = min(len(self.nomials), len(pts))
 
         full_rank_candidates = []
-        for candidate_polynomial in [p for p in self.default_combinations if len(p) <= target_length]:
+        for candidate_polynomial in candidates:
             B = self.matrix(pts, candidate_polynomial)
             full_rank = FullRank(B, self.full_rank_tol)
             if full_rank:
@@ -166,15 +165,6 @@ class PolynomialFit:
                 logging.debug("%s is rank-deficient with min_singular_value=%s", candidate_polynomial, full_rank.min_singular_value)
 
         return full_rank_candidates
-
-    def stabilisable_candidates(self, pts):
-        candidates = self.subset_that_fits(pts)
-        stabilisable = self.find_stabilisable(pts, candidates)
-
-        if not stabilisable:
-            raise UnfittableException("Cannot find a polynomial which is stabilisable")
-
-        return stabilisable
 
     def find_stabilisable(self, pts, full_rank_candidates):
         candidates = []
@@ -191,8 +181,7 @@ class PolynomialFit:
 
         return candidates
 
-    def stable_fit(self, pts, upwind_weight=1000, default_downwind_weight=1000):
-        stabilisable_candidates = self.stabilisable_candidates(pts)
+    def find_stable(self, pts, stabilisable_candidates, upwind_weight=1000, default_downwind_weight=1000):
         candidates = []
     
         for candidate in stabilisable_candidates:
@@ -212,12 +201,28 @@ class PolynomialFit:
                 downwind_weight -= 1
 
         candidates.sort(key=lambda x: (len(x.terms), x.terms.full_rank))
-        print(np.array(candidates))
+        logging.debug(np.array(candidates))
 
-        if len(candidates) == 0:
+        return candidates
+
+    def stable_fit(self, pts, upwind_weight=1000, default_downwind_weight=1000):
+        stable_polynomial = None
+        target_length = min(len(pts), len(self.default_combinations))
+
+        while not stable_polynomial and target_length > 0:
+            all_candidates = [p for p in self.default_combinations if len(p) == target_length]
+            full_rank_candidates = self.subset_that_fits(pts, all_candidates)
+            stabilisable_candidates = self.find_stabilisable(pts, full_rank_candidates)
+            stable_polynomials = self.find_stable(pts, stabilisable_candidates)
+            if len(stable_polynomials) > 0:
+                stable_polynomial = stable_polynomials[-1]
+
+            target_length -= 1
+            
+        if target_length == 0 and not stable_polynomial:
             raise UnfittableException("Cannot find stable polynomial")
 
-        return candidates[-1]
+        return stable_polynomial
 
     def stable(self, coefficients):
         upwind = coefficients[0]

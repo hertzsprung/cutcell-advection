@@ -11,6 +11,38 @@ np.set_printoptions(precision=4, linewidth=120, suppress=True)
 def stable_fit(pts):
     return PolynomialFit(full_rank_tol=0.6).stable_fit(pts).terms.terms
 
+def test_four_by_three():
+    pts = [ \
+        (-1, 0), \
+        (1, 0), \
+        (-3, 0), \
+        (-5, 0), \
+        (-1, -2), \
+        (1, -2), \
+        (1, -2), \
+        (-3, -2), \
+        (-5, -2), \
+        (-1, 2), \
+        (1, 2), \
+        (-3, 2), \
+        (-5, 2) \
+    ]
+
+    expected = [ \
+        Nomial(Lambda((x, y), 1.0)), \
+        Nomial(Lambda((x, y), x)), \
+        Nomial(Lambda((x, y), y)), \
+        Nomial(Lambda((x, y), x*y)), \
+        Nomial(Lambda((x, y), x**2)), \
+        Nomial(Lambda((x, y), y**2)), \
+        Nomial(Lambda((x, y), x**2*y)), \
+        Nomial(Lambda((x, y), x*y**2)), \
+        Nomial(Lambda((x, y), x**3)), \
+    ]
+
+    print(PolynomialFit(full_rank_tol=0.6).stable_fit(pts).coeffs)
+    assert stable_fit(pts) == expected
+
 def test_six_points_with_diagonal():
     pts = [ \
         (-1, 0.0330314), \
@@ -28,6 +60,7 @@ def test_six_points_with_diagonal():
         Nomial(Lambda((x, y), x*y)), \
         Nomial(Lambda((x, y), y**2)) \
     ]
+
     assert stable_fit(pts) == expected
 
 def test_nine_points_with_diagonal():

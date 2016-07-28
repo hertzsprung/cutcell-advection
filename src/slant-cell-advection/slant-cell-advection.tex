@@ -53,6 +53,13 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 \section{Multidimensional advection scheme}
 
+Stability constriants:
+\begin{align}
+	0.5 \leq u \leq 1 \\
+	0 \leq d \leq 0.5 \\
+	u - d \geq \max(|p|)
+\end{align}
+
 \begin{figure}
 	\includegraphics[width=\textwidth]{stencilConstruction.png}
 	\caption{\TODO{example stencils in interior of quad and hex meshes, and example stencil near boundary of a slanted cell mesh (taken from one of the test cases)}}

@@ -16,9 +16,10 @@
 \usepackage[british]{babel}
 \usepackage{csquotes}
 \usepackage[T1]{fontenc}
+\usepackage{siunitx}
 
 
-\title{Advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
+\title{Multidimensional advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
 \author{James Shaw}
 
 \newcommand{\iunit}{\boldsymbol{\hat \imath}}
@@ -31,139 +32,126 @@
 
 \section{Introduction}
 
-Increasing spatial resolution means that numerical weather prediction models are able to resolve smaller-scale, steep slopes in terrain.  A large majority of operational models use terrain-following coordinates to represent orography, but such models can suffer from increased numerical errors near steep slopes where the coordinate transformation becomes almost singular \citep{nikiforakis2009}.  Such singularities can be avoided by using the cut-cell method, which has been proposed as an alternative to terrain-following coordinates.  The cut-cell method represents terrain using piecewise polynomial functions that intersect with an orthogonal, Cartesian mesh.  Several studies of idealised flows have found that cut-cell models produce results with an accuracy that is comparable to, or better than, terrain-following models \citep{yamazaki-satomura2008,good2014,shaw-weller2016}.
+First, we present a multidimensional advection scheme that is computationally cheap and suitable for complex flows on arbitrary meshes.  Second, we present a new type of Cartesian mesh, the slanted cell mesh, that avoids the small cell problem associated with cut cell meshes.   We apply the advection scheme to tests over steep orography and show that accurate results are obtained on slanted cell meshes.  Finally, we challenge the multidimensional advection scheme using a test of deformational flow on a geodesic mesh.
 
-%Using the horizontal advection test case by \citet{schaer2002}, \citet{good2014} found that advection errors were smaller
-
-\TODO{however, cut cells bring their own problems: the small cell problem, and loss of accuracy near the lower boundary.  this paper is going to address these two issues\ldots hopefully!}
-
-
-\TODO{I think I'm going into too much detail on cut cell meshes: slanted cell meshes are constructed differently from cut cell meshes which is why they don't suffer from the small cell problem}
-
-The cut cell method intersects a terrain surface with an orthogonal, Cartesian mesh.
-Cells that are entirely above ground are unaltered, and cells that lie entirely beneath the ground are removed.
-Cells that are intersected by the terrain are called `cut cells'.  The terrain within each cut cell is represented by a polynomial surface.  This surface is is typically bilinear, and interpolates the four terrain elevations which are known at the cell edges (Fig.~\ref{fig:cut-cell}).  Higher order polynomials have also been tried, e.g. \citet{kirkpatrick2003}.
-
-\TODO{I suppose I should try to clear up the terminology mess: cut cells, shaved cells, immersed boundaries, embedded boundaries -- there's some literature that tries to clarify this, can't remember what, but I should read that first -- klein2009? nikiforakis2009?}
+\section{Slanted cell mesh generation}
 
 \begin{figure}
-	\caption{\TODO{an example diagram of a 3D cell with a bilinear terrain surface, similar to Fig 4(top) in \cite{walko-avissar2008b}, highlighting face areas open to the air}}
-	\label{fig:cut-cell}
+	\includegraphics[width=\textwidth]{slantCellConstruction.png}
+	\caption{\TODO{Before and after diagrams showing how a slanted cell mesh is constructed from a uniform quadrilateral mesh}}
 \end{figure}
 
-Explicit, finite volume advection schemes must satisfy the Courant--Friedrichs--Lewy (CFL) criterion in order to be stable.  The multidimensional CFL criterion constrains the timestep, $\Delta t$, such that
-\begin{align}
-	\Delta t \leq \min_\mathrm{cells} \frac{2\mathcal{V}}{\sum_\mathrm{faces} F}
-\end{align}
-where $\mathcal{V}$ is the volume of a cell and $F$ is the flux across a face.  Hence, the maximum timestep is constrained by the largest fluxes through the smallest cells.  \TODO{we need to explain this further because it's important that we understand about large fluxes across small cell dimensions, but maybe that can wait until later.}
-The cut cell method can create arbitrarily small cells that impose severe constraints on the timestep.
+\begin{figure}
+	\includegraphics[width=\textwidth]{3dslices.png}
+	\caption{\TODO{An example of a 3D slanted cell mesh with Alpine topography, maybe best illustrated using orthogonal cross-sections}}
+\end{figure}
 
-There are a variety of techniques that alleviate the timestep constraint for cut cell meshes.  One technique is to combine small cells with neighbouring cells, so that the smallest cell volume and, hence, the maximum timestep, is increased.  \citet{ye1999} identified cells with cell centres below ground, and combined each of them with the cell above.  They applied the technique to a two-dimensional model of viscous incompressible flow.  The technique ensures that the smallest cell volume is at least half the volume of an uncut cell, hence the maximum timestep is also constrained to be at least half the maximum timestep for the equivalent mesh with no cut cells.
-\citet{yamazaki2016} extended this cell-combining technique to a three-dimensional, fully-compressible, non-hydrostatic atmospheric model, in which small cells are combined vertically or horizontally depending on the steepness of the terrain slope in the small cell.  \TODO{and? so what? they appear to get reasonable results but say nothing about their timesteps -- I've asked Hiroe about this}
-
-The cell-combining technique still requires smaller timesteps than the maximum timestep for an equivalent, uncut mesh.  This is because the technique does not combine cut cells whose volume is greater than half the volume of an uncut cell.
-\TODO{\citet{kirkpatrick2003} and \citet{berger-helzel2012} both say cell-combining is hard in 3D, but \citet{yamazaki2016} managed it}
-
-Another technique that alleviates the timestep constraint is the thin-wall approximation, in which the computational volume of a cell unaltered when it is cut \citep{steppeler2002}.  In other words, a cut cell is assigned a computational volume equal to its original, uncut, physical volume.  The area of a cell face is calculated as the area unoccupied by solid terrain.  In the thin-wall approximation, a cut cell can be conceptualised as a cardboard box without a lid and with side walls that are infinitesimally thin.  Straight lines are cut along the side walls so that the box's upper edges lie along the bilinear terrain surface.  \TODO{I might need another figure to show the thin-wall approximation, or I might be able to refer back to Fig.~\ref{fig:cut-cell}.}
-
-\TODO{\citet{bonaventura2000} use the thin-cell approximation in some places, but the cell volume can be any non-negative value.  so it seems that it is the semi-Lagrangian advection scheme that gets them around the small cell problem, not the thin-wall approximation}
-
-By using computational volumes that are equally large for cut and uncut cells, the thin-wall approximation imposes no additional timestep constraints compared to an equivalent Cartesian mesh with no cut cells.  The cell-combination technique still constrains the timestep because smaller cell volumes remain where cells are not combined.  Hence, the thin-wall technique should permit timesteps up to twice as large as those permitted by the cell-combination technique.
-
-\TODO{but thin-wall approximation also has difficulties: \citet{yamazaki-satomura2010} talk about ``internal inconsistency'' (mean that cell volumes are inconsistent with face areas).  \citet{walko-avissar2008b} provide a nice example of a thin-wall problem, possibly adapted from \citet{calhoun-leveque2000}, describing the retardation of a cold front in uniform horizontal flow along a flat surface that includes long, thin, rectangular cut cells.}
-
-\TODO{\citet{lock2008} uses a variant of the thin-wall approximation called the volume-expansion method which is also used in the COSMO-DE model.  The volume-expansion method rescales the cell volume so that it has a minimum of $3/8$ of the equivalent uncut cell.  She acknowledges that ``model solutions in the cut-cells are no longer true solutions to the problem initially specified by the orographic field''.}
-
-\TODO{as a slight aside, \citet{calhoun-leveque2000} talk about using ``capacity functions'' and talk about flow through porous media, but this technique seems to be somewhat (if not entirely) equivalent to the thin-wall approximation}
-
-\TODO{There are a wealth of other techniques that I have yet to satisfactorily understand:
-\begin{itemize}
-	\item flux stabilisation \citep{klein2009}, good explanation and other refs in \citet{berger-helzel2012}
-	\item a volume-of-fluid approach by \citet{almgren1997}
-	\item the master--slave cell-linking approach by \citet{kirkpatrick2003}
-	\item mirror-cell method for high-order accuracy at boundaries \citep{forrer-jeltsch1998}
-\end{itemize}
-}
-
-\TODO{We can also avoid the small cell problem by avoiding explicit methods, instead using some sort of implicit scheme, or semi-Lagrangian advection.  \citet{jebens2011} has formulated a partially implicit method and applied it on cut cell meshes.  \citet{bonaventura2000} and \citet{rosatti2005} use SISL schemes with cut cell meshes.}
-
-\TODO{There are other mesh types applied to atmospheric flows besides typical terrain following meshes and cut cell meshes:
-\begin{itemize}
-	\item Chimera overlapping meshes \citep{takemura2015}
-	\item Orthogonal terrain following coordinates \citep{zou2016}
-\end{itemize}}
-
-\TODO{\citet{nikiforakis2009} says that cut cell meshes are a ``hybrid between structured and unstructured meshes''.  It seems to me that our slanted cell mesh has similarities with unstructured-structured meshes for aerospace.  \citet{almgren1997} has plenty of citations for meshes of this type applied to aerofoils and turbomachinery, but most are behind paywalls that I haven't managed to get past.  }
-
-\TODO{what about existing work on unstructured/boundary fitted meshes?  \citet{almgren1997} has masses of citations for loads of different mesh techniques in the context of aeronautics.  I haven't seen much/anything of different meshes for atmospheric flows, except for \citet{smolarkiewicz-szmelter2011}.}
-
-\TODO{could the small cell problem exist with terrain-following coordinates, too?  if we have steep slopes then we could get highly-distorted cells with very small volumes\ldots}
-
-\vspace*{2em}
-
-
-\TODO{The next topics to discuss are: loss of accuracy at the lower boundary (2nd order schemes often become only 1st-order accurate locally), then how our slanted cell mesh technique and \texttt{cubicUpwindCPCFit} advection scheme might be able to increase timesteps and increase local accuracy\ldots maybe!}
-
-\section{Mesh generation}
-\TODO{describe how we construct a slanted cell mesh.  at some point in the paper we must justify the choice of 'tolerance', which was set to $2\Delta z/5$ in \citet{shaw-weller2016} without much justification.}
-
-\TODO{do analysis to find the smallest dimensions of a cell}
+\begin{figure}
+	\includegraphics[width=\textwidth]{meshComparison.png}
+	\caption{\TODO{examples of BTF, slanted cell and cut cell meshes with the same steep mountain profile (one of those used in the thermal advection test)}}
+\end{figure}
 
 \section{Multidimensional advection scheme}
-\begin{itemize}
-	\item how stencils are constructed
-	\item polynomial fit procedure and associated numerical analysis
-	\item demonstrate procedure as applied to interior of a 2D quadrilateral mesh, and applied near boundary of a slanted cell mesh
-\end{itemize}
 
-\TODO{I could plot polynomialTerm counts on faces of a slanted cell mesh, and heatmaps of stencil weights}
+\begin{figure}
+	\includegraphics[width=\textwidth]{stencilConstruction.png}
+	\caption{\TODO{example stencils in interior of quad and hex meshes, and example stencil near boundary of a slanted cell mesh (taken from one of the test cases)}}
+\end{figure}
+
 
 \section{Results}
+\subsection{\TODO{Horizontal advection?}}
 
-\subsection{3D slanted cell mesh of real terrain}
-\begin{itemize}
-	\item shows that the slanted cell method generalises to 3D and is applicable to real terrain
-	\item measure smallest cell sizes between different mesh types
-	\item could we compare with BTF and ASAM cut cells?
-\end{itemize}
+\subsection{Thermal advection}
 
-\subsection{Thermal advection over steep slopes}
-\begin{itemize}
-	\item use the thermal advection test from \citet{shaw-weller2016}, but with steeper slopes
-	\item compare BTF, slanted cells, and cut cell meshes created with the ASAM mesh generator
-	\item compare cubicUpwindCPCFit with OpenFOAM's built-in linearUpwind scheme
-	\item Use Courant numbers close to 1 and report the timesteps for each mesh type
-	\item cubicUpwindCPCFit is 3rd order accurate in the l2 norm on BTF meshes
-	\item cubicUpwindCPCFit is 1st order accurate in the linf norm on slanted cell meshes
-	\item cubicUpwindCPCFit is 2nd order accurate in the l2 norm on slanted cell meshes
-	\item cubicUpwindCPCFit is better than 2nd order accurate in the linf norm on BTF meshes
-	\item linearUpwind is 2nd order accurate in all cases, except for 1st order accuracy in the linf norm on slanted cell meshes
-	\item hence, cubicUpwindCPCFit is more accurate than linearUpwind
-\end{itemize}
+Domain \SI{301}{\kilo\meter} wide, \SI{25}{\kilo\meter} high, Sch\"ar had $\Delta x = \SI{1}{\kilo\meter}, \Delta z^\star = \SI{500}{\meter}$.  Integrate \SI{18000}{\second} so that tracer initially at left hand edge of mountain has safely passed through the outlet boundary (i.e. we are in a steady-state solution).  $\Delta t = \SI{25}{\second}$ for Sch\"ar's mesh.
 
-\subsection{Deformational flow on a plane}
-\begin{itemize}
-	\item test case from \citet{lauritzen2012}
-	\item demonstrates that cubicUpwindCPCFit is suitable for complex flows on arbitrary meshes
-	\item compare results on quadrilateral, triangular, hexagonal meshes \TODO{diamond meshes might be easiest to create, though}
-\end{itemize}
+\begin{table}
+	\begin{verbatim}
+60x10
+120x20
+150x25
+240x40
+300x50x25s
+450x75
+600x100
+900x150
+1200x200
+2400x400
+3000x500
+	\end{verbatim}
+	\caption{\TODO{suggested $x$ cells $\times$ $z$ cells $\times \Delta t$ resolutions for thermal advection convergence tests}}
+\end{table}
 
-\TODO{I haven't thought much about this yet, but there's a lot of literature that says ``2nd-order schemes become 1st-order at the lower boundary'', and talk about global accuracy versus local accuracy.  I'm not sure how to measure local order of accuracy, but I think I should examine order-of-accuracy for \texttt{cubicUpwindCPCFit}.  The work by \citet{ye1999} is quite similar to ours: they use polynomial stencils to interpolate onto boundaries, and test an explicit advection scheme which they show is 2nd order globally and locally.}
+Mountain profile:
+\begin{subequations}
+\begin{align}
+   h(x) &= h^\star \cos^2 ( \alpha x )
+%
+\intertext{where}
+%
+   h^\star(x) &= \left\{ \begin{array}{l l}
+       h_0 \cos^2 ( \beta x ) & \quad \text{if $| x | < a$} \\
+	0 & \quad \text{otherwise}
+    \end{array} \right.
+\end{align}
+\end{subequations}
+where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).
 
-\TODO{Hilary suggested I could do the blob advection in an annulus test \citep{berger-helzel2012}}
+$h0, a$ and $\lambda$ are chosen to give us very steep terrain, and to match those from Hilary and Yumeng's upcoming QJRMS paper.
+
+Initial thermal profile:
+\begin{align}
+	\theta(z) = \theta_0 \exp \left( \frac{N^2}{g} z \right) \label{eqn:thermal-profile}
+\end{align}
+
+Velocity field:
+\begin{equation}
+	\Psi(x,z) = -u_0 H \frac{z - h}{H - h} \label{eqn:streamfunc-btf}
+\end{equation}
+where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal wind speed where $h(x) = 0$.
+The horizontal and vertical components of velocity, $u$ and $w$, are then given by
+\begin{align}
+	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H}{H - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H - z}{\left( H - h \right)^2} \label{eqn:uw-btf} \\
+	\frac{\mathrm{d} h}{\mathrm{d} x} &= - h_0 \left[ 
+		\beta \cos^2 \left( \alpha x \right) \sin \left( 2 \beta x \right) +
+		\alpha \cos^2 \left( \beta x \right) \sin \left( 2 \alpha x \right)
+	\right]
+\end{align}
+
+Analytic solution:
+\begin{align}
+	\theta_T(x, z) = \theta_0 \exp \left( \frac{N^2}{g} z^\star(x, z) \right) 
+\end{align}
+
+\begin{figure}
+	\caption{\TODO{thermal advection l2 and linf convergence plots comparing BTF, slanted cells and cut cells, cubicUpwindCPCFit and linearUpwind}}
+\end{figure}
+
+\subsection{Resting atmosphere over Alpine terrain}
+
+\subsection{Deformational flow}
+Following \citep{lauritzen2012}.  \TODO{which of the initial conditions should I use?  slotted cylinder would be the hardest}
 
 \section{Conclusions}
 
+The slanted cell method
 \begin{itemize}
-	\item Slanted cell meshes are more straightforward to construct than cut cell meshes
-	\item The slanted cell method avoids creating very small cells, instead creating thin cells that are long in the direction of flow
-	\item The slanted cell method generalises to 3D
-	\item cubicUpwindCPCFit is computationally cheap at runtime, with expensive computations depending only on the mesh
-	\item cubicUpwindCPCFit is suitable for arbitrary meshes, including terrain following, slanted and cut cell meshes, triangular and hexagonal meshes
-	\item cubicUpwindCPCFit is more accurate than linearUpwind
+	\item avoids creating very small cells, instead creating thin cells that are long in the direction of the flow, hence alleviates the small cell problem
+	\item accurately represents a hydrostatically balanced atmosphere at rest over steep Alpine terrain
+	\item is straightforward compared to the cut cell method
+	\item generalises to 3D
 \end{itemize}
 
-\TODO{Future work: I don't want to go beyond advection scheme/advection tests in this paper.  that said, I have had some very good results of resting atmosphere on the slanted cell mesh compared to cut cell and BTF meshes, and it might be interesting to see how steep we can go, and what happens to the spurious circulations in future.}
+The advection scheme is
+\begin{itemize}
+	\item suitable for complex flows on arbitrary meshes
+	\item computationally cheap at runtime, with more expensive computations depending only on the mesh geometry
+	\item fourth-order convergent at best, first-order convergent at worst
+	\item stable for Courant numbers up to 1
+\end{itemize}
+
+Idealised atmospheric flows over steep slopes are accurately represented using the multidimensional advection scheme without severely constraining the timestep.  The multidimensional advection scheme is suitable for complex flows on arbitrary meshes.
 
 \section{Acknowledgements}
 \TODO{Supervisors, funding bodies.  ASAM group for the mesh generator---I should ask permission to use cut cell meshes in this paper.  Shing Hing Man.}

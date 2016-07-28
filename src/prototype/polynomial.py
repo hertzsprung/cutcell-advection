@@ -158,8 +158,7 @@ class PolynomialFit:
         while not stable_polynomial and target_length > 0:
             all_candidates = [p for p in self.default_combinations if len(p) == target_length]
             full_rank_candidates = self.retain_full_rank(pts, all_candidates)
-            stabilisable_candidates = self.retain_positive_central_coefficients(pts, full_rank_candidates)
-            stable_polynomials = self.retain_stable(pts, stabilisable_candidates)
+            stable_polynomials = self.retain_stable(pts, full_rank_candidates)
             if len(stable_polynomials) > 0:
                 stable_polynomial = stable_polynomials[-1]
 
@@ -185,28 +184,13 @@ class PolynomialFit:
 
         return full_rank_candidates
 
-    def retain_positive_central_coefficients(self, pts, full_rank_candidates):
-        candidates = []
-
-        for candidate in full_rank_candidates:
-            B = self.matrix(pts, candidate)
-            Binv = la.pinv(B)
-            coefficients = Binv[0]
-            if self.central_are_positive(coefficients):
-                logging.debug("Found stabilisable fit %s with unweighted coefficients %s", candidate, coefficients)
-                candidates.append(candidate)
-            else:
-                logging.debug("Unstabilisable fit %s with unweighted coefficients %s", candidate, coefficients)
-
-        return candidates
-
-    def retain_stable(self, pts, stabilisable_candidates, upwind_weight=1000, default_downwind_weight=1000):
+    def retain_stable(self, pts, stabilisable_candidates, upwind_weight=1024, default_downwind_weight=1024):
         candidates = []
     
         for candidate in stabilisable_candidates:
             stable = False
             downwind_weight = default_downwind_weight
-            while not stable and downwind_weight > 0:
+            while not stable and downwind_weight >= 1:
                 B = self.matrix(pts, candidate)
                 B[0] = B[0] * upwind_weight
                 B[1] = B[1] * downwind_weight
@@ -217,21 +201,20 @@ class PolynomialFit:
                 if self.stable(coeffs):
                     candidates.append(StableFit(pts, candidate, upwind_weight, downwind_weight, coeffs))
                     stable = True
-                downwind_weight -= 1
+                downwind_weight /= 2
 
         candidates.sort(key=lambda x: (len(x.terms), x.terms.full_rank))
         logging.debug(np.array(candidates))
 
         return candidates
 
-    def central_are_positive(self, coefficients):
-        return coefficients[0] > 0 and coefficients[1] > -1e-14
-
     def stable(self, coefficients):
         upwind = coefficients[0]
         downwind = coefficients[1]
         
-        return abs(downwind) < upwind and downwind <= 0.5
+        return downwind < upwind and upwind >= 0.5 and upwind <= 1 and \
+                downwind > -1e-14 and downwind <= 0.5 and \
+                upwind - downwind >= max(np.absolute(coefficients[2:]))
 
     def matrix(self, pts, polynomial):
         return np.array([[n(x, y) for n in polynomial] for (x, y) in pts], dtype=float)

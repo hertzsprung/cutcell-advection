@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.DEBUG)
 np.set_printoptions(precision=4, linewidth=120, suppress=True)
 
 def stable_fit(pts):
-    return PolynomialFit(full_rank_tol=0.6).stable_fit(pts).terms.terms
+    return PolynomialFit(full_rank_tol=1e-9).stable_fit(pts).terms.terms
 
 def test_four_by_three():
     pts = [ \
@@ -40,7 +40,6 @@ def test_four_by_three():
         Nomial(Lambda((x, y), x**3)), \
     ]
 
-    print(PolynomialFit(full_rank_tol=0.6).stable_fit(pts).coeffs)
     assert stable_fit(pts) == expected
 
 def test_six_points_with_diagonal():
@@ -61,6 +60,7 @@ def test_six_points_with_diagonal():
         Nomial(Lambda((x, y), y**2)) \
     ]
 
+    print(PolynomialFit(full_rank_tol=1e-9).stable_fit(pts).downwind_weight)
     assert stable_fit(pts) == expected
 
 def test_nine_points_with_diagonal():

@@ -2,24 +2,5 @@ $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advectio
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/ametsoc2014.bst \
-  src/slant-cell-advection/references.bib
-
-$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,stability-analysis))
-$(eval $(call MakeDir,build/fig-matrix-constraint))
-$(eval $(call Gnuplot,build/fig-matrix-constraint,matrix-constraint.tex,src/slant-cell-advection/matrix-constraint.plt))
-build/stability-analysis/stability-analysis.pdf: \
-  build/fig-matrix-constraint/matrix-constraint.tex
-
-
-$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,uniform-cubic-stability-analysis))
-$(eval $(call MakeDir,build/fig-uniform-cubic-stability-amplification))
-$(eval $(call Gnuplot,build/fig-uniform-cubic-stability-amplification,uniform-cubic-stability-amplification.tex,src/slant-cell-advection/uniform-cubic-stability-amplification.plt))
-build/uniform-cubic-stability-analysis/uniform-cubic-stability-analysis.pdf: \
-  build/fig-uniform-cubic-stability-amplification/uniform-cubic-stability-amplification.tex
-
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
-
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))
-
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-double-upwind-stencil,fig-double-upwind-stencil))
-
+  src/slant-cell-advection/references.bib \
+  build/fig-thermalAdvection-convergence/fig-thermalAdvection-convergence.pdf

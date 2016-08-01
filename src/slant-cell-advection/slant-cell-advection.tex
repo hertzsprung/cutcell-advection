@@ -43,7 +43,7 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{3dslices.png}
-	\caption{\TODO{An example of a 3D slanted cell mesh with Alpine topography, maybe best illustrated using orthogonal cross-sections}}
+	\caption{\TODO{An example of a 3D slanted cell mesh with Alpine topography, maybe best illustrated using orthogonal cross-sections.  Can we show this for triangles, quads and hexagons?}}
 \end{figure}
 
 \begin{figure}
@@ -132,6 +132,16 @@ Analytic solution:
 \end{align}
 
 \begin{figure}
+	\includegraphics[width=\textwidth]{maxTimesteps.png}
+	\caption{\TODO{maximum timesteps (Co=1) for BTF, slanted cells and cut cells: BTF and slanted cells scale linearly with mesh spacing, cut cells do not}}
+\end{figure}
+
+\begin{figure}
+	\caption{\TODO{error fields for BTF, slanted cells and cut cells at a given mesh spacing, showing errors generated over slopes and advected downstream on slanted cell and cut cell meshes}}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{convergence.png}
 	\caption{\TODO{thermal advection l2 and linf convergence plots comparing BTF, slanted cells and cut cells, cubicUpwindCPCFit and linearUpwind}}
 \end{figure}
 
@@ -144,10 +154,11 @@ Following \citep{lauritzen2012}.  \TODO{which of the initial conditions should I
 
 The slanted cell method
 \begin{itemize}
-	\item avoids creating very small cells, instead creating thin cells that are long in the direction of the flow, hence alleviates the small cell problem
+	\item alleviates the small cell problem
+	\item has a linear relationship between mesh spacing and maximum timestep because arbitrarily small cells are not created
 	\item accurately represents a hydrostatically balanced atmosphere at rest over steep Alpine terrain
-	\item is straightforward compared to the cut cell method
-	\item generalises to 3D
+	\item is straightforward to construct compared to the cut cell method
+	\item generalises to 3D, applicable to any horizontal mesh structure
 \end{itemize}
 
 The advection scheme is

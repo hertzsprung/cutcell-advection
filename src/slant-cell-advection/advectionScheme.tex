@@ -27,13 +27,13 @@ where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescr
 	\label{fig:interiorQuadStencil}
 \end{figure}
 
-To introduce the approximation method, we will consider how an approximate value is calculated for a face in the interior of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
+To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorQuadStencil}.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
 The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$:
 \begin{align}
-	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2
+	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly}
 \end{align}
 A least squares approach is needed because the system of equations is overdetermined, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant term $a_1$.
 
@@ -73,6 +73,32 @@ Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for fa
 
 
 \subsection{Polynomial generation}
+To calculate an approximate face value, a polynomial least squares fit is calculated from a stencil of surrounding cell centre values.  
+For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $a_1 \ldots a_9$, using twelve cell centre values, $\phi_1 \ldots \phi_{12}$, from the upwind-biased stencil.  This yields a matrix equation
+\begin{align}
+	\begin{bmatrix}
+		1 & x_1 & y_1 & x_1^2 & x_1 y_1 & y_1^2 & x_1^3 & x_1^2 y_1 & x_1 y_1^2 \\
+		1 & x_2 & y_2 & x_2^2 & x_2 y_2 & y_2^2 & x_2^3 & x_2^2 y_2 & x_2 y_2^2 \\
+		\vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+		1 & x_{12} & y_{12} & x_{12}^2 & x_{12} y_{12} & y_{12}^2 & x_{12}^3 & x_{12}^2 y_{12} & x_{12} y_{12}^2 \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		a_1 \\
+		a_2 \\
+		\vdots \\
+		a_9
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\vdots \\
+		\phi_{12}
+	\end{bmatrix}
+\end{align}
+
+
+
 % generating candidates
 % full rank check
 

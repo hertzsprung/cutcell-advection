@@ -9,5 +9,7 @@ src/errors/convergence-thermalAdvection.pdf
 *.swp
 *#
 *~
+*.aux
+*.log
 __pycache__
 .cache

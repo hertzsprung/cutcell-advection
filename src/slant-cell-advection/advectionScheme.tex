@@ -1,12 +1,10 @@
-\documentclass{standalone}
-\begin{document}
 \section{Multidimensional advection scheme}
 
-The advection of a dependent variable $\phi$ is given by the flux form conservation equation:
+The advection of a dependent variable $\phi$ is given by the conservation equation
 \begin{align}
-	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \bm{u} \phi \right) = 0 \label{eqn:advection}
+	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
-where $\bm{u}$ is a prescribed wind field.  The time derivative is discretised using a three-stage, second-order Runge-Kutta scheme:
+where $\mathbf{u}$ is a prescribed wind field.  The time derivative is discretised using a three-stage, second-order Runge-Kutta scheme:
 \begin{subequations}
 \begin{align}
 	\phi^\star &= \phi^{(n)} + \Delta t f(\phi^{(n)}) \\
@@ -14,24 +12,24 @@ where $\bm{u}$ is a prescribed wind field.  The time derivative is discretised u
 	\phi^{(n+1)} &= \phi^{(n)} + \frac{\Delta t}{2} \left( f(\phi^{(n)}) + f(\phi^{\star\star}) \right)
 \end{align}
 \end{subequations}
-where \(f(\phi^{(n)}) = - \nabla \cdot (\bm{u} \phi^{(n)})\) at time level \(n\).
+where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).
 
 Using the finite volume method, the wind field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
 \begin{align}
-	\nabla \cdot \left( \bm{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in c} \bm{u}_f \cdot \bm{S}_f \phi_F
+	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
 \end{align}
-where $\mathcal{V}_c$ is the cell volume, $\bm{u}_f$ is a wind vector prescribed at a face, ${\bm{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in c}$ denotes a summation over all faces $f$ belonging to cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
+where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in c}$ denotes a summation over all faces $f$ belonging to cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=4in]{interiorQuadStencil.png}
-	\caption{\TODO{interior quad stencil}}
+	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
+	\caption{An upwind-biased stencil on a two-dimensional rectangular grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
 	\label{fig:interiorQuadStencil}
 \end{figure}
 
-To introduce the approximation method, we will consider how an approximate value is calculated for a face in the interior of a two-dimensional uniform quadrilateral mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
+To introduce the approximation method, we will consider how an approximate value is calculated for a face in the interior of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
 
-The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorQuadStencil}.  The wind at the face, $\bm{U}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
+The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorQuadStencil}.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
 The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$:
 \begin{align}
@@ -42,6 +40,37 @@ A least squares approach is needed because the system of equations is overdeterm
 The remainder of this section generalises the the approximation technique for arbitrary meshes, explaining the methods for constructing stencils, choosing the terms of the polynomial, and ensuring numerical stability of the advection scheme.
 
 \subsection{Stencil construction}
+For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
+The opposing faces for face $f$ and upwind cell $c_u$ are determined as follows.
+Defining $G$ to be the set of other faces bounding cell $c_u$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
+\begin{align}
+	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2} \label{eqn:opp}
+\end{align}
+where $\mathbf{S}_f$ and $\mathbf{S}_g$ are the surface area vectors pointing outward from cell $c_u$ for faces $f$ and $g$ respectively.
+Using the fact that $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}|\:|\mathbf{b}| \cos(\theta)$ we can rewrite equation~\eqref{eqn:opp} as
+\begin{align}
+	\mathrm{Opp}(f, g) = - \frac{|\mathbf{S}_g|}{|\mathbf{S}_f|} \cos(\theta)
+\end{align}
+where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$.
+
+The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those faces with $\mathrm{Opp} \geq 0.5$, and the face with the maximum opposedness.  Expressed in set notation, this is
+\begin{align}
+	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max(\mathrm{Opp}(f, g)) \} 
+\end{align}
+On a two-dimensional rectangular mesh, there is always one opposing face that is exactly parallel to the face $f$.
+
+Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Having found these two sets of cells, the stencil is constructed to comprise all internal and external cells.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
+	%
+	\caption{A thirteen-cell, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular.}
+	\label{fig:double-upwind-stencil}
+\end{figure}
+
+Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, marked by black squares.  The resultant stencil contains 13 cells.
+
 
 \subsection{Polynomial generation}
 % generating candidates

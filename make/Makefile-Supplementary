@@ -13,7 +13,4 @@ build/uniform-cubic-stability-analysis/uniform-cubic-stability-analysis.pdf: \
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
 
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-upwind-stencil,fig-upwind-stencil))
-
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-double-upwind-stencil,fig-double-upwind-stencil))
 

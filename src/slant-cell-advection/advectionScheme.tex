@@ -35,9 +35,9 @@ The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a na
 \begin{align}
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly}
 \end{align}
-A least squares approach is needed because the system of equations is overdetermined, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant term $a_1$.
+A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant term $a_1$.
 
-The remainder of this section generalises the the approximation technique for arbitrary meshes, explaining the methods for constructing stencils, choosing the terms of the polynomial, and ensuring numerical stability of the advection scheme.
+The remainder of this section generalises the the approximation technique for arbitrary meshes, explaining the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the advection scheme.
 
 \subsection{Stencil construction}
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
@@ -72,9 +72,12 @@ Once the opposing faces have been determined, the set of internal and external c
 Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, marked by black squares.  The resultant stencil contains 13 cells.
 
 
-\subsection{Polynomial generation}
-To calculate an approximate face value, a polynomial least squares fit is calculated from a stencil of surrounding cell centre values.  
-For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $a_1 \ldots a_9$, using twelve cell centre values, $\phi_1 \ldots \phi_{12}$, from the upwind-biased stencil.  This yields a matrix equation
+\subsection{Least squares fit}
+To calculate an approximate value at face $f$, a polynomial least squares fit is calculated from a stencil of surrounding cell centre values.
+
+\TODO{what follows is not generalised: we haven't put weights on the central cells}
+
+For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
 \begin{align}
 	\begin{bmatrix}
 		1 & x_1 & y_1 & x_1^2 & x_1 y_1 & y_1^2 & x_1^3 & x_1^2 y_1 & x_1 y_1^2 \\
@@ -96,9 +99,35 @@ For faces that are far away from the boundaries of a rectangular mesh, we fit th
 		\phi_{12}
 	\end{bmatrix}
 \end{align}
+which can be written as $\mathbf{B} \mathbf{a} = \bm{\phi}$.
+The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial, and $\mathbf{B}$ is constructed using only the mesh geometry.
+A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
+The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
+The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of $\mathbf{B}^+$ found by singular value decomposition:
+\begin{align}
+	\mathbf{a} = \mathbf{B}^+ \bm{\phi}
+%
+\intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is calculated as} 
+%
+	a_1 = \begin{bmatrix}
+		b_{1,1}^+ \\
+		b_{1,2}^+ \\
+		\vdots \\
+		b_{1,12}^+
+	\end{bmatrix}
+	\cdot
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\vdots \\
+		\phi_{12}
+	\end{bmatrix}
+\end{align}
+where $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements in the first row of $\mathbf{B}^+$.
 
+For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
-
+\subsection{Polynomial generation}
 % generating candidates
 % full rank check
 

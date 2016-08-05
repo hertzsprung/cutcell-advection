@@ -1,5 +1,7 @@
 \section{Multidimensional advection scheme}
 
+\TODO{clean up terminology for "cell centre values"/"stencil values"/"stencil point values" etc}
+
 The advection of a dependent variable $\phi$ is given by the conservation equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
@@ -73,9 +75,7 @@ Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for fa
 
 
 \subsection{Least squares fit}
-To calculate an approximate value at face $f$, a polynomial least squares fit is calculated from a stencil of surrounding cell centre values.
-
-\TODO{what follows is not generalised: we haven't put weights on the central cells}
+To approximate the value at a face $f$, a least squares fit is calculated from a stencil of surrounding cell centre values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  Finally, we will describe how the approach is applicable to faces of arbitrary meshes.  
 
 For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
 \begin{align}
@@ -99,7 +99,10 @@ For faces that are far away from the boundaries of a rectangular mesh, we fit th
 		\phi_{12}
 	\end{bmatrix}
 \end{align}
-which can be written as $\mathbf{B} \mathbf{a} = \bm{\phi}$.
+which can be written as
+\begin{align}
+	\mathbf{B} \mathbf{a} = \bm{\phi} \label{eqn:unweightedLeastSquares}
+\end{align}
 The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial, and $\mathbf{B}$ is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
@@ -123,7 +126,17 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of
 		\phi_{12}
 	\end{bmatrix}
 \end{align}
-where $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements in the first row of $\mathbf{B}^+$.
+where $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
+
+The least squares fit presented above was unweighted, with equal weight placed on all stencil cell values.  \citet{lashley2002} showed that a weighted least squares fit is necessary for numerical stability, with greater weight being placed on the cells connected to face $f$.  We assign a weight to each stencil value, $\mathbf{w} = w_1 \ldots w_{12}$ and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
+\begin{align}
+	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{w} \cdot \bm{\phi}
+\end{align}
+where $\mathbf{\tilde{B}} = \mathbf{W} \mathbf{B}$ and $\mathbf{W} = \mathrm{diag}(\mathbf{w})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$:
+\begin{align}
+	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{w} \cdot \mathbf{\phi}
+\end{align}
+where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
 
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
@@ -146,4 +159,3 @@ Stability constriants:
 	\includegraphics[width=\textwidth]{stencilConstruction.png}
 	\caption{\TODO{example stencils in interior of quad and hex meshes, and example stencil near boundary of a slanted cell mesh (taken from one of the test cases)}}
 \end{figure}
-\end{document}

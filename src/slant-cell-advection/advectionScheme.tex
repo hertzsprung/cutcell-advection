@@ -1,7 +1,5 @@
 \section{Multidimensional advection scheme}
 
-\TODO{clean up terminology for "cell centre values"/"stencil values"/"stencil point values" etc}
-
 The advection of a dependent variable $\phi$ is given by the conservation equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
@@ -25,13 +23,13 @@ where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescr
 \begin{figure}
 	\centering
 	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
-	\caption{An upwind-biased stencil on a two-dimensional rectangular grid.  The stencil is used to fit a multidimensional polynomial to twelve cell centred values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
-	\label{fig:interiorQuadStencil}
+	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) triangular, (b) rectangular and (c) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
+	\label{fig:interiorStencils}
 \end{figure}
 
 To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
 
-The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorQuadStencil}.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
+The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}b.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
 The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$:
 \begin{align}
@@ -103,7 +101,7 @@ which can be written as
 \begin{align}
 	\mathbf{B} \mathbf{a} = \bm{\phi} \label{eqn:unweightedLeastSquares}
 \end{align}
-The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial, and $\mathbf{B}$ is constructed using only the mesh geometry.
+The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is constructed using only the mesh geometry and is called the \textit{stencil matrix}.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
 The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of $\mathbf{B}^+$ found by singular value decomposition:
@@ -141,8 +139,28 @@ where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
 \subsection{Polynomial generation}
-% generating candidates
-% full rank check
+\begin{figure}
+	\centering
+	\caption{\TODO{2x3 and 3x3 meshes}}
+	\label{fig:boundaryStencils}
+\end{figure}
+
+The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a triangular mesh has 19 points (figure~\ref{fig:interiorStencils}a), a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}b), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}c).
+In all three cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
+
+For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  A candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
+
+First, high-order terms may be included in a candidate polynomial only if the lower-order terms are also included.
+Let
+\begin{align}
+	M(x, y) = { x^i y^j : i,j \geq 0 \text{ and } i+j \leq 3 }
+\end{align}
+be the set of all monomials of degree at most \num{3} in $x, y$.
+A subset $S$ of $M(x,y)$ is ``dense'' if, whenever $x^a y^b$ and $x^c y^d$ are in $S$ with $a \leq c$ and $b \leq d$, then $x^i y^j$ is also in $S$ for all $a < i < c$, $b < j < d$.
+
+Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.  Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial would not be a candidate polynomial.
+
+The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the advection scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsection{Stabilisation procedure}
 % stability constraints
@@ -155,7 +173,3 @@ Stability constriants:
 	u - d \geq \max(|p|)
 \end{align}
 
-\begin{figure}
-	\includegraphics[width=\textwidth]{stencilConstruction.png}
-	\caption{\TODO{example stencils in interior of quad and hex meshes, and example stencil near boundary of a slanted cell mesh (taken from one of the test cases)}}
-\end{figure}

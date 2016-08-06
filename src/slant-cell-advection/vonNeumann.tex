@@ -15,7 +15,7 @@ where $\alpha_u$ and $\beta_u$ are the upwind weights and $\alpha_d$ and $\beta_
 
 At a given time $t = n \Delta t$ at time-level $n$ and with a time-step $\Delta t$, we assume a wave-like solution with an amplification factor $A$, such that
 \begin{align}
-	\phi_j^{(n)} &= A^n e^{\iu j k \Delta x}
+	\phi_j^{(n)} &= A^n e^{\iu j k \Delta x} \label{eqn:vn}
 \end{align}
 where $\phi_j^{(n)}$ denotes a value of $\phi$ at position $j$ and time-level $n$.  Using this to rewrite the left-hand side of equation~\eqref{eqn:advectionLR}
 \begin{align}
@@ -78,5 +78,28 @@ Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
 	0 \leq \alpha_d &\leq 0.5
 \end{align}
 
-
 \subsection*{Three-point analysis}
+We start again from equation~\eqref{eqn:advectionLR} but this time approximate $\phi_L$ and $\phi_R$ using three points:
+\begin{align}
+	\phi_L &= \alpha_{uu} \phi_{j-2} + \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
+	\phi_R &= \alpha_{uu} \phi_{j-1} + \alpha_u \phi_j + \alpha_d \phi_{j+1}
+\end{align}
+having used the same weights $\alpha_{uu}$, $\alpha_u$ and $\alpha_d$ for both left and right fluxes.
+Substituting equation~\eqref{eqn:vn} into equation~\eqref{eqn:advectionLR} we find
+\begin{align}
+A = \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
+%
+\intertext{So that, if the complex modulus $|A| \leq 1$ then}
+%
+\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x \geq 0
+\end{align}
+If $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ then $\alpha_u - \alpha_d \geq \alpha_{uu}$, and if $\cos k\Delta x = 0$ and $\cos 2k\Delta x = -1$ then $\alpha_u - \alpha_d \geq -\alpha_{uu}$.  Hence we find that
+\begin{align}
+	\alpha_u - \alpha_d &\geq |\alpha_{uu}| \label{eqn:uuConstraint}
+%
+\intertext{and, when the same analysis is performed with four points, $\alpha_{uuu}$, $\alpha_{uu}$, $\alpha_u$ and $\alpha_d$ we find the same condition holds replacing $\alpha_{uu}$ with $\alpha_{uuu}$.  Hence, we generalise equation~\ref{eqn:uuConstraint} to find the final stability constraint}
+%
+	\alpha_u - \alpha_d &\geq \max_{p\:\in\:P} |\alpha_p|
+\end{align}
+where the peripheral cells $P$ is the set of all stencil cells except for the upwind and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
+

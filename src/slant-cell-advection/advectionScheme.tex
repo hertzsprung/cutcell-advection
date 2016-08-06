@@ -197,7 +197,7 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 	\centering
 	\includegraphics{../fig-stabilisation/fig-stabilisation.pdf}
 %
-	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratical polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  The point data is marked with their weights labelled.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The five points are located at $(-2.8, 2.4)$, $(-1.6, 2.7)$, $(-1.2, 2.2)$, $(-1, 1.8)$ and $(0.62, 1.9)$.}
+	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratical polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data is marked with their weights labelled.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The five points are located at $(-2.8, 2.4)$, $(-1.6, 2.7)$, $(-1.2, 2.2)$, $(-1, 1.8)$ and $(0.62, 1.9)$.}
 	\label{fig:oscillatory1D}
 \end{figure}
 

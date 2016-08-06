@@ -16,13 +16,13 @@ where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \
 
 Using the finite volume method, the wind field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
 \begin{align}
-	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
+	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
 \end{align}
-where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in c}$ denotes a summation over all faces $f$ belonging to cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
+where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ belonging to cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
 
 \begin{figure}
 	\centering
-	\includegraphics{../fig-upwind-stencil/fig-upwind-stencil.pdf}
+	\includegraphics{../fig-interior-stencils/fig-interior-stencils.pdf}
 	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) triangular, (b) rectangular and (c) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
 	\label{fig:interiorStencils}
 \end{figure}
@@ -132,7 +132,7 @@ The least squares fit presented above was unweighted, with equal weight placed o
 \end{align}
 where $\mathbf{\tilde{B}} = \mathbf{W} \mathbf{B}$ and $\mathbf{W} = \mathrm{diag}(\mathbf{w})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$:
 \begin{align}
-	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{w} \cdot \mathbf{\phi}
+	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{w} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
 \end{align}
 where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
 
@@ -141,7 +141,8 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 \subsection{Polynomial generation}
 \begin{figure}
 	\centering
-	\caption{\TODO{2x3 and 3x3 meshes}}
+	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
+	\caption{Upwind-biased stencils for faces near the left-hand boundary of a rectangular mesh, with (a) a $2 \times 3$ stencil for the face immediately adjacent to the left-hand boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
 	\label{fig:boundaryStencils}
 \end{figure}
 
@@ -157,16 +158,22 @@ Let
 \end{align}
 be the set of all monomials of degree at most \num{3} in $x, y$.
 A subset $S$ of $M(x,y)$ is ``dense'' if, whenever $x^a y^b$ and $x^c y^d$ are in $S$ with $a \leq c$ and $b \leq d$, then $x^i y^j$ is also in $S$ for all $a < i < c$, $b < j < d$.
+For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6 x^2 y$ is a dense subset of $M(x,y)$, but $\phi = a_1 + a_2 x + a_3 y + a_4 x^2 y$ is not because $x^2 y$ can be included only if $xy$ and $x^2$ are also included.
 
 Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.  Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial would not be a candidate polynomial.
 
 The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the advection scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsection{Stabilisation procedure}
+So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a weighted least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the advection scheme chooses a suitable candidate polynomial and appropriate weights so that the fit is numerically stable.
+
+The approximate value of $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is equal to the dot product of $\mathbf{\tilde{b}_1^+} \cdot \mathbf{w}$ with the cell centre values $\bm{\phi}$.
+If the $\bm{\phi}$ field is assumed to be smooth, 
+shows that the value of $a_1$ depends on the values of the psuedo-inverse, $\mathbf{\tilde{b}_1^+}$.  If the $\phi$ field is assumed to be smooth,  A one-dimensional von Neumann analysis was performed to obtain stability constraints.is presented in the appendix
 % stability constraints
 % reweighting
 
-Stability constriants:
+Stability constraints:
 \begin{align}
 	0.5 \leq u \leq 1 \\
 	0 \leq d \leq 0.5 \\

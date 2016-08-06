@@ -179,7 +179,7 @@ A one-dimensional von Neumann analysis was performed to obtain stability constra
 \begin{align}
 	0.5 \leq w_u \leq 1 \label{eqn:stabilityU} \\
 	0 \leq w_d \leq 0.5 \label{eqn:stabilityD} \\
-	w_u - w_d \geq \max_{p \in\:P}(|w_p|)
+	w_u - w_d \geq \max_{p\:\in\:P}(|w_p|)
 \end{align}
 \end{subequations}
 where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell.
@@ -191,7 +191,7 @@ In the second step, the most-preferred polynomial is taken from the list of cand
 
 In the third step, we calculate the weights $\mathbf{w}$ from the least squares fit and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list.
 
-Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In practise, we have not encountered any stencil for which this last resort is required.
+Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In fact, we have not encountered any stencil for which this last resort is required.
 
 \begin{figure}
 	\centering

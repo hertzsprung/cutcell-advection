@@ -1,0 +1,82 @@
+\section*{Appendix: One-dimensional von Neumann stability analysis}
+Two analyses are performed in order to find stability constraints on the weights $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ as appear in equation~\eqref{eqn:weightedPinv}.  The first analysis uses two points to derived separate constraints on the upwind weight $w_u$ and downwind weight $w_d$.  The second analysis uses three points to derive a constraint that considers all weights in a stencil.
+
+\subsection*{Two-point analysis}
+We start with the conservation equation for a dependent variable $\phi$ that is discrete-in-space and continuous-in-time
+\begin{align}
+\frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \label{eqn:advectionLR} \\
+%
+\shortintertext{where the left and right fluxes, $\phi_L$ and $\phi_R$ are weighted averages of the neighbouring points.  Assuming that $u$ is positive}
+%
+\phi_L &= \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
+\phi_R &= \beta_u \phi_j + \beta_d \phi_{j+1}
+\end{align}
+where $\alpha_u$ and $\beta_u$ are the upwind weights and $\alpha_d$ and $\beta_d$ are the downwind weights for the left and right fluxes respectively.  A subscript $j$ denotes the value at a given point $x = j \Delta x$ where $\Delta x$ is a uniform mesh spacing.
+
+At a given time $t = n \Delta t$ at time-level $n$ and with a time-step $\Delta t$, we assume a wave-like solution with an amplification factor $A$, such that
+\begin{align}
+	\phi_j^{(n)} &= A^n e^{\iu j k \Delta x}
+\end{align}
+where $\phi_j^{(n)}$ denotes a value of $\phi$ at position $j$ and time-level $n$.  Using this to rewrite the left-hand side of equation~\eqref{eqn:advectionLR}
+\begin{align}
+\frac{\partial \phi_j}{\partial t} &= \frac{\partial}{\partial t} \left( A^{t / \Delta t} \right) e^{ijk\Delta x} = \frac{\ln A}{\Delta t} A^n e^{ikj\Delta x} \\
+%
+\shortintertext{hence equation~\eqref{eqn:advectionLR} becomes}
+%
+\frac{\ln A}{\Delta t} &= - \frac{u}{\Delta x} \left( \beta_u + \beta_d e^{ik\Delta x} - \alpha_u e^{-ik\Delta x} - \alpha_d \right) \\
+\ln A &= -c \left( \beta_u - \alpha_d + \beta_d \cos k\Delta x + \iu \beta_d \sin k \Delta x - \alpha_u \cos k\Delta x + \iu \alpha_u \sin k\Delta x \right)
+%
+\intertext{where the Courant number $c = u \Delta t / \Delta x$.
+Let $\Re = \beta_u - \alpha_d + \beta_d \cos k\Delta x - \alpha_u \cos k\Delta x$ and
+$\Im = \beta_d \sin k \Delta x + \alpha_u \sin k\Delta x$, then}
+%
+\ln A &= -c \left( \Re + \iu \Im \right) \\
+A &= e^{-c \Re} e^{-\iu c \Im} \\
+%
+\shortintertext{and the complex modulus and complex argument of $A$ are found to be}
+%
+|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \quad \text{and} \\
+\arg(A) &= -c \Im = -c \left( \beta_d + \alpha_u \right) \sin k\Delta x
+\end{align}
+For stability, we need $|A| \leq 1$ and $\arg(A) < 0$ for $c > 0$, so
+\begin{align}
+\beta_u - \alpha_d + \left( \beta_d - \alpha_u \right) \cos k\Delta x &\geq 0 \quad \forall k\Delta x \quad \text{and} \\
+\beta_d + \alpha_u &> 0 \label{eqn:arg-ineq}
+\end{align}
+Imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \beta_d$:
+\begin{align}
+|A| &= \exp \left( -c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) \right)
+%
+\intertext{and given $1 - \cos k\Delta x \geq 0$ for well-resolved waves, then}
+%
+\alpha_u - \alpha_d &\geq 0 \\
+%
+\shortintertext{which provides a lower bound on $\alpha_u$:}
+\alpha_u &\geq \alpha_d \label{eqn:lower-bound}
+\end{align}
+Additionally, we do not want more damping than an upwind scheme (where $\alpha_u = \beta_u = 1$, $\alpha_d = \beta_d = 0$), having an amplification factor, $A_\mathrm{up}$:
+\begin{align}
+|A_\mathrm{up}| &= \exp \left( -c \left(1 - \cos k\Delta x \right) \right)
+%
+\intertext{So we need $|A| \geq |A_\mathrm{up}|$:}
+%
+-c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) &\geq -c \left( 1- \cos k\Delta x \right) \\
+\alpha_u - \alpha_d &\leq 1 \\
+\alpha_u &\leq 1 + \alpha_d
+%
+\intertext{which provides an upper bound on $\alpha_u$.  Combining with eqn~\eqref{eqn:lower-bound} we can bound $\alpha_u$ on both sides:}
+%
+\alpha_d \leq \alpha_u \leq 1 + \alpha_d
+\end{align}
+Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
+\begin{align}
+	1 - \alpha_u < \alpha_u &\leq 1 + (1 - \alpha_u) \\
+	0.5 \leq \alpha_u &\leq 1
+%
+\shortintertext{and, since $\alpha_u + \alpha_d = 1$, then}
+%
+	0 \leq \alpha_d &\leq 0.5
+\end{align}
+
+
+\subsection*{Three-point analysis}

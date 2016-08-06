@@ -5,8 +5,9 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/ametsoc2014.bst \
   src/slant-cell-advection/references.bib \
   build/fig-interior-stencils/fig-interior-stencils.pdf \
-  build/fig-boundary-stencils/fig-boundary-stencils.pdf \
   build/fig-double-upwind-stencil/fig-double-upwind-stencil.pdf \
+  build/fig-boundary-stencils/fig-boundary-stencils.pdf \
+  build/fig-stabilisation/fig-stabilisation.pdf \
   build/fig-thermalAdvection-convergence/fig-thermalAdvection-convergence.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-interior-stencils,fig-interior-stencils))

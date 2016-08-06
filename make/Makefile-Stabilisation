@@ -1,0 +1,17 @@
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-stabilisation,fig-stabilisation))
+
+build/fig-stabilisation/fig-stabilisation.pdf: \
+  build/stabilisation/stabilisation.tex
+
+build/stabilisation/stabilisation.tex: \
+  build/stabilisation/cubic.dat \
+  build/stabilisation/centralQuad.dat \
+
+$(eval $(call CopyNamedFiles,src/slant-cell-advection,cubic.dat centralQuad.dat,build/stabilisation))
+
+$(eval $(call Gnuplot,build/stabilisation,stabilisation.tex,src/slant-cell-advection/stabilisation.plt))
+
+build/stabilisation/stabilisation.tex: \
+| build/stabilisation
+
+$(eval $(call MakeDir,build/stabilisation))

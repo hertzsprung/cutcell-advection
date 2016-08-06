@@ -108,7 +108,7 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of
 \begin{align}
 	\mathbf{a} = \mathbf{B}^+ \bm{\phi}
 %
-\intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is calculated as} 
+\intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is a weighted mean of $\bm{\phi}$:} 
 %
 	a_1 = \begin{bmatrix}
 		b_{1,1}^+ \\
@@ -124,17 +124,20 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of
 		\phi_{12}
 	\end{bmatrix}
 \end{align}
-where $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
+where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
 
-The least squares fit presented above was unweighted, with equal weight placed on all stencil cell values.  \citet{lashley2002} showed that a weighted least squares fit is necessary for numerical stability, with greater weight being placed on the cells connected to face $f$.  We assign a weight to each stencil value, $\mathbf{w} = w_1 \ldots w_{12}$ and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
+In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
+\citet{lashley2002} showed that it is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil.
+To achieve this, we allow each cell to make an unequal contribution to the least squares fit.
+We assign a \textit{multiplier} to each stencil value, $\mathbf{m} = m_1 \ldots m_{12}$ and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
 \begin{align}
-	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{w} \cdot \bm{\phi}
+	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{m} \cdot \bm{\phi}
 \end{align}
-where $\mathbf{\tilde{B}} = \mathbf{W} \mathbf{B}$ and $\mathbf{W} = \mathrm{diag}(\mathbf{w})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$:
+where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{diag}(\mathbf{m})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$:
 \begin{align}
-	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{w} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
+	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
 \end{align}
-where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
+where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.  Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.
 
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
@@ -165,18 +168,47 @@ Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is f
 The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the advection scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsection{Stabilisation procedure}
-So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a weighted least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the advection scheme chooses a suitable candidate polynomial and appropriate weights so that the fit is numerically stable.
+So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the advection scheme chooses a suitable candidate polynomial and appropriate multipliers so that the fit is numerically stable.
 
-The approximate value of $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is equal to the dot product of $\mathbf{\tilde{b}_1^+} \cdot \mathbf{w}$ with the cell centre values $\bm{\phi}$.
-If the $\bm{\phi}$ field is assumed to be smooth, 
-shows that the value of $a_1$ depends on the values of the psuedo-inverse, $\mathbf{\tilde{b}_1^+}$.  If the $\phi$ field is assumed to be smooth,  A one-dimensional von Neumann analysis was performed to obtain stability constraints.is presented in the appendix
-% stability constraints
-% reweighting
+The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
+If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\bm{\phi}$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
 
-Stability constraints:
+A one-dimensional von Neumann analysis was performed to obtain stability constraints on the weights $\mathbf{w}$.  The analysis is presented in the appendix, and it shows that the weights must satisfy three constraints:
+\begin{subequations}
+\label{eqn:stability}
 \begin{align}
-	0.5 \leq u \leq 1 \\
-	0 \leq d \leq 0.5 \\
-	u - d \geq \max(|p|)
+	0.5 \leq w_u \leq 1 \label{eqn:stabilityU} \\
+	0 \leq w_d \leq 0.5 \label{eqn:stabilityD} \\
+	w_u - w_d \geq \max_{p \in\:P}(|w_p|)
 \end{align}
+\end{subequations}
+where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell.
 
+The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
+If there are multiple candidates with the same number of terms, the candidate with the largest minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
+
+In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 1024$ and $m_d = 1024$ respectively, and all peripheral cells have multipliers $m_p = 1$.  This choice results in a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
+
+In the third step, we calculate the weights $\mathbf{w}$ from the least squares fit and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list.
+
+Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In practise, we have not encountered any stencil for which this last resort is required.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-stabilisation/fig-stabilisation.pdf}
+%
+	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratical polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  The point data is marked with their weights labelled.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The five points are located at $(-2.8, 2.4)$, $(-1.6, 2.7)$, $(-1.2, 2.2)$, $(-1, 1.8)$ and $(0.62, 1.9)$.}
+	\label{fig:oscillatory1D}
+\end{figure}
+
+To illustrate the stabilisation procedure, figure~\ref{fig:oscillatory1D}a presents a one-dimensional example of a cubic polynomial fitted through five points, with the weight at each point printed above it.
+In preference order, the candidate polynomials are
+\begin{align}
+	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \\
+	\phi &= a_1 + a_2 x + a_3 x^2 \\
+	\phi &= a_1 + a_2 x \\
+	\phi &= a_1
+\end{align}
+We begin with the cubic equation.  The multipliers are chosen so that the polynomial passes almost exactly through the upwind and downwind points that are immediately to the left and right of the $y$-axis respectively.
+The constraint on the upwind point is violated because $w_u = 1.822 > 1$ (equation~\ref{eqn:stabilityU}).  Reducing the downwind multiplier does not help to satisfy the constraint, so we start again with the quadratic equation (figure~\ref{fig:oscillatory1D}b).
+Again, the multipliers are chosen to force the polynomial through the upwind and downwind points, but this violates the constraint on the downwind point because $w_d = 0.502 > 0.5$ (equation~\ref{eqn:stabilityD}).  This time, however, stable weights are found by reducing $w_d$ to one (figure~\ref{fig:oscillatory1D}c) and these are the weights that will be used to approximate $\phi_F$, where the polynomial intercepts the $y$-axis.

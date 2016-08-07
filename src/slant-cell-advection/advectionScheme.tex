@@ -18,7 +18,7 @@ Using the finite volume method, the wind field is prescribed at face centroids a
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
 \end{align}
-where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ belonging to cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
+where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
 
 \begin{figure}
 	\centering
@@ -35,14 +35,14 @@ The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a na
 \begin{align}
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly}
 \end{align}
-A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant term $a_1$.
+A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
 
-The remainder of this section generalises the the approximation technique for arbitrary meshes, explaining the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the advection scheme.
+The remainder of this section generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the advection scheme.
 
 \subsection{Stencil construction}
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
 The opposing faces for face $f$ and upwind cell $c_u$ are determined as follows.
-Defining $G$ to be the set of other faces bounding cell $c_u$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
+Defining $G$ to be the set of faces other than $f$ that border cell $c_u$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
 \begin{align}
 	\mathrm{Opp}(f, g) \equiv - \frac{\mathbf{S}_f \cdot \mathbf{S}_g}{|\mathbf{S}_f|^2} \label{eqn:opp}
 \end{align}
@@ -51,13 +51,13 @@ Using the fact that $\mathbf{a} \cdot \mathbf{b} = |\mathbf{a}|\:|\mathbf{b}| \c
 \begin{align}
 	\mathrm{Opp}(f, g) = - \frac{|\mathbf{S}_g|}{|\mathbf{S}_f|} \cos(\theta)
 \end{align}
-where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the area of $g$ and how closely it parallels face $f$.
+where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be seen that $\mathrm{Opp}$ is a measure of the relative area of $g$ and how closely it parallels face $f$.
 
 The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those faces with $\mathrm{Opp} \geq 0.5$, and the face with the maximum opposedness.  Expressed in set notation, this is
 \begin{align}
-	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max(\mathrm{Opp}(f, g)) \} 
+	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max_{g\:\in\:G}(\mathrm{Opp}(f, g)) \} 
 \end{align}
-On a two-dimensional rectangular mesh, there is always one opposing face that is exactly parallel to the face $f$.
+On a rectangular mesh, there is always one opposing face that is exactly parallel to the face $f$.
 
 Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Having found these two sets of cells, the stencil is constructed to comprise all internal and external cells.
 
@@ -65,11 +65,11 @@ Once the opposing faces have been determined, the set of internal and external c
 	\centering
 	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
 	%
-	\caption{A thirteen-cell, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular.}
+	\caption{A thirteen-cell, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular to $x$.}
 	\label{fig:double-upwind-stencil}
 \end{figure}
 
-Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, marked by black squares.  The resultant stencil contains 13 cells.
+Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  The resultant stencil contains 13 cells.
 
 
 \subsection{Least squares fit}
@@ -101,7 +101,7 @@ which can be written as
 \begin{align}
 	\mathbf{B} \mathbf{a} = \bm{\phi} \label{eqn:unweightedLeastSquares}
 \end{align}
-The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is constructed using only the mesh geometry and is called the \textit{stencil matrix}.
+The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is called the \textit{stencil matrix}, and it is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
 The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of $\mathbf{B}^+$ found by singular value decomposition:
@@ -129,7 +129,7 @@ where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first ro
 In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
 \citet{lashley2002} showed that it is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil.
 To achieve this, we allow each cell to make an unequal contribution to the least squares fit.
-We assign a \textit{multiplier} to each stencil value, $\mathbf{m} = m_1 \ldots m_{12}$ and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
+We assign a \textit{multiplier} to each cell in the stencil, $\mathbf{m} = m_1 \ldots m_{12}$, and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
 \begin{align}
 	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{m} \cdot \bm{\phi}
 \end{align}
@@ -152,7 +152,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a triangular mesh has 19 points (figure~\ref{fig:interiorStencils}a), a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}b), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}c).
 In all three cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
 
-For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  A candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
+For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  In two dimensions, a candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
 
 First, high-order terms may be included in a candidate polynomial only if the lower-order terms are also included.
 Let
@@ -171,7 +171,7 @@ The candidate polynomials are all the dense subsets of $M(x,y)$ that have a sten
 So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the advection scheme chooses a suitable candidate polynomial and appropriate multipliers so that the fit is numerically stable.
 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
-If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\bm{\phi}$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
+If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
 
 A one-dimensional von Neumann analysis was performed to obtain stability constraints on the weights $\mathbf{w}$.  The analysis is presented in the appendix, and it shows that the weights must satisfy three constraints:
 \begin{subequations}
@@ -182,7 +182,7 @@ A one-dimensional von Neumann analysis was performed to obtain stability constra
 	w_u - w_d \geq \max_{p\:\in\:P}(|w_p|)
 \end{align}
 \end{subequations}
-where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell.
+where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell $p$.
 
 The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
 If there are multiple candidates with the same number of terms, the candidate with the largest minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
@@ -197,7 +197,7 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 	\centering
 	\includegraphics{../fig-stabilisation/fig-stabilisation.pdf}
 %
-	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratical polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data is marked with their weights labelled.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The five points are located at $(-2.8, 2.4)$, $(-1.6, 2.7)$, $(-1.2, 2.2)$, $(-1, 1.8)$ and $(0.62, 1.9)$.}
+	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratical polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data are labelled with their respective weights.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The upwind point is located at $(-1, 1.8$ and the downwind point at $(0.62, 1.9)$, and the peripheral points are at $(-2.8, 2.4)$, $(-1.6, 2.7)$ and $(-1.2, 2.2)$.}
 	\label{fig:oscillatory1D}
 \end{figure}
 

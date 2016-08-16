@@ -9,6 +9,7 @@ set key outside top center
 
 set xlabel "$\\Delta x$"
 
+set xrange [1e2:1e4]
 set yrange [1e-8:1e-1]
 
 set multiplot layout 1,2

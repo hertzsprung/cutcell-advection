@@ -1,6 +1,6 @@
 \section{Multidimensional advection scheme}
 
-The advection of a dependent variable $\phi$ is given by the conservation equation
+The advection of a dependent variable $\phi$ is given by the equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
@@ -18,7 +18,7 @@ Using the finite volume method, the wind field is prescribed at face centroids a
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
 \end{align}
-where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.
+where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.  The approximation method to calculate $\phi_F$ is described here.
 
 \begin{figure}
 	\centering
@@ -129,7 +129,7 @@ where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first ro
 In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
 \citet{lashley2002} showed that it is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil.
 To achieve this, we allow each cell to make an unequal contribution to the least squares fit.
-We assign a \textit{multiplier} to each cell in the stencil, $\mathbf{m} = m_1 \ldots m_{12}$, and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
+We assign an integer \textit{multiplier} to each cell in the stencil, $\mathbf{m} = m_1 \ldots m_{12}$, and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
 \begin{align}
 	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{m} \cdot \bm{\phi}
 \end{align}
@@ -137,7 +137,9 @@ where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{dia
 \begin{align}
 	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
 \end{align}
-where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.  Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.
+where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
+Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.
+Note that, once $\mathbf{\tilde{b}_1^+}$ is calculated for each stencil, only the first row needs to be stored.
 
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
@@ -187,7 +189,7 @@ where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respecti
 The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
 If there are multiple candidates with the same number of terms, the candidate with the largest minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
 
-In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 1024$ and $m_d = 1024$ respectively, and all peripheral cells have multipliers $m_p = 1$.  This choice results in a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
+In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral cells have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citet{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
 
 In the third step, we calculate the weights $\mathbf{w}$ from the least squares fit and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list.
 

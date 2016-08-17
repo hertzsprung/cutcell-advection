@@ -37,6 +37,8 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 \section{Slanted cell mesh generation}
 
+\TODO{can slanted cells represent cliffs?  Terry is keen to do tests with cliffs.  \citet{yamazaki-satomura2010} did tests with cliffs, too.}
+
 \begin{figure}
 	\includegraphics[width=0.5\textwidth]{slantCellConstruction.png}
 	\caption{\TODO{Before and after diagrams showing how a slanted cell mesh is constructed from a uniform quadrilateral mesh}}
@@ -58,9 +60,7 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 
 \section{Results}
-\subsection{\TODO{Horizontal advection?}}
-
-\subsection{Thermal advection}
+\subsection{Tracer advection in a terrain-following wind field}
 
 Domain \SI{301}{\kilo\meter} wide, \SI{25}{\kilo\meter} high, Sch\"ar had $\Delta x = \SI{1}{\kilo\meter}, \Delta z^\star = \SI{500}{\meter}$.  Integrate \SI{18000}{\second} so that tracer initially at left hand edge of mountain has safely passed through the outlet boundary (i.e. we are in a steady-state solution).  $\Delta t = \SI{25}{\second}$ for Sch\"ar's mesh.
 

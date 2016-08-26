@@ -42,7 +42,30 @@ First, we present a multidimensional advection scheme that is computationally ch
 \section{Results}
 
 \subsection{Deformational flow}
-Following \citep{lauritzen2012}.  \TODO{which of the initial conditions should I use?  slotted cylinder would be the hardest}
+Following \citep{lauritzen2012}.  Tests on hex and triangular meshes, again comparing cubicUpwindCPCFit against linearUpwind.  \citet{lauritzen2012} had six classes of test:
+\begin{enumerate}
+	\item \textbf{convergence tests with Gaussian hills}
+	\item \textbf{minimal resolution test with cosine bell}
+	\item filament preservation
+	\item \textbf{"rough" distribution with a slotted cylinder}
+	\item correlation preservation
+	\item cosine bell in divergent flow
+\end{enumerate}
+I think we should reproduce a subset of these: 1, 2 and 4 would be good, perhaps 6.  But I think 3 and 5 go beyond the capabilities of our scheme and there's no need to attempt them.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{hexCubUpEvolution.png}
+	\caption{\TODO{evolution of deformational flow test case with plots at $t=0$, $t=T/2$ and $t=T$.  The analytic solution at $t=T$ is identical to the initial condition.  This figure is supposed to give a sense of what `should' happen, so plot at a high resolution using whichever mesh gives better results.}}
+\end{figure}
+
+\begin{figure}
+	\includegraphics{../fig-deformationSphere-convergence/fig-deformationSphere-convergence.pdf}
+	\caption{\TODO{deformational flow l2 and linf convergence plots comparing cubed sphere, hex and tri, cubicUpwindCPCFit and linearUpwind}}
+\end{figure}
+
+% what do other people plot/analyse when they do this test?
+% lauritzen2014 plot T/2 for the slotted cylinder at 1.5 and 0.75 degrees
+% I think that the error field at T would be more revealing
 
 \section{Conclusions}
 
@@ -72,5 +95,7 @@ Idealised atmospheric flows over steep slopes are accurately represented using t
 
 \bibliographystyle{ametsoc2014}
 \bibliography{references}
+
+\include {vonNeumann}
 
 \end{document}

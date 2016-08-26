@@ -1,5 +1,5 @@
 \section*{Appendix: One-dimensional von Neumann stability analysis}
-Two analyses are performed in order to find stability constraints on the weights $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ as appear in equation~\eqref{eqn:weightedPinv}.  The first analysis uses two points to derived separate constraints on the upwind weight $w_u$ and downwind weight $w_d$.  The second analysis uses three points to derive a constraint that considers all weights in a stencil.
+Two analyses are performed in order to find stability constraints on the weights $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ as appear in equation~\eqref{eqn:weightedPinv}.  The first analysis uses two points to derive separate constraints on the upwind weight $w_u$ and downwind weight $w_d$.  The second analysis uses three points to derive a constraint that considers all weights in a stencil.
 
 \subsection*{Two-point analysis}
 We start with the conservation equation for a dependent variable $\phi$ that is discrete-in-space and continuous-in-time
@@ -11,7 +11,7 @@ We start with the conservation equation for a dependent variable $\phi$ that is 
 \phi_L &= \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
 \phi_R &= \beta_u \phi_j + \beta_d \phi_{j+1}
 \end{align}
-where $\alpha_u$ and $\beta_u$ are the upwind weights and $\alpha_d$ and $\beta_d$ are the downwind weights for the left and right fluxes respectively.  A subscript $j$ denotes the value at a given point $x = j \Delta x$ where $\Delta x$ is a uniform mesh spacing.
+where $\alpha_u$ and $\beta_u$ are the upwind weights and $\alpha_d$ and $\beta_d$ are the downwind weights for the left and right fluxes respectively, and $\alpha_u + \alpha_d = 1$ and $\beta_u + \beta_d = 1$.  A subscript $j$ denotes the value at a given point $x = j \Delta x$ where $\Delta x$ is a uniform mesh spacing.
 
 At a given time $t = n \Delta t$ at time-level $n$ and with a time-step $\Delta t$, we assume a wave-like solution with an amplification factor $A$, such that
 \begin{align}
@@ -38,7 +38,7 @@ A &= e^{-c \Re} e^{-\iu c \Im} \\
 |A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \quad \text{and} \\
 \arg(A) &= -c \Im = -c \left( \beta_d + \alpha_u \right) \sin k\Delta x
 \end{align}
-For stability, we need $|A| \leq 1$ and $\arg(A) < 0$ for $c > 0$, so
+For stability, we need $|A| \leq 1$ and for advection in the correct direction we need $\arg(A) < 0$ for $c > 0$, so
 \begin{align}
 \beta_u - \alpha_d + \left( \beta_d - \alpha_u \right) \cos k\Delta x &\geq 0 \quad \forall k\Delta x \quad \text{and} \\
 \beta_d + \alpha_u &> 0 \label{eqn:arg-ineq}
@@ -47,7 +47,7 @@ Imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \b
 \begin{align}
 |A| &= \exp \left( -c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) \right)
 %
-\intertext{and given $1 - \cos k\Delta x \geq 0$ for well-resolved waves, then}
+\intertext{and given $1 - \cos k\Delta x \geq 0$, then}
 %
 \alpha_u - \alpha_d &\geq 0 \\
 %
@@ -68,7 +68,7 @@ Additionally, we do not want more damping than an upwind scheme (where $\alpha_u
 %
 \alpha_d \leq \alpha_u \leq 1 + \alpha_d
 \end{align}
-Now, assume that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
+Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
 \begin{align}
 	1 - \alpha_u < \alpha_u &\leq 1 + (1 - \alpha_u) \\
 	0.5 \leq \alpha_u &\leq 1

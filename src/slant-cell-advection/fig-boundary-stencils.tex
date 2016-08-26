@@ -6,7 +6,8 @@
   cpnt/.style={fill=gray},
 ]
 
-\node [above] at (0,6) {(a)};
+\node [above] at (-1,6) {(a)};
+\draw (-1,0) [fill=black!20,black!20] rectangle (0,6) node [midway,black] {\rotatebox{90}{Inlet boundary}};
 \draw (0,0) rectangle (4.8,6);
 \draw (0,2) -- (4.8,2);
 \draw (0,4) -- (4.8,4);
@@ -25,8 +26,9 @@
 \path [cpnt] (3.6,3) circle [radius=0.1] node [right] {$\phi_d$};
 \path [cpnt] (3.6,5) circle [radius=0.1];
 
-\begin{scope}[shift={(7,0)}]
-\node [above] at (0,6) {(b)};
+\begin{scope}[shift={(8,0)}]
+\draw (-1,0) [fill=black!20,black!20] rectangle (0,6) node [midway,black] {\rotatebox{90}{Inlet boundary}};
+\node [above] at (-1,6) {(b)};
 
 \draw (0,0) rectangle (7.2,6);
 \draw (0,2) -- (7.2,2);

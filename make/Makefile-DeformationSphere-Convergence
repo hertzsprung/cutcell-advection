@@ -10,6 +10,10 @@ build/deformationSphere-convergence/deformationSphere-convergence.tex: \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-tri-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-tri-collated/1.0368e+06/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-tri-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-tri-collated/1.0368e+06/linferrorT.txt \
 | build/deformationSphere-convergence
 
 $(eval $(call MakeDir,build/deformationSphere-convergence))

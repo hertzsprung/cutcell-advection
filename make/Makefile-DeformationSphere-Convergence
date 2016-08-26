@@ -1,0 +1,15 @@
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-convergence,fig-deformationSphere-convergence))
+
+build/fig-deformationSphere-convergence/fig-deformationSphere-convergence.pdf: \
+  build/deformationSphere-convergence/deformationSphere-convergence.tex
+
+$(eval $(call Gnuplot,build/deformationSphere-convergence,deformationSphere-convergence.tex,src/slant-cell-advection/deformationSphere-convergence.plt))
+
+build/deformationSphere-convergence/deformationSphere-convergence.tex: \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt \
+| build/deformationSphere-convergence
+
+$(eval $(call MakeDir,build/deformationSphere-convergence))

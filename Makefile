@@ -21,6 +21,6 @@ include $(MAKE_COMMON)/templates/Makefile-FileSystem
 include $(MAKE_COMMON)/templates/Makefile-Gnuplot
 include $(MAKE_COMMON)/templates/Makefile-LaTeX
 include make/Makefile-Stabilisation
-include make/Makefile-ThermalAdvection-Convergence
+include make/Makefile-DeformationSphere-Convergence
 include make/Makefile-Slant-Cell-Advection
 include make/Makefile-Supplementary

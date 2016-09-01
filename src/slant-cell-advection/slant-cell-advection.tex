@@ -42,16 +42,16 @@ First, we present a multidimensional advection scheme that is computationally ch
 \section{Results}
 
 \subsection{Deformational flow}
-Following \citep{lauritzen2012}.  Tests on hex and triangular meshes, again comparing cubicUpwindCPCFit against linearUpwind.  \citet{lauritzen2012} had six classes of test:
+Following \citep{lauritzen2012}.  Tests on cubed sphere, hex and triangular meshes, again comparing cubicUpwindCPCFit against linearUpwind.  \citet{lauritzen2012} had six classes of test:
 \begin{enumerate}
 	\item \textbf{convergence tests with Gaussian hills}
 	\item \textbf{minimal resolution test with cosine bell}
 	\item filament preservation
-	\item \textbf{"rough" distribution with a slotted cylinder}
+	\item "rough" distribution with a slotted cylinder
 	\item correlation preservation
-	\item cosine bell in divergent flow
+	\item \textbf{cosine bell in divergent flow}
 \end{enumerate}
-I think we should reproduce a subset of these: 1, 2 and 4 would be good, perhaps 6.  But I think 3 and 5 go beyond the capabilities of our scheme and there's no need to attempt them.
+We will reproduce 1, 2 and 6, highlighted in bold.
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{hexCubUpEvolution.png}
@@ -65,18 +65,8 @@ I think we should reproduce a subset of these: 1, 2 and 4 would be good, perhaps
 
 % what do other people plot/analyse when they do this test?
 % lauritzen2014 plot T/2 for the slotted cylinder at 1.5 and 0.75 degrees
-% I think that the error field at T would be more revealing
 
 \section{Conclusions}
-
-The slanted cell method
-\begin{itemize}
-	\item alleviates the small cell problem
-	\item has a linear relationship between mesh spacing and maximum timestep because arbitrarily small cells are not created
-	\item accurately represents a hydrostatically balanced atmosphere at rest over steep Alpine terrain
-	\item is straightforward to construct compared to the cut cell method
-	\item generalises to 3D, applicable to any horizontal mesh structure
-\end{itemize}
 
 The advection scheme is
 \begin{itemize}
@@ -85,8 +75,6 @@ The advection scheme is
 	\item fourth-order convergent at best, first-order convergent at worst
 	\item stable for Courant numbers up to 1
 \end{itemize}
-
-Idealised atmospheric flows over steep slopes are accurately represented using the multidimensional advection scheme without severely constraining the timestep.  The multidimensional advection scheme is suitable for complex flows on arbitrary meshes.
 
 \section{Acknowledgements}
 \TODO{Supervisors, funding bodies.  ASAM group for the mesh generator---I should ask permission to use cut cell meshes in this paper.  Dr Tristan Pryer.  Dr Shing Hing Man.}

@@ -1,0 +1,23 @@
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-convergence,fig-mountainAdvection-convergence))
+
+build/fig-mountainAdvection-convergence/fig-mountainAdvection-convergence.pdf: \
+  build/mountainAdvection-convergence/mountainAdvection-convergence.tex
+
+$(eval $(call Gnuplot,build/mountainAdvection-convergence,mountainAdvection-convergence.tex,src/slant-cell-advection/mountainAdvection-convergence.plt))
+
+build/mountainAdvection-convergence/mountainAdvection-convergence.tex: \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-linearUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-linearUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-cubicUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-cubicUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-linearUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-linearUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-cubicUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-cubicUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-linearUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-linearUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-cubicUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-cubicUpwind-collated/10000/linferrorT.txt \
+| build/mountainAdvection-convergence
+
+$(eval $(call MakeDir,build/mountainAdvection-convergence))

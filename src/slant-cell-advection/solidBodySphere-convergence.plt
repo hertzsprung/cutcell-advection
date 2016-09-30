@@ -10,7 +10,7 @@ set key outside top center
 set xlabel "$\\Delta \\lambda$"
 
 set xrange [10:0.3]
-set yrange [1e-3:1]
+set yrange [1e-4:1]
 
 set multiplot layout 1,2
 

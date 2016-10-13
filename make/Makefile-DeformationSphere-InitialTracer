@@ -1,2 +1,0 @@
-$(eval $(call DeformationSphereInitialTracerPlot,build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5))
-$(eval $(call DeformationSphereInitialTracerPlot,build/deformationSphere-cosBells-nondiv-linearUpwind-hex-5))

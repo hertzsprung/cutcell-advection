@@ -1,0 +1,28 @@
+# $1 -- case directory
+define DeformationSphereTracerPlots
+
+$(eval $(call GmtPlot,$1,src/deformationSphere/tracer,0,pdf))
+$(eval $(call GmtPlot,$1,src/deformationSphere/tracer,518400,pdf))
+$(eval $(call GmtPlot,$1,src/deformationSphere/tracer,1.0368e+06,pdf))
+
+$1/0/tracer.pdf: $1/0/T
+$1/518400/tracer.pdf: $1/518400/T
+$1/1.0368e+06/tracer.pdf: $1/1.0368e+06/T
+
+$1/0/tracer.pdf $1/518400/tracer.pdf $1/1.0368e+06/tracer.pdf: \
+  $(addprefix $1/,$(systemFiles)) \
+  $(addprefix $1/,$(meshFiles))
+
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/$1,$(meshFiles),$1))
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/src/dummy,$(systemFiles),$1))
+$(eval $(call CopyNamedFile,$(ATMOSTESTS_DIR)/$1,0/T,$1))
+$(eval $(call CopyNamedFile,$(ATMOSTESTS_DIR)/$1,518400/T,$1))
+$(eval $(call CopyNamedFile,$(ATMOSTESTS_DIR)/$1,1.0368e+06/T,$1))
+$(eval $(call MakeDir,$1/0))
+$(eval $(call MakeDir,$1/518400))
+$(eval $(call MakeDir,$1/1.0368e+06))
+$(eval $(call MakeDir,$1/system))
+$(eval $(call MakeDir,$1/$(polyMesh)))
+$(eval $(call MakeDir,$1/$(gmtDicts)))
+
+endef

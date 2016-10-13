@@ -2,6 +2,7 @@ $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advectio
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/advectionScheme.tex \
+  src/slant-cell-advection/deformationSphere.tex \
   src/slant-cell-advection/vonNeumann.tex \
   src/slant-cell-advection/ametsoc2014.bst \
   src/slant-cell-advection/references.bib \

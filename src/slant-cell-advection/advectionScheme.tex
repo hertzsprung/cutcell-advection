@@ -1,5 +1,7 @@
 \section{Multidimensional advection scheme}
 
+\TODO{I haven't said exactly how we do 2D stencils on the sphere: how local coordinates are established, projection onto a local 2D plane}
+
 The advection of a dependent variable $\phi$ in a prescribed, non-divergent wind field $\mathbf{u}$ is given by the equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
@@ -23,7 +25,7 @@ where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescr
 \begin{figure}
 	\centering
 	\includegraphics{../fig-interior-stencils/fig-interior-stencils.pdf}
-	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) triangular, (b) rectangular and (c) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
+	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) rectangular and (b) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
 	\label{fig:interiorStencils}
 \end{figure}
 
@@ -151,7 +153,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 	\label{fig:boundaryStencils}
 \end{figure}
 
-The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a triangular mesh has 19 points (figure~\ref{fig:interiorStencils}a), a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}b), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}c).
+The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}a), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}b).
 In all three cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
 
 For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  In two dimensions, a candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.

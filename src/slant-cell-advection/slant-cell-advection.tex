@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[times]{elsarticle}
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -8,8 +8,6 @@
 \usepackage{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{doi}
-\usepackage{charter}
-\usepackage[bitstream-charter]{mathdesign}
 \usepackage[final,babel]{microtype}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
@@ -18,10 +16,6 @@
 \usepackage{siunitx}
 \usepackage[font={small}]{caption}
 
-
-\title{Multidimensional advection over steep terrain on a new type of Cartesian mesh \\ \TODO{(working title)}}
-\author{James Shaw}
-
 \newcommand{\iu}{{i\mkern1mu}}
 \newcommand{\iunit}{\boldsymbol{\hat \imath}}
 \newcommand{\junit}{\boldsymbol{\hat \jmath}}
@@ -29,58 +23,69 @@
 \newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
 
 \begin{document}
-\maketitle
+
+\begin{frontmatter}
+\title{A finite volume transport scheme for atmospheric flows over steep terrain \\ \TODO{(working title)}}
+\author[uor]{James Shaw\corref{cor}}
+\ead{js102@zepler.net}
+\author[uor]{Hilary Weller}
+
+\cortext[cor]{Corresponding author}
+\address[uor]{Department of Meteorology, University of Reading, Reading, United Kingdom}
+
+\begin{abstract}
+	\TODO{abstract}
+\end{abstract}
+
+\begin{keyword}
+	\TODO{keywords}
+\end{keyword}
+\end{frontmatter}
 
 \section{Introduction}
 
-First, we present a multidimensional advection scheme that is computationally cheap and suitable for complex flows on arbitrary meshes.  Second, we present a new type of Cartesian mesh, the slanted cell mesh, that avoids the small cell problem associated with cut cell meshes.   We apply the advection scheme to tests over steep orography and show that accurate results are obtained on slanted cell meshes.  Finally, we challenge the multidimensional advection scheme using a test of deformational flow on a geodesic mesh.
+First, we present a multidimensional advection scheme that is computationally cheap and suitable for complex flows on a variety of meshes.  Second, we present a new type of Cartesian mesh, the slanted cell mesh, that avoids the small cell problem associated with cut cell meshes.   We apply the advection scheme to tests over steep orography and show that accurate results are obtained on slanted cell meshes.  Finally, we challenge the multidimensional advection scheme using a test of deformational flow on a geodesic mesh.
 
 
 \include{advectionScheme}
 
 
 \section{Results}
+\TODO{should I use RK4 or will RK2 suffice?}
 
-\subsection{Deformational flow}
-Following \citep{lauritzen2012}.  Tests on cubed sphere, hex and triangular meshes, again comparing cubicUpwindCPCFit against linearUpwind.  \citet{lauritzen2012} had six classes of test:
-\begin{enumerate}
-	\item \textbf{convergence tests with Gaussian hills}
-	\item \textbf{minimal resolution test with cosine bell}
-	\item filament preservation
-	\item "rough" distribution with a slotted cylinder
-	\item correlation preservation
-	\item \textbf{cosine bell in divergent flow}
-\end{enumerate}
-We will reproduce 1, 2 and 6, highlighted in bold.
+\subsection{Horizontal transport with mesh refinement}
+Coping with sudden changes in mesh spacing is necessary for some types of mesh refinement and mesh adaptivity.  We should use the horizontal advection test from \citet{schaer2002} on a BTF mesh with a 2x/4x/8x refined mesh in part of the mountainous region.  The tracer will have to pass into and out of this refined region.  This test will also help to familiarise the reader with this standard test.  We will modify parts of this test in the following subsection in order to test advection over the lower boundary.
 
 \begin{figure}
-	\includegraphics[width=\textwidth]{hexCubUpEvolution.png}
-	\caption{\TODO{evolution of deformational flow test case with plots at $t=0$, $t=T/2$ and $t=T$.  The analytic solution at $t=T$ is identical to the initial condition.  This figure is supposed to give a sense of what `should' happen, so plot at a high resolution using whichever mesh gives better results.}}
+	\caption{\TODO{horizontal advection error contours for linearUpwind and cubicFit}}
+\end{figure}
+
+\subsection{Transport over a mountainous lower boundary}
+This test is a modification of the \citet{schaer2002} horizontal advection test.  The mountain height is raised, the wind field is aligned with the the terrain-following surfaces, and the tracer is moved downward so that it is advected over the ground.
+
+\begin{itemize}
+	\item Compare cubicFit with linearUpwind
+	\item Compare errors on BTF, cut cells and slanted cells using a small timestep
+	\item Show maximum timesteps for various mesh spacings using Courant number close to one
+\end{itemize}
+
+\begin{figure}
+	\caption{\TODO{mountain advection error contours for BTF, cut cells and slanted cells; linearUpwind and cubicFit}}
 \end{figure}
 
 \begin{figure}
-	\includegraphics{../fig-deformationSphere-convergence/fig-deformationSphere-convergence.pdf}
-	\caption{\TODO{deformational flow l2 and linf convergence plots comparing cubed sphere, hex and tri, cubicUpwindCPCFit and linearUpwind}}
+	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}}
 \end{figure}
 
-% what do other people plot/analyse when they do this test?
-% lauritzen2014 plot T/2 for the slotted cylinder at 1.5 and 0.75 degrees
-
-\subsection{Mountain advection}
-
-
-\begin{figure}
-	\includegraphics{../fig-mountainAdvection-convergence/fig-mountainAdvection-convergence.pdf}
-	\caption{\TODO{mountain advection l2 and linf convergence plots comparing btf, slanted cells and cut cells, cubicUpwindCPCFit and linearUpwind}}
-\end{figure}
+\include{deformationSphere}
 
 \section{Conclusions}
 
 The advection scheme is
 \begin{itemize}
-	\item suitable for complex flows on arbitrary meshes
+	\item suitable for complex flows on a variety of meshes
 	\item computationally cheap at runtime, with more expensive computations depending only on the mesh geometry
-	\item fourth-order convergent at best, first-order convergent at worst
+	\item \TODO{convergence}
 	\item stable for Courant numbers up to 1
 \end{itemize}
 
@@ -91,7 +96,5 @@ The advection scheme is
 
 \bibliographystyle{ametsoc2014}
 \bibliography{references}
-
-\include {vonNeumann}
 
 \end{document}

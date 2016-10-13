@@ -13,3 +13,5 @@ src/errors/convergence-thermalAdvection.pdf
 *.log
 __pycache__
 .cache
+gmt.history
+colourScale.cpt

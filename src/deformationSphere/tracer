@@ -1,0 +1,24 @@
+FoamFile {
+        version         1.4;
+        format          ascii;
+
+        root            "";
+        case            "";
+        instance        "constant";
+        local           "";
+
+        class           dictionary;
+        object          gmtDict;
+}
+
+projection "Q180/6i"; 
+projection2D latLon;
+separateLegend true;
+plotBoundaryDots false;
+
+FieldsToPlot (
+	[T rawValues 0 1 0.1 "$GMTU/colours/green_linear_rev.cpt"]
+);
+
+region "-180/180/-90/90"; 
+boundaryMarks "90/45WSen";

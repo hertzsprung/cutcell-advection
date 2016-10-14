@@ -1,3 +1,4 @@
+# gaussians
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-gaussiansConvergence,fig-deformationSphere-gaussiansConvergence))
 
 build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf: \
@@ -17,3 +18,20 @@ build/deformationSphere-gaussiansConvergence/deformationSphere-gaussiansConverge
 | build/deformationSphere-gaussiansConvergence
 
 $(eval $(call MakeDir,build/deformationSphere-gaussiansConvergence))
+
+# cosBells
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-cosBellsConvergence,fig-deformationSphere-cosBellsConvergence))
+
+build/fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf: \
+  build/deformationSphere-cosBellsConvergence/deformationSphere-cosBellsConvergence.tex
+
+$(eval $(call Gnuplot,build/deformationSphere-cosBellsConvergence,deformationSphere-cosBellsConvergence.tex,src/slant-cell-advection/deformationSphere-cosBellsConvergence.plt))
+
+build/deformationSphere-cosBellsConvergence/deformationSphere-cosBellsConvergence.tex: \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-cosBells-nondiv-linearUpwind-hex-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-cosBells-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-cosBells-nondiv-linearUpwind-quad-collated/1.0368e+06/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/deformationSphere-cosBells-nondiv-cubicUpwind-quad-collated/1.0368e+06/l2errorT.txt \
+| build/deformationSphere-cosBellsConvergence
+
+$(eval $(call MakeDir,build/deformationSphere-cosBellsConvergence))

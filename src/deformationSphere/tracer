@@ -11,13 +11,13 @@ FoamFile {
         object          gmtDict;
 }
 
-projection "Q180/6i"; 
+projection "Q180/2.7i"; 
 projection2D latLon;
 separateLegend true;
 plotBoundaryDots false;
 
 FieldsToPlot (
-	[T rawValues 0 1 0.1 "$GMTU/colours/green_linear_rev.cpt"]
+	[T rawValues -0.1 1 0.1 "$GMTU/colours/green_linear_rev.cpt"]
 );
 
 region "-180/180/-90/90"; 

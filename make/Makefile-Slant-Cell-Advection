@@ -11,6 +11,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-boundary-stencils/fig-boundary-stencils.pdf \
   build/fig-stabilisation/fig-stabilisation.pdf \
   build/fig-deformationSphere-convergence/fig-deformationSphere-convergence.pdf \
+  build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf \
   build/fig-mountainAdvection-convergence/fig-mountainAdvection-convergence.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-interior-stencils,fig-interior-stencils))

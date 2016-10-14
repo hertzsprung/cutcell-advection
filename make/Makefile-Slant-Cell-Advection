@@ -2,6 +2,7 @@ $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advectio
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/advectionScheme.tex \
+  src/slant-cell-advection/mountainAdvection.tex \
   src/slant-cell-advection/deformationSphere.tex \
   src/slant-cell-advection/vonNeumann.tex \
   src/slant-cell-advection/ametsoc2014.bst \
@@ -10,6 +11,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-double-upwind-stencil/fig-double-upwind-stencil.pdf \
   build/fig-boundary-stencils/fig-boundary-stencils.pdf \
   build/fig-stabilisation/fig-stabilisation.pdf \
+  build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \
   build/fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf \
   build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf \

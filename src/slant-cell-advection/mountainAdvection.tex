@@ -1,0 +1,20 @@
+\subsection{Transport over a mountainous lower boundary}
+This test is a modification of the \citet{schaer2002} horizontal advection test.  The mountain height is raised, the wind field is aligned with the the terrain-following surfaces, and the tracer is moved downward so that it is advected over the ground.
+
+\begin{itemize}
+	\item Compare cubicFit with linearUpwind
+	\item Compare errors on BTF, cut cells and slanted cells using a small timestep
+	\item Show maximum timesteps for various mesh spacings using Courant number close to one
+\end{itemize}
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
+	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom)}}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}}
+\end{figure}
+

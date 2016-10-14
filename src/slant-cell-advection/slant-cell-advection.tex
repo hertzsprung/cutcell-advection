@@ -61,22 +61,7 @@ Coping with sudden changes in mesh spacing is necessary for some types of mesh r
 	\caption{\TODO{horizontal advection error contours for linearUpwind and cubicFit}}
 \end{figure}
 
-\subsection{Transport over a mountainous lower boundary}
-This test is a modification of the \citet{schaer2002} horizontal advection test.  The mountain height is raised, the wind field is aligned with the the terrain-following surfaces, and the tracer is moved downward so that it is advected over the ground.
-
-\begin{itemize}
-	\item Compare cubicFit with linearUpwind
-	\item Compare errors on BTF, cut cells and slanted cells using a small timestep
-	\item Show maximum timesteps for various mesh spacings using Courant number close to one
-\end{itemize}
-
-\begin{figure}
-	\caption{\TODO{mountain advection error contours for BTF, cut cells and slanted cells; linearUpwind and cubicFit}}
-\end{figure}
-
-\begin{figure}
-	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}}
-\end{figure}
+\include{mountainAdvection}
 
 \include{deformationSphere}
 

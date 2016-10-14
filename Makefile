@@ -22,9 +22,10 @@ include $(MAKE_COMMON)/templates/Makefile-GmtPlot
 include $(MAKE_COMMON)/templates/Makefile-Gnuplot
 include $(MAKE_COMMON)/templates/Makefile-LaTeX
 include make/templates/Makefile-DeformationSphere-TracerPlots
+include make/templates/Makefile-MountainAdvection-ContourPlot
 include make/Makefile-Stabilisation
 include make/Makefile-DeformationSphere-Convergence
 include make/Makefile-DeformationSphere-TracerPlots
-include make/Makefile-MountainAdvection-Convergence
+include make/Makefile-MountainAdvection
 include make/Makefile-Slant-Cell-Advection
 include make/Makefile-Supplementary

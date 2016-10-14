@@ -1,0 +1,31 @@
+# $1 -- case directory
+# $2 -- axis labels (SW or W or S)
+define MountainAdvectionPlots
+
+$(eval $(call GmtPlots,$1,src/mountainAdvection/tracerContours,10000,pdf))
+$(eval $(call GmtPlot,$1,src/mountainAdvection/errorContours$2,10000,pdf))
+
+$1/10000/tracerContours.pdf: \
+  $1/10000/T \
+  $1/10000/T5000 \
+  $1/10000/T0 \
+  $(addprefix $1/,$(systemFiles)) \
+  $(addprefix $1/,$(meshFiles))
+
+$1/10000/errorContours$2.pdf: \
+  $1/10000/T_diff \
+  $(addprefix $1/,$(systemFiles)) \
+  $(addprefix $1/,$(meshFiles))
+
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/$1,$(meshFiles),$1))
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/src/dummy,$(systemFiles),$1))
+$(eval $(call CopyNamedFile,$(ATMOSTESTS_DIR)/$1,10000/T_diff,$1))
+$(eval $(call CopyFile,$(ATMOSTESTS_DIR)/$1/0/T,$1/10000/T0))
+$(eval $(call CopyFile,$(ATMOSTESTS_DIR)/$1/5000/T,$1/10000/T5000))
+$(eval $(call CopyNamedFile,$(ATMOSTESTS_DIR)/$1,10000/T,$1))
+$(eval $(call MakeDir,$1/10000))
+$(eval $(call MakeDir,$1/system))
+$(eval $(call MakeDir,$1/$(polyMesh)))
+$(eval $(call MakeDir,$1/$(gmtDicts)))
+
+endef

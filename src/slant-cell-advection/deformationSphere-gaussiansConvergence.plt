@@ -5,7 +5,7 @@ set logscale
 set format x "$10^{%L}$"
 set format y "$10^{%L}$"
 
-set key outside top center
+set key tmargin
 
 set xlabel "$\\Delta \\lambda$"
 
@@ -18,9 +18,9 @@ set multiplot layout 1,2
 
 set ylabel "$\\ell_2$ error"
 plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 1 dt 3 lw 2 title 'hex linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 1 title 'hex cubicUpwind', \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 1 title 'hex cubicFit', \
      "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 2 dt 3 lw 2 title 'quad linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 2 title 'quad cubicUpwind', \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 2 title 'quad cubicFit', \
      x * 1e-1 lc rgbcolor "black" dt 1 lw 1 title '1st order', \
      x**2 * 1e-1 lc rgbcolor "black" dt 3 lw 3 title '2nd order'
 
@@ -28,8 +28,8 @@ plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwi
 
 set ylabel "$\\ell_\\infty$ error"
 plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 dt 3 lw 2 title 'hex linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 title 'hex cubicUpwind', \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 title 'hex cubicFit', \
      "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 dt 3 lw 2 title 'quad linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 title 'quad cubicUpwind', \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 title 'quad cubicFit', \
      x * 1e-1 lc rgbcolor "black" dt 1 lw 1 title '1st order', \
      x**2 * 1e-1 lc rgbcolor "black" dt 3 lw 3 title '2nd order'

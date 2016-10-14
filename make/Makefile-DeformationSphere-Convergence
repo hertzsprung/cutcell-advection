@@ -1,11 +1,11 @@
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-convergence,fig-deformationSphere-convergence))
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-gaussiansConvergence,fig-deformationSphere-gaussiansConvergence))
 
-build/fig-deformationSphere-convergence/fig-deformationSphere-convergence.pdf: \
-  build/deformationSphere-convergence/deformationSphere-convergence.tex
+build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf: \
+  build/deformationSphere-gaussiansConvergence/deformationSphere-gaussiansConvergence.tex
 
-$(eval $(call Gnuplot,build/deformationSphere-convergence,deformationSphere-convergence.tex,src/slant-cell-advection/deformationSphere-convergence.plt))
+$(eval $(call Gnuplot,build/deformationSphere-gaussiansConvergence,deformationSphere-gaussiansConvergence.tex,src/slant-cell-advection/deformationSphere-gaussiansConvergence.plt))
 
-build/deformationSphere-convergence/deformationSphere-convergence.tex: \
+build/deformationSphere-gaussiansConvergence/deformationSphere-gaussiansConvergence.tex: \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/l2errorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt \
@@ -14,6 +14,6 @@ build/deformationSphere-convergence/deformationSphere-convergence.tex: \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/linferrorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/l2errorT.txt \
   $(ATMOSTESTS_DIR)/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/linferrorT.txt \
-| build/deformationSphere-convergence
+| build/deformationSphere-gaussiansConvergence
 
-$(eval $(call MakeDir,build/deformationSphere-convergence))
+$(eval $(call MakeDir,build/deformationSphere-gaussiansConvergence))

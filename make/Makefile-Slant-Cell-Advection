@@ -15,8 +15,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \
   build/fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf \
   build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf \
-  build/fig-deformationSphere-divergentTracer/fig-deformationSphere-divergentTracer.pdf \
-  build/fig-mountainAdvection-convergence/fig-mountainAdvection-convergence.pdf
+  build/fig-deformationSphere-divergentTracer/fig-deformationSphere-divergentTracer.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-interior-stencils,fig-interior-stencils))
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-double-upwind-stencil,fig-double-upwind-stencil))

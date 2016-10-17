@@ -16,3 +16,17 @@ $(eval $(call MountainAdvectionPlots,build/mountainAdvection-btf-cubicUpwind-100
 $(eval $(call MountainAdvectionPlots,build/mountainAdvection-cutCell-cubicUpwind-1000,S))
 $(eval $(call MountainAdvectionPlots,build/mountainAdvection-slantedCell-cubicUpwind-1000,S))
 
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-maxdt,fig-mountainAdvection-maxdt))
+
+build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf: \
+  build/mountainAdvection-maxdt/mountainAdvection-maxdt.tex
+
+$(eval $(call Gnuplot,build/mountainAdvection-maxdt,mountainAdvection-maxdt.tex,src/slant-cell-advection/mountainAdvection-maxdt.plt))
+
+build/mountainAdvection-maxdt/mountainAdvection-maxdt.tex: \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-linearUpwind-collated/0/maxdt.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-linearUpwind-collated/0/maxdt.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-linearUpwind-collated/0/maxdt.txt \
+| build/mountainAdvection-maxdt
+
+$(eval $(call MakeDir,build/mountainAdvection-maxdt))

@@ -51,8 +51,9 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 
 \section{Results}
-\TODO{should I use RK4 or will RK2 suffice?}
-\TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.}
+\TODO{should I use RK4 or will RK2 suffice?} \\
+\TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
+\TODO{should I do eigenmode analysis?  this would prove stability for particular meshes for arbitrary wind fields}
 
 \subsection{Horizontal transport with mesh refinement}
 Coping with sudden changes in mesh spacing is necessary for some types of mesh refinement and mesh adaptivity.  We should use the horizontal advection test from \citet{schaer2002} on a BTF mesh with a 2x/4x/8x refined mesh in part of the mountainous region.  The tracer will have to pass into and out of this refined region.  This test will also help to familiarise the reader with this standard test.  We will modify parts of this test in the following subsection in order to test advection over the lower boundary.

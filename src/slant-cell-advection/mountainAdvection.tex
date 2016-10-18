@@ -1,5 +1,45 @@
 \subsection{Transport over a mountainous lower boundary}
-This test is a modification of the \citet{schaer2002} horizontal advection test.  The mountain height is raised, the wind field is aligned with the the terrain-following surfaces, and the tracer is moved downward so that it is advected over the ground.
+A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is no wind and zero tracer density near the ground \citep{good2014}.
+Here we present a variation of this standard test case that challenges transport schemes on all mesh types: positioning the tracer near the ground and modifying the wind field so that it is tangential to terrain-following coordinate surfaces allows us to assess the accuracy of the cubicFit scheme near the lower boundary.
+
+The domain is defined on an $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
+
+The terrain is wave-shaped, specified by the surface height $h$ such that
+\begin{subequations}
+\begin{align}
+   h(x) &= h^\star \cos^2 ( \alpha x )
+%
+\intertext{where}
+%
+   h^\star(x) &= \left\{ \begin{array}{l l}
+       h_0 \cos^2 ( \beta x ) & \quad \text{if $| x | < a$} \\
+	0 & \quad \text{otherwise}
+    \end{array} \right.
+\end{align}
+\end{subequations}
+where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{3}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).
+Basic terrain following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.
+
+\TODO{describe wind field}
+
+A tracer with density $\phi$ is positioned upwind of the mountain at the ground.  It has the shape
+\begin{align}
+	\phi(x, z) &= \phi_0 \left\{ \begin{array}{l l}
+		\cos^2 \left( \frac{\pi r}{2} \right) & \quad \text{if $r \leq 1$} \\
+		0 & \quad \text{otherwise}
+	\end{array} \right.
+%
+\intertext{with radius $r$ given by}
+%
+	r &= \sqrt{
+		\left( \frac{x - x_0}{A_x} \right)^2 + 
+		\left( \frac{z - z_0}{A_z} \right)^2
+	}
+\end{align}
+where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
+Tests are integrated forward in time for \SI{10000}{\second}.
+
+\TODO{explain how we calculate the analytic solution}
 
 \begin{itemize}
 	\item Compare cubicFit with linearUpwind

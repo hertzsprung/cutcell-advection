@@ -51,8 +51,20 @@ First, we present a multidimensional advection scheme that is computationally ch
 
 \TODO{describe BTF, cut cell method and slanted cell method.  Cite ASAM for the cut cell method.  Describe slanted cell method and cite \citep{shaw-weller2016}.}
 
-\include{advectionScheme}
+\begin{equation}
+	z = \left( H - h \right) \left( z^\star / H \right) + h \label{eqn:btf}
+\end{equation}
 
+\section{Transport schemes for arbitrary meshes}
+\TODO{move the derivation from the advection equation and timestepping details to here since they're common to both cubicFit and linearUpwind}
+
+\include{cubicFit}
+\subsection{linearUpwind transport scheme}
+\TODO{describe OpenFOAM's linearUpwind scheme and cite something? OpenFOAM docs? OpenFOAM github?}
+
+\begin{figure}
+	\caption{\TODO{I'll probably need a figure that shows linearUpwind's stencil and shows how it approximates $\phi_F$}}
+\end{figure}
 
 \section{Results}
 \TODO{should I use RK4 or will RK2 suffice?} \\
@@ -63,10 +75,6 @@ First, we present a multidimensional advection scheme that is computationally ch
 Coping with sudden changes in mesh spacing is necessary for some types of mesh refinement and mesh adaptivity.  We should use the horizontal advection test from \citet{schaer2002} on a BTF mesh with a 2x/4x/8x refined mesh in part of the mountainous region.  The tracer will have to pass into and out of this refined region.  This test will also help to familiarise the reader with this standard test.  We will modify parts of this test in the following subsection in order to test advection over the lower boundary.
 
 \TODO{I tried this with horizontal advection, no orography, with 4x mesh refinement in a region of the mesh.  Results for linearUpwind and cubicFit were very similar to corresponding results without any refinement.  So I'm not sure this test will be particularly revealing.}
-
-\begin{figure}
-	\caption{\TODO{horizontal advection error contours for linearUpwind and cubicFit}}
-\end{figure}
 
 \include{mountainAdvection}
 

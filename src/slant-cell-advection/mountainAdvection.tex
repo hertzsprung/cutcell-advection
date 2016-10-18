@@ -1,8 +1,8 @@
 \subsection{Transport over a mountainous lower boundary}
-A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is no wind and zero tracer density near the ground \citep{good2014}.
-Here we present a variation of this standard test case that challenges transport schemes on all mesh types: positioning the tracer near the ground and modifying the wind field so that it is tangential to terrain-following coordinate surfaces allows us to assess the accuracy of the cubicFit scheme near the lower boundary.
+A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is zero velocity and zero tracer density near the ground \citep{good2014}.
+Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer near the ground and modifying the velocity field so that it is tangential to terrain-following coordinate surfaces, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain following, cut cell and slanted cell meshes.
 
-The domain is defined on an $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
+The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}
@@ -17,10 +17,23 @@ The terrain is wave-shaped, specified by the surface height $h$ such that
     \end{array} \right.
 \end{align}
 \end{subequations}
-where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{3}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).
-Basic terrain following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.
+where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
+Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.
 
-\TODO{describe wind field}
+A velocity field is chosen so that velocities are everywhere tangential to the basic terrain-following coordinate surfaces given by equation~\eqref{eqn:btf}.  A streamfunction $\Psi$ is used to ensure that the discrete velocity field is non-divergent such that
+\begin{equation}
+	\Psi(x,z) = -u_0 H \frac{z - h}{H - h} \label{eqn:streamfunc-btf}
+\end{equation}
+where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.
+The horizontal and vertical components of velocity, $u$ and $w$, are then given by
+\begin{align}
+	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H}{H - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H - z}{\left( H - h \right)^2} \label{eqn:uw-btf} \\
+	\frac{\mathrm{d} h}{\mathrm{d} x} &= - h_0 \left[ 
+		\beta \cos^2 \left( \alpha x \right) \sin \left( 2 \beta x \right) +
+		\alpha \cos^2 \left( \beta x \right) \sin \left( 2 \alpha x \right)
+	\right]
+\end{align}
+Unlike the horizontal advection test in \citep{schaer2002}, the velocity field presented here extends from the top of the domain all the way to the ground.  
 
 A tracer with density $\phi$ is positioned upwind of the mountain at the ground.  It has the shape
 \begin{align}
@@ -37,15 +50,16 @@ A tracer with density $\phi$ is positioned upwind of the mountain at the ground.
 	}
 \end{align}
 where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
-Tests are integrated forward in time for \SI{10000}{\second}.
 
-\TODO{explain how we calculate the analytic solution}
-
-\begin{itemize}
-	\item Compare cubicFit with linearUpwind
-	\item Compare errors on BTF, cut cells and slanted cells using a small timestep
-	\item Show maximum timesteps for various mesh spacings using Courant number close to one
-\end{itemize}
+Tests are integrated forward in time for \SI{10000}{\second}, by which time the tracer is positioned to the right of the mountain (figure~\ref{fig:mountainAdvection}a).
+An analytic solution at \SI{10000}{\second} is obtained by calculating the new horizontal position of the tracer.  Integrating along the trajectory yields $t$, the time taken to move from the left side of the mountain to the right:
+\begin{align}
+	\mathrm{d}t &= \mathrm{d}x / u(x) \\
+	t &= \int_0^x \frac{H - h(x)}{u_0 H}\:\mathrm{d}x \\
+	t &= \frac{x}{u_0} - \frac{h_0}{16 u_0 H} \left[ 4x + \frac{\sin 2 (\alpha + \beta) x}{\alpha + \beta} \right.+ \nonumber \\
+   &\ \left. \frac{\sin 2(\alpha - \beta) x}{\alpha - \beta} + 2 \left( \frac{\sin 2\alpha x}{\alpha} + \frac{\sin 2\beta x}{\beta} \right) \right]
+\end{align}
+This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \SI{51577.4}{\meter}\).  
 
 \begin{figure}
 	\centering
@@ -57,7 +71,9 @@ Tests are integrated forward in time for \SI{10000}{\second}.
 	\centering
 	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
 	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom).  Tracer contours 0.1.  Error contours 0.01.} \\
+	\TODO{Annotate panel (a) with t=0s, t=5000s, t=10000s above each blob} \\
 	\TODO{I could overlay l2 and linf errors onto these plots.  Might be nicer than tabulating them separately.}}
+	\label{fig:mountainAdvection}
 \end{figure}
 
 \begin{figure}

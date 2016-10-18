@@ -1,8 +1,8 @@
-\section{Multidimensional advection scheme}
+\subsection{cubicFit transport scheme}
 
 \TODO{I haven't said exactly how we do 2D stencils on the sphere: how local coordinates are established, projection onto a local 2D plane}
 
-The advection of a dependent variable $\phi$ in a prescribed, non-divergent wind field $\mathbf{u}$ is given by the equation
+The transport of a dependent variable $\phi$ in a prescribed, non-divergent wind field $\mathbf{u}$ is given by the equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
@@ -39,9 +39,9 @@ The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a na
 \end{align}
 A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
 
-The remainder of this section generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the advection scheme.
+The remainder of this section generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
-\subsection{Stencil construction}
+\subsubsection{Stencil construction}
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
 The opposing faces for face $f$ and upwind cell $c_u$ are determined as follows.
 Defining $G$ to be the set of faces other than $f$ that border cell $c_u$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
@@ -74,7 +74,7 @@ Once the opposing faces have been determined, the set of internal and external c
 Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  The resultant stencil contains 13 cells.
 
 
-\subsection{Least squares fit}
+\subsubsection{Least squares fit}
 To approximate the value at a face $f$, a least squares fit is calculated from a stencil of surrounding cell centre values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  Finally, we will describe how the approach is applicable to faces of arbitrary meshes.  
 
 For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
@@ -145,7 +145,7 @@ Note that, once $\mathbf{\tilde{b}_1^+}$ is calculated for each stencil, only th
 
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
-\subsection{Polynomial generation}
+\subsubsection{Polynomial generation}
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
@@ -169,10 +169,10 @@ For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6
 
 Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.  Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial would not be a candidate polynomial.
 
-The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the advection scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
+The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
-\subsection{Stabilisation procedure}
-So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the advection scheme chooses a suitable candidate polynomial and appropriate multipliers so that the fit is numerically stable.
+\subsubsection{Stabilisation procedure}
+So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers so that the fit is numerically stable.
 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
 If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.

@@ -2,8 +2,13 @@
 # $2 -- axis labels (SW or W or S)
 define MountainAdvectionPlots
 
-$(eval $(call GmtPlots,$1,src/mountainAdvection/tracerContours,10000,pdf))
+$(eval $(call GmtPlot,$1,src/mountainAdvection/tracerContours,10000,pdf))
 $(eval $(call GmtPlot,$1,src/mountainAdvection/errorContours$2,10000,pdf))
+$(eval $(call GmtPlot,$1,src/mountainAdvection/mesh$2,constant,pdf))
+
+$1/constant/mesh.pdf: \
+  $(addprefix $1/,$(systemFiles)) \
+  $(addprefix $1/,$(meshFiles))
 
 $1/10000/tracerContours.pdf: \
   $1/10000/T \

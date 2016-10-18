@@ -11,6 +11,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-double-upwind-stencil/fig-double-upwind-stencil.pdf \
   build/fig-boundary-stencils/fig-boundary-stencils.pdf \
   build/fig-stabilisation/fig-stabilisation.pdf \
+  build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf \
   build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf \
   build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \

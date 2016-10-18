@@ -1,7 +1,7 @@
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-meshes,fig-mountainAdvection-meshes))
 
 build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf: \
-  build/mountainAdvection-btf-linearUpwind-1000/constant/mesh.pdf \
+  build/mountainAdvection-btf-linearUpwind-1000/constant/meshW.pdf \
   build/mountainAdvection-cutCell-linearUpwind-1000/constant/mesh.pdf \
   build/mountainAdvection-slantedCell-linearUpwind-1000/constant/mesh.pdf
 

@@ -76,8 +76,7 @@ This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \S
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
-	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  Tracer contours 0.1.} \\
-	\TODO{Annotate panel (a) with t=0s, t=5000s, t=10000s above each blob}}
+	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}. \TODO{try to mask off below the mountain to hide the messy contouring}}
 	\label{fig:mountainAdvection-tracer}
 \end{figure}
 
@@ -86,8 +85,7 @@ Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{50
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
-	\caption{\TODO{mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom).  Error contours 0.01.} \\
-	\TODO{I could overlay l2 and linf errors onto these plots.  Might be nicer than tabulating them separately.}}
+	\caption{Error contours at $t=\SI{10000}{\second}$ for the two-dimensional tracer transport tests.  Results are presented on BTF, cut cell and slanted cell meshes (shown in figure~\ref{fig:mountainAdvection-meshes}) using the linearUpwind and cubicFit transport schemes.  Error contours are every \SI{0.01}{\kilo\gram\per\meter\cubed} with solid black lines marking positive errors and dashed red lines marking negative errors.}
 	\label{fig:mountainAdvection-errors}
 \end{figure}
 

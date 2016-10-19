@@ -65,7 +65,11 @@ This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \S
 
 Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{5000}{\second}$, and end time $t=\SI{10000}{\second}$ are shown in figure~\ref{fig:mountainAdvection-contours}a using the linearUpwind scheme on the BTF mesh.  As apparent at $t=\SI{5000}{\second}$, the tracer is distorted by the terrain-following velocity field as it passes over the mountain, but its original shape is restored once it has cleared the mountain by $t=\SI{10000}{\second}$.
 Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-contours}b, \ref{fig:mountainAdvection-contours}c and \ref{fig:mountainAdvection-contours}d respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-contours}e, \ref{fig:mountainAdvection-contours}f and \ref{fig:mountainAdvection-contours}g respectively).
-Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-contours}b), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-contours}e).  We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
+Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-contours}b), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-contours}e).
+We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
+
+Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-contours}c).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-contours}d), but the error's shape remains the same.
+The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the cut cell mesh (figure~\ref{fig:mountainAdvection-contours}f) and slanted cell mesh (figure~\ref{fig:mountainAdvection-contours}g).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshe.  Nevertheless, errors on the BTF mesh are at least four times smaller than errors on cut cell or slanted cell meshes using the cubicFit scheme.
 
 \begin{figure}
 	\centering
@@ -86,6 +90,7 @@ Results are most accurate on the BTF mesh.  This is to be expected because the v
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
-	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}}
+	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}\\
+	\TODO{I have only calculated the numbers for this plot, I haven't yet run all the tests themselves at Co close to one.  I have at least run \textit{some} tests at $Co \approx 1$ and there were no issues.}}
 \end{figure}
 

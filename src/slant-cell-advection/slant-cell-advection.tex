@@ -61,12 +61,14 @@ First, we present a multidimensional advection scheme that is computationally ch
 \include{cubicFit}
 \subsection{linearUpwind transport scheme}
 \TODO{describe OpenFOAM's linearUpwind scheme and cite something? OpenFOAM docs? OpenFOAM github?}
+\TODO{I need to mention that we use a Dirichlet boundary condition of $\phi = \SI{0}{\kilogram\per\meter\cubed}$ at the ground.  Results are unstable if I use  zero gradient boundary condition.}
 
 \begin{figure}
 	\caption{\TODO{I'll probably need a figure that shows linearUpwind's stencil and shows how it approximates $\phi_F$}}
 \end{figure}
 
 \section{Results}
+\TODO{the `slug' advection test case makes slanted cells look bad compared to BTF.  should we redress the balance with a different test?}
 \TODO{should I use RK4 or will RK2 suffice?} \\
 \TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
 \TODO{should I do eigenmode analysis?  this would prove stability for particular meshes for arbitrary wind fields}

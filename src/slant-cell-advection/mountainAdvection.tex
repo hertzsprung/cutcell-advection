@@ -1,6 +1,6 @@
 \subsection{Transport over a mountainous lower boundary}
 A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is zero velocity and zero tracer density near the ground \citep{good2014}.
-Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer near the ground and modifying the velocity field so that it is tangential to terrain-following coordinate surfaces, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain following, cut cell and slanted cell meshes.
+Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain following, cut cell and slanted cell meshes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
 
@@ -18,9 +18,11 @@ The terrain is wave-shaped, specified by the surface height $h$ such that
 \end{align}
 \end{subequations}
 where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
-Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.
 
-A velocity field is chosen so that velocities are everywhere tangential to the basic terrain-following coordinate surfaces given by equation~\eqref{eqn:btf}.  A streamfunction $\Psi$ is used to ensure that the discrete velocity field is non-divergent such that
+Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.  Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
+Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mountainAdvection-meshes}a) while the cut cell mesh (figure~\ref{fig:mountainAdvection-meshes}b) and slanted cell mesh (figure~\ref{fig:mountainAdvection-meshes}c) are orthogonal everywhere except for cells nearest the ground.
+
+A velocity field is chosen so that velocities are everywhere tangential to the basic terrain-following coordinate surfaces given by equation~\eqref{eqn:btf}.  This velocity field ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
 \begin{equation}
 	\Psi(x,z) = -u_0 H \frac{z - h}{H - h} \label{eqn:streamfunc-btf}
 \end{equation}
@@ -33,9 +35,9 @@ The horizontal and vertical components of velocity, $u$ and $w$, are then given 
 		\alpha \cos^2 \left( \beta x \right) \sin \left( 2 \alpha x \right)
 	\right]
 \end{align}
-Unlike the horizontal advection test in \citep{schaer2002}, the velocity field presented here extends from the top of the domain all the way to the ground.  
+Unlike the horizontal transport test in \citep{schaer2002}, the velocity field presented here extends from the top of the domain all the way to the ground.  
 
-A tracer with density $\phi$ is positioned upwind of the mountain at the ground.  It has the shape
+At $t=\SI{0}{\second}$, a tracer with density $\phi$ is positioned upwind of the mountain at the ground.  It has the shape
 \begin{align}
 	\phi(x, z) &= \phi_0 \left\{ \begin{array}{l l}
 		\cos^2 \left( \frac{\pi r}{2} \right) & \quad \text{if $r \leq 1$} \\
@@ -51,7 +53,7 @@ A tracer with density $\phi$ is positioned upwind of the mountain at the ground.
 \end{align}
 where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
 
-Tests are integrated forward in time for \SI{10000}{\second}, by which time the tracer is positioned to the right of the mountain (figure~\ref{fig:mountainAdvection}a).
+Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.
 An analytic solution at \SI{10000}{\second} is obtained by calculating the new horizontal position of the tracer.  Integrating along the trajectory yields $t$, the time taken to move from the left side of the mountain to the right:
 \begin{align}
 	\mathrm{d}t &= \mathrm{d}x / u(x) \\
@@ -61,10 +63,15 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 \end{align}
 This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \SI{51577.4}{\meter}\).  
 
+Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{5000}{\second}$, and end time $t=\SI{10000}{\second}$ are shown in figure~\ref{fig:mountainAdvection-contours}a using the linearUpwind scheme on the BTF mesh.  As apparent at $t=\SI{5000}{\second}$, the tracer is distorted by the terrain-following velocity field as it passes over the mountain, but its original shape is restored once it has cleared the mountain by $t=\SI{10000}{\second}$.
+Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-contours}b, \ref{fig:mountainAdvection-contours}c and \ref{fig:mountainAdvection-contours}d respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-contours}e, \ref{fig:mountainAdvection-contours}f and \ref{fig:mountainAdvection-contours}g respectively).
+Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-contours}b), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-contours}e).  We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
+
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf}
 	\caption{\TODO{BTF, cut cell and slanted cell meshes used for the slug over a mountain test}}
+	\label{fig:mountainAdvection-meshes}
 \end{figure}
 
 \begin{figure}
@@ -73,7 +80,7 @@ This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \S
 	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom).  Tracer contours 0.1.  Error contours 0.01.} \\
 	\TODO{Annotate panel (a) with t=0s, t=5000s, t=10000s above each blob} \\
 	\TODO{I could overlay l2 and linf errors onto these plots.  Might be nicer than tabulating them separately.}}
-	\label{fig:mountainAdvection}
+	\label{fig:mountainAdvection-contours}
 \end{figure}
 
 \begin{figure}

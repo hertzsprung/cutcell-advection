@@ -3,9 +3,25 @@
 \usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{color}
 
 \setlength{\parindent}{0pt}
 \begin{document}
+\TPMargin{2pt}
+\textblockcolour{white}
+\begin{textblock}{0.55}(1.3,1.5)
+\normalsize
+(a)
+\end{textblock}
+\begin{textblock}{0.55}(6.3,1.5)
+\normalsize
+(b)
+\end{textblock}
+\begin{textblock}{0.55}(11.3,1.5)
+\normalsize
+(c)
+\end{textblock}
 \includegraphics{../mountainAdvection-btf-linearUpwind-1000/constant/meshW.pdf}
 \includegraphics{../mountainAdvection-cutCell-linearUpwind-1000/constant/mesh.pdf}
 \includegraphics{../mountainAdvection-slantedCell-linearUpwind-1000/constant/mesh.pdf}

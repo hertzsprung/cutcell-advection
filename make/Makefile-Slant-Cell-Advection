@@ -1,6 +1,7 @@
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection))
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
+  src/slant-cell-advection/transportSchemes.tex \
   src/slant-cell-advection/cubicFit.tex \
   src/slant-cell-advection/mountainAdvection.tex \
   src/slant-cell-advection/deformationSphere.tex \
@@ -12,6 +13,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-boundary-stencils/fig-boundary-stencils.pdf \
   build/fig-stabilisation/fig-stabilisation.pdf \
   build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf \
+  build/fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf \
   build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf \
   build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \

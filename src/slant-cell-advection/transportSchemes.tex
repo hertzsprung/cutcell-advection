@@ -1,0 +1,17 @@
+\section{Transport schemes for arbitrary meshes}
+The cubicFit transport scheme is described here for arbitrary two-dimensional meshes and arbitrary, single-layer spherical meshes.  Section \ref{sec:results} compares results using the cubicFit scheme with results using the linearUpwind transport scheme, and so a description of the linearUpwind scheme is also provided here.
+
+\TODO{move the derivation from the advection equation and timestepping details to here since they're common to both cubicFit and linearUpwind}
+
+\TODO{somewhere in here we need to state the multidimensional Courant number and note that the Courant number may vary between cells belonging to the same mesh.  We should then say that the stability limit for both schemes is $\max{\mathrm{Co}} \leq 1$.}
+
+\input{cubicFit}
+
+\subsection{linearUpwind transport scheme}
+\TODO{describe OpenFOAM's linearUpwind scheme and cite something? OpenFOAM docs? OpenFOAM github?}
+\TODO{I need to mention that we use a Dirichlet boundary condition of $\phi = \SI{0}{\kilogram\per\meter\cubed}$ at the ground.  Results are unstable if I use  zero gradient boundary condition.}
+
+\begin{figure}
+	\caption{\TODO{I'll probably need a figure that shows linearUpwind's stencil and shows how it approximates $\phi_F$}}
+\end{figure}
+

@@ -1,8 +1,11 @@
 \subsection{Transport over a mountainous lower boundary}
+\label{sec:mountainAdvection}
+
 A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is zero velocity and zero tracer density near the ground \citep{good2014}.
 Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain following, cut cell and slanted cell meshes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
+A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet, ground and top boundaries, and the outlet boundary is open with $\partial \phi / \partial x = \SI{0}{\kilo\gram\per\meter\tothe{4}}$.  \TODO{the outlet boundary is currently fixedValue=0!  this needs fixing}
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}
@@ -21,6 +24,13 @@ where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI
 
 Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.  Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
 Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mountainAdvection-meshes}a) while the cut cell mesh (figure~\ref{fig:mountainAdvection-meshes}b) and slanted cell mesh (figure~\ref{fig:mountainAdvection-meshes}c) are orthogonal everywhere except for cells nearest the ground.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf}
+	\caption{Cell edges of (a) basic terrain-following, (b) cut cell, and (c) slanted cell two-dimensional $x$--$z$ meshes used for the tracer transport tests in section~\ref{sec:mountainAdvection}.  Only the lowest \SI{10}{\kilo\meter} for the central region of the domain in shown.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
+	\label{fig:mountainAdvection-meshes}
+\end{figure}
 
 A velocity field is chosen so that velocities are everywhere tangential to the basic terrain-following coordinate surfaces given by equation~\eqref{eqn:btf}.  This velocity field ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
 \begin{equation}
@@ -53,7 +63,7 @@ At $t=\SI{0}{\second}$, a tracer with density $\phi$ is positioned upwind of the
 \end{align}
 where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
 
-Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.
+Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.  \TODO{state timesteps for BTF/cut cell/slanted cell}
 An analytic solution at \SI{10000}{\second} is obtained by calculating the new horizontal position of the tracer.  Integrating along the trajectory yields $t$, the time taken to move from the left side of the mountain to the right:
 \begin{align}
 	\mathrm{d}t &= \mathrm{d}x / u(x) \\
@@ -63,34 +73,45 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 \end{align}
 This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \SI{51577.4}{\meter}\).  
 
-Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{5000}{\second}$, and end time $t=\SI{10000}{\second}$ are shown in figure~\ref{fig:mountainAdvection-contours}a using the linearUpwind scheme on the BTF mesh.  As apparent at $t=\SI{5000}{\second}$, the tracer is distorted by the terrain-following velocity field as it passes over the mountain, but its original shape is restored once it has cleared the mountain by $t=\SI{10000}{\second}$.
-Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-contours}b, \ref{fig:mountainAdvection-contours}c and \ref{fig:mountainAdvection-contours}d respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-contours}e, \ref{fig:mountainAdvection-contours}f and \ref{fig:mountainAdvection-contours}g respectively).
-Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-contours}b), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-contours}e).
-We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
-
-Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-contours}c).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-contours}d), but the error's shape remains the same.
-The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the cut cell mesh (figure~\ref{fig:mountainAdvection-contours}f) and slanted cell mesh (figure~\ref{fig:mountainAdvection-contours}g).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshe.  Nevertheless, errors on the BTF mesh are at least four times smaller than errors on cut cell or slanted cell meshes using the cubicFit scheme.
-
 \begin{figure}
 	\centering
-	\includegraphics{../fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf}
-	\caption{\TODO{BTF, cut cell and slanted cell meshes used for the slug over a mountain test}}
-	\label{fig:mountainAdvection-meshes}
+	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
+	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  Tracer contours 0.1.} \\
+	\TODO{Annotate panel (a) with t=0s, t=5000s, t=10000s above each blob}}
+	\label{fig:mountainAdvection-tracer}
 \end{figure}
+
+Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{5000}{\second}$, and end time $t=\SI{10000}{\second}$ are shown in figure~\ref{fig:mountainAdvection-tracer} using the linearUpwind scheme on the BTF mesh.  As apparent at $t=\SI{5000}{\second}$, the tracer is distorted by the terrain-following velocity field as it passes over the mountain, but its original shape is restored once it has cleared the mountain by $t=\SI{10000}{\second}$.
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
-	\caption{\TODO{evolution of the slug over a mountain at $t=0$, $t=T/2$ and $t=T$.  mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom).  Tracer contours 0.1.  Error contours 0.01.} \\
-	\TODO{Annotate panel (a) with t=0s, t=5000s, t=10000s above each blob} \\
+	\caption{\TODO{mountain advection error contours for (left-to-right) BTF, cut cells and slanted cells; linearUpwind (top) and cubicFit (bottom).  Error contours 0.01.} \\
 	\TODO{I could overlay l2 and linf errors onto these plots.  Might be nicer than tabulating them separately.}}
-	\label{fig:mountainAdvection-contours}
+	\label{fig:mountainAdvection-errors}
 \end{figure}
+
+Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
+Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-errors}a), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-errors}d).
+We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
+
+Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c), but the error's shape remains the same.
+The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}e) and slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}f).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshe.  Nevertheless, errors on the BTF mesh are at least four times smaller than errors on cut cell or slanted cell meshes using the cubicFit scheme.
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
 	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}\\
 	\TODO{I have only calculated the numbers for this plot, I haven't yet run all the tests themselves at Co close to one.  I have at least run \textit{some} tests at $Co \approx 1$ and there were no issues.}}
+	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 
+Another series of tests were performed on BTF, slanted cell and cut cell meshes using a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved.  In order to verify that cubicFit is accurate near the stability limit, timesteps were chosen so that the maximum Courant number was close to one.  \TODO{(check this is true:) Results were accurate in all tests and the scheme was largely insensitive to the choice of timestep.}
+
+This series of tests also enables a comparison of longest stable timesteps between mesh types.  The longest stable timestep for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max{\mathrm{Co}}$ where $\Delta t$ is the timestep used in a particular test run and $\max{\mathrm{Co}}$ is the maximum Courant number for that test run.
+\TODO{For example, on the BTF mesh with $\Delta x = \SI{123}{\meter}$ and $\Delta t = \SI{456}{\second}$ the maximum Courant number was $\max{\mathrm{Co}} = 789$.  The longest stable timestep is then $\Delta t_\mathrm{max} = \SI{345}{\second}$.}
+
+The longest stable timesteps for BTF, cut cell and slanted cell meshes are presented in figure~\ref{fig:mountainAdvection-maxdt}.  BTF meshes permit the longest timesteps of all three meshes since cells are almost uniform in volume, and the velocity field coincides with mesh layers so that cells are maximally long in the direction of flow.  As expected, the longest stable timestep scales linearly with BTF mesh spacing.
+There is no such linear scaling on cut cell meshes because these meshes can have arbitrarily small cells.  The timestep constraints on cut cell meshes are the most severe of the three mesh types.  Slanted cell meshes have a timestep constraint that is more severe than BTF meshes, but still exhibit the same, predictable linear scaling with mesh spacing.
+
+The transport tests presented in this section demonstrate that the cubicFit scheme is suitable for flows over steep terrain on two-dimensional terrain-following and cut cell meshes.  The cubicFit scheme is less sensitive to the mesh type compared to the linearUpwind scheme.  In the next section, we evaluate the cubicFit scheme using more complex, deformational flows on icosahedra and cubed-sphere meshes.

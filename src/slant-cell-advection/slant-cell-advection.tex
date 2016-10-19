@@ -55,19 +55,11 @@ First, we present a multidimensional advection scheme that is computationally ch
 	z = \left( H - h \right) \left( z^\star / H \right) + h \label{eqn:btf}
 \end{equation}
 
-\section{Transport schemes for arbitrary meshes}
-\TODO{move the derivation from the advection equation and timestepping details to here since they're common to both cubicFit and linearUpwind}
-
-\include{cubicFit}
-\subsection{linearUpwind transport scheme}
-\TODO{describe OpenFOAM's linearUpwind scheme and cite something? OpenFOAM docs? OpenFOAM github?}
-\TODO{I need to mention that we use a Dirichlet boundary condition of $\phi = \SI{0}{\kilogram\per\meter\cubed}$ at the ground.  Results are unstable if I use  zero gradient boundary condition.}
-
-\begin{figure}
-	\caption{\TODO{I'll probably need a figure that shows linearUpwind's stencil and shows how it approximates $\phi_F$}}
-\end{figure}
+\input{transportSchemes}
 
 \section{Results}
+\label{sec:results}
+
 \TODO{the `slug' advection test case makes slanted cells look bad compared to BTF.  should we redress the balance with a different test?}
 \TODO{should I use RK4 or will RK2 suffice?} \\
 \TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
@@ -78,9 +70,9 @@ Coping with sudden changes in mesh spacing is necessary for some types of mesh r
 
 \TODO{I tried this with horizontal advection, no orography, with 4x mesh refinement in a region of the mesh.  Results for linearUpwind and cubicFit were very similar to corresponding results without any refinement.  So I'm not sure this test will be particularly revealing.}
 
-\include{mountainAdvection}
+\input{mountainAdvection}
 
-\include{deformationSphere}
+\input{deformationSphere}
 
 \section{Conclusions}
 
@@ -95,7 +87,7 @@ The advection scheme is
 \section{Acknowledgements}
 \TODO{Supervisors, funding bodies.  ASAM group for the mesh generator---I should ask permission to use cut cell meshes in this paper.  Dr Tristan Pryer.  Dr Shing Hing Man.}
 
-\include{vonNeumann}
+\input{vonNeumann}
 
 \bibliographystyle{ametsoc2014}
 \bibliography{references}

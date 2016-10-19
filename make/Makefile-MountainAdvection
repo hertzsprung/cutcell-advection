@@ -5,10 +5,14 @@ build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf: \
   build/mountainAdvection-cutCell-linearUpwind-1000/constant/mesh.pdf \
   build/mountainAdvection-slantedCell-linearUpwind-1000/constant/mesh.pdf
 
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-tracer,fig-mountainAdvection-tracer))
+
+build/fig-mountainAdvection-error/fig-mountainAdvection-tracer.pdf: \
+  build/mountainAdvection-btf-linearUpwind-1000/10000/tracerContours.pdf
+
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-error,fig-mountainAdvection-error))
 
 build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf: \
-  build/mountainAdvection-btf-linearUpwind-1000/10000/tracerContours.pdf \
   build/mountainAdvection-btf-linearUpwind-1000/10000/errorContoursW.pdf \
   build/mountainAdvection-cutCell-linearUpwind-1000/10000/errorContours.pdf \
   build/mountainAdvection-slantedCell-linearUpwind-1000/10000/errorContours.pdf \

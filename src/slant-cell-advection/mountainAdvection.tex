@@ -2,7 +2,7 @@
 \label{sec:mountainAdvection}
 
 A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is zero velocity and zero tracer density near the ground \citep{good2014}.
-Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain following, cut cell and slanted cell meshes.
+Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
 A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet, ground and top boundaries, and the outlet boundary is open with $\partial \phi / \partial x = \SI{0}{\kilo\gram\per\meter\tothe{4}}$.  \TODO{the outlet boundary is currently fixedValue=0!  this needs fixing}
@@ -99,12 +99,12 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
-	\caption{\TODO{mountain advection maximum timesteps for BTF, cut cells and slanted cells for various mesh spacings.  Demonstrates first that cubicFit has no problems near the limit of stability and, second, that slanted cells scale predictably with mesh spacing.}\\
+	\caption{Longest stable timesteps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  The tests were integrated with a maximum Courant number close to 1, while $\Delta t_\mathrm{max}$ is calculated as the timestep corresponding to a maximum Courant number of exactly 1.
 	\TODO{I have only calculated the numbers for this plot, I haven't yet run all the tests themselves at Co close to one.  I have at least run \textit{some} tests at $Co \approx 1$ and there were no issues.}}
 	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 
-Another series of tests were performed on BTF, slanted cell and cut cell meshes using a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved.  In order to verify that cubicFit is accurate near the stability limit, timesteps were chosen so that the maximum Courant number was close to one.  \TODO{(check this is true:) Results were accurate in all tests and the scheme was largely insensitive to the choice of timestep.}
+Another series of tests were performed on BTF, slanted cell and cut cell meshes using a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, timesteps were chosen so that the maximum Courant number was close to one.  \TODO{(check this is true:) Results were accurate in all tests and the scheme was largely insensitive to the choice of timestep.}
 
 This series of tests also enables a comparison of longest stable timesteps between mesh types.  The longest stable timestep for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max{\mathrm{Co}}$ where $\Delta t$ is the timestep used in a particular test run and $\max{\mathrm{Co}}$ is the maximum Courant number for that test run.
 \TODO{For example, on the BTF mesh with $\Delta x = \SI{123}{\meter}$ and $\Delta t = \SI{456}{\second}$ the maximum Courant number was $\max{\mathrm{Co}} = 789$.  The longest stable timestep is then $\Delta t_\mathrm{max} = \SI{345}{\second}$.}

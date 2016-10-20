@@ -1,16 +1,23 @@
 \subsection{Deformational flow on a sphere}
+To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
+The standard test in \citep{lauritzen2012} comprised six elements
+\begin{enumerate}
+\item a convergence test using a Gaussian-shaped tracer
+\item a ``minimal'' resolution test using a cosine-shaped tracer
+\item a test of filament preservation
+\item a test using a ``rough'' slotted cylinder tracer
+\item a test of correlation preservation between two tracers
+\item a test using a divergent velocity field
+\end{enumerate}
+We assess the cubicFit scheme using only tests 1, 2 and 6.  We do not consider filament preservation or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  \TODO{why is tracer correlation out of scope for this paper?}
+Results are compared between linearUpwind and cubicFit schemes using icoshedral meshes and cubed-sphere meshes.
 
 \TODO{how much detail do I need about OpenFOAM's global Cartesian coordinates, lack of 2D meshes and our correction for spherical geometry?}
 
-Tests on cubed sphere and hexagons, again comparing cubicFit against linearUpwind.  \citet{lauritzen2012} had six classes of test and we will reproduce three of them:
-\begin{enumerate}
-	\item convergence tests with Gaussian hills
-	\item minimal resolution test with cosine bell
-	\item cosine bell in divergent flow
-\end{enumerate}
-We will not consider filament preservation, a "rough" distribution with a slotted cylinder, or correlation preservation.
 
 \subsubsection{Numerical order of convergence using Gaussian hills}
+% 
+
 \begin{figure}
 	\centering
 	\includegraphics{../fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf}

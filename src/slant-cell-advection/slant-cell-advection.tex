@@ -46,14 +46,26 @@
 
 First, we present a multidimensional advection scheme that is computationally cheap and suitable for complex flows on a variety of meshes.  Second, we present a new type of Cartesian mesh, the slanted cell mesh, that avoids the small cell problem associated with cut cell meshes.   We apply the advection scheme to tests over steep orography and show that accurate results are obtained on slanted cell meshes.  Finally, we challenge the multidimensional advection scheme using a test of deformational flow on a geodesic mesh.
 
-\section{Types of meshes for representing terrain}
-\label{sec:meshes}
+\section{Types of meshes}
+\subsection{Meshes for representing terrain}
+\label{sec:meshes-terrain}
 
 \TODO{describe BTF, cut cell method and slanted cell method.  Cite ASAM for the cut cell method.  Describe slanted cell method and cite \citep{shaw-weller2016}.}
 
 \begin{equation}
 	z = \left( H - h \right) \left( z^\star / H \right) + h \label{eqn:btf}
 \end{equation}
+
+\subsection{Meshing a spherical Earth}
+
+\TODO{Describe icosahedral meshes (cite one or more of \citep{thuburn2014,heikes-randall1995a,heikes-randall1995b})} \\
+\TODO{Describe cubed-sphere mesh (cite someone?)}
+
+Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
+\begin{align}
+	\Delta \lambda = \ang{360} \frac{\overline{\Delta x}}{2 \pi R_e}
+\end{align}
+where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e = \SI{6.3712e6}{\meter}$ is the radius of the Earth.
 
 \input{transportSchemes}
 

@@ -22,7 +22,7 @@ The terrain is wave-shaped, specified by the surface height $h$ such that
 \end{subequations}
 where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
 
-Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes}.  Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
+Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.  The details of the various mesh generation methods were given in section~\ref{sec:meshes-terrain}.  Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
 Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mountainAdvection-meshes}a) while the cut cell mesh (figure~\ref{fig:mountainAdvection-meshes}b) and slanted cell mesh (figure~\ref{fig:mountainAdvection-meshes}c) are orthogonal everywhere except for cells nearest the ground.
 
 \begin{figure}

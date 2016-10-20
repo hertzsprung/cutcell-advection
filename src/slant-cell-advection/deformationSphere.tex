@@ -1,6 +1,8 @@
 \subsection{Deformational flow on a sphere}
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
-The standard test in \citep{lauritzen2012} comprised six elements
+Results are compared between linearUpwind and cubicFit schemes using icosahedra and cubed-spheres.
+
+The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \begin{enumerate}
 \item a convergence test using a Gaussian-shaped tracer
 \item a ``minimal'' resolution test using a cosine-shaped tracer
@@ -10,19 +12,50 @@ The standard test in \citep{lauritzen2012} comprised six elements
 \item a test using a divergent velocity field
 \end{enumerate}
 We assess the cubicFit scheme using only tests 1, 2 and 6.  We do not consider filament preservation or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  \TODO{why is tracer correlation out of scope for this paper?}
-Results are compared between linearUpwind and cubicFit schemes using icoshedral meshes and cubed-sphere meshes.
 
 \TODO{how much detail do I need about OpenFOAM's global Cartesian coordinates, lack of 2D meshes and our correction for spherical geometry?}
 
 
 \subsubsection{Numerical order of convergence using Gaussian hills}
-% 
+\label{sec:deformationSphere-gaussian-nondiv}
+
+The first deformational flow test uses a $C^\infty$ initial tracer that is transported in a non-divergent, time-varying rotational velocity field.
+The velocity field deforms two Gaussian `hills' of tracer into thin vortical filaments.  Half-way through the integration the rotation reverses so that the filaments become circular hills once again.  The analytic solution at the end of integration is identical to the initial condition.
+A rotational flow is superimposed on a time-invariant background flow in order to avoid error cancellation.
+The non-divergent velocity field is defined by the streamfunction $\Psi$:
+\begin{align}
+	\Psi(\lambda, \theta, t) = \frac{10 R_e}{T} \sin^2 \left(\lambda'\right) \cos^2 \left(\theta\right) \cos \left( \frac{\pi t}{T} \right) - \frac{2 \pi R_e}{T} \sin\left(\theta\right)
+\end{align}
+where $\lambda$ is a longitude, $\theta$ is a latitude, $T = \SI{1.0368e6}{\second}$ is the duration of integration, and $\lambda' = \lambda - 2 \pi t / T$.
+
+The initial tracer $\phi$ is defined as the sum of two Gaussian hills:
+\begin{align}
+	\phi = \phi_1(\lambda, \theta) + \phi_2(\lambda, \theta)
+\end{align}
+An individual hill $\phi_i$ is given by
+\begin{align}
+	\phi_i(\lambda, \theta) = \phi_0 \exp\left( -b \left( \frac{|\mathbf{x} - \mathbf{x}_i|}{R_e} \right)^2 \right)
+\end{align}
+where $\phi_0 = 0.95$ and $b = 5$.  The Cartesian position vector $\mathbf{x} = (x,y,z)$ is related to the spherical coordinates $(\lambda, \theta)$ by
+\begin{align}
+	(x,y,z) = (R_e \cos \theta \cos \lambda, R_e \cos \theta \sin \lambda, R_e \sin \theta)
+\end{align}
+The centre of hill $i$ is positioned at $\mathbf{x}_i$.  In spherical coordinates, two hills are centred at
+\begin{align}
+	(\lambda_1,\theta_1) &= (5 \pi /6, 0) \\
+	(\lambda_2,\theta_2) &= (7 \pi /6, 0)
+\end{align}
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf}
-	\caption{\TODO{evolution of deformational flow test cases for Gaussian hills with plots at $t=0$, $t=T/2$ and $t=T$.  The analytic solution at $t=T$ is identical to the initial condition.  Cosine bells initial condition also plotted.  This figure is supposed to give a sense of what `should' happen, so plot at a high resolution using whichever mesh gives better results.}}
+	\caption{Tracer fields for the deformational flow test using (a) initial Gaussian hills and (b) initial cosine bells.  The tracer is deformed by the velocity field before the rotation reverses to return the tracer to its original distribution: (c) by $t=T/2$ the Gaussian hills are stretched into a thin S-shaped filament; (d) at $t=T$ the tracer resembles the initial Gaussian hills except for some distortion and diffusion due to numerical errors.
+	\TODO{plot at a high resolution using whichever mesh gives better results.}\\
+	\TODO{would it be clearer to use contours?  or do heatmap plots aid intercomparison?}}
+	\label{fig:deformationSphere-evolution}
 \end{figure}
+
+The results in figure~\ref{fig:deformationSphere-evolution} are obtained using the cubicFit scheme on \TODO{whatever high-res mesh I choose}.  The initial Gaussian hills are shown in figure~\ref{fig:deformationSphere-evolution}a.  At $t=T/2$ the tracer has been deformed into an S-shaped filament (figure~\ref{fig:deformationSphere-evolution}c).  By $t=T$ the tracer has almost returned to its original distribution except for some distortion and diffusion that are the result of numerical errors (figure~\ref{fig:deformationSphere-evolution}d).
 
 \begin{figure}
 	\centering
@@ -31,6 +64,17 @@ Results are compared between linearUpwind and cubicFit schemes using icoshedral 
 \end{figure}
 
 \subsubsection{``Minimal'' resolution using cosine bells}
+\TODO{what motivates us to perform this test?}
+
+The non-divergent velocity field is the same as convergence test in section~\ref{sec:deformationSphere-gaussian-nondiv}.  A quasi-smooth tracer field is defined as the sum of two cosine bells:
+\begin{align}
+	\phi =
+	\begin{cases}
+		b + c \phi_1(\lambda, \theta) & \quad \text{if $r_1 < r$} \\
+		b + c \phi_2(\lambda, \theta) & \quad \text{if $r_2 < r$} \\
+		b			      & \quad \text{otherwise}
+	\end{cases}
+\end{align}
 
 \begin{figure}
 	\centering

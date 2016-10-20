@@ -1,12 +1,34 @@
 \documentclass{article}
 \usepackage[paperwidth=6.5in,paperheight=4in,margin=0in]{geometry}
+\usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{color}
 
 \setlength{\parindent}{0pt}
 \begin{document}
+\TPMargin{1pt}
+\begin{textblock}{4}(1.1,0)
+\normalsize
+(a) Gaussian hills at $t=\SI{0}{\second}$
+\end{textblock}
+\begin{textblock}{4}(8.9,0)
+\normalsize
+(b) Cosine bells at $t=\SI{0}{\second}$
+\end{textblock}
+\begin{textblock}{4}(1.1,8.2)
+\normalsize
+(c) Gaussian hills at $t=T/2$
+\end{textblock}
+\begin{textblock}{4}(8.9,8.2)
+\normalsize
+(d) Gaussian hills at $t=T$
+\end{textblock}
+\vspace*{0.4em}
 \includegraphics{../deformationSphere-gaussians-nondiv-linearUpwind-hex-5/0/tracer.pdf}
-\includegraphics{../deformationSphere-cosBells-nondiv-linearUpwind-hex-5/0/tracer.pdf} \\
+\includegraphics{../deformationSphere-cosBells-nondiv-linearUpwind-hex-5/0/tracer.pdf}
+\vspace*{2.5em} \\
 \includegraphics{../deformationSphere-gaussians-nondiv-linearUpwind-hex-5/518400/tracer.pdf}
 \includegraphics{../deformationSphere-gaussians-nondiv-linearUpwind-hex-5/1.0368e+06/tracer.pdf}
 \end{document}

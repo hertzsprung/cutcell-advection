@@ -3,13 +3,21 @@
 \usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
-\usepackage[absolute,overlay]{textpos}
+\usepackage[absolute]{textpos}
 \usepackage{color}
+\usepackage{tikz}
 
 \setlength{\parindent}{0pt}
 \begin{document}
 \TPMargin{1pt}
-\begin{textblock}{4}(3,1.4)
+\begin{textblock}{0.75}(10.03,0.7)
+\begin{tikzpicture}[
+  scale=0.5
+]
+	\fill [orange!20] (0,0) rectangle (8.7,6.1);
+\end{tikzpicture}
+\end{textblock}
+\begin{textblock}{4}(4.3,1.4)
 \normalsize
 $t = \SI{0}{\second}$
 \end{textblock}
@@ -17,9 +25,10 @@ $t = \SI{0}{\second}$
 \normalsize
 $t = \SI{5000}{\second}$
 \end{textblock}
-\begin{textblock}{4}(12.5,1.4)
+\begin{textblock}{4}(11.5,1.4)
 \normalsize
 $t = \SI{10000}{\second}$
 \end{textblock}
+\centering
 \includegraphics{../mountainAdvection-btf-cubicUpwind-1000/10000/tracerContours.pdf}
 \end{document}

@@ -73,15 +73,9 @@ where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e =
 \label{sec:results}
 
 \TODO{the `slug' advection test case makes slanted cells look bad compared to BTF.  should we redress the balance with a different test?}
-\TODO{should I use RK4 or will RK2 suffice?} \\
 \TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
 \TODO{should I do eigenmode analysis?  this would prove stability for particular meshes for arbitrary wind fields} \\
 \TODO{somewhere define error norms}
-
-\subsection{Horizontal transport with mesh refinement}
-Coping with sudden changes in mesh spacing is necessary for some types of mesh refinement and mesh adaptivity.  We should use the horizontal advection test from \citet{schaer2002} on a BTF mesh with a 2x/4x/8x refined mesh in part of the mountainous region.  The tracer will have to pass into and out of this refined region.  This test will also help to familiarise the reader with this standard test.  We will modify parts of this test in the following subsection in order to test advection over the lower boundary.
-
-\TODO{I tried this with horizontal advection, no orography, with 4x mesh refinement in a region of the mesh.  Results for linearUpwind and cubicFit were very similar to corresponding results without any refinement.  So I'm not sure this test will be particularly revealing.}
 
 \input{mountainAdvection}
 

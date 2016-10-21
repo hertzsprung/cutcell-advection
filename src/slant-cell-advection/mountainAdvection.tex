@@ -32,14 +32,14 @@ Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mo
 	\label{fig:mountainAdvection-meshes}
 \end{figure}
 
-A velocity field is chosen so that velocities are everywhere tangential to the basic terrain-following coordinate surfaces given by equation~\eqref{eqn:btf}.  This velocity field ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
+A velocity field is chosen so that velocities are everywhere tangential to terrain-following coordinate surfaces.  This velocity field ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
 \begin{equation}
-	\Psi(x,z) = -u_0 H \frac{z - h}{H - h} \label{eqn:streamfunc-btf}
+	\Psi(x,z) = -u_0 H_1 \frac{z - h}{H_1 - h} \label{eqn:streamfunc-btf}
 \end{equation}
-where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.
+where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.  The velocity field becomes horizontal at $H_1 = \SI{10}{\kilo\meter}$.  Note that $H_1$ is chosen to be much smaller than the domain height $H$ in equation~\eqref{eqn:btf} so that flow crosses the surfaces of the BTF mesh, cut cell mesh and slanted cell mesh.
 The horizontal and vertical components of velocity, $u$ and $w$, are then given by
 \begin{align}
-	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H}{H - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H - z}{\left( H - h \right)^2} \label{eqn:uw-btf} \\
+	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H_1}{H_1 - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H_1 \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H_1 - z}{\left( H_1 - h \right)^2} \label{eqn:uw-btf} \\
 	\frac{\mathrm{d} h}{\mathrm{d} x} &= - h_0 \left[ 
 		\beta \cos^2 \left( \alpha x \right) \sin \left( 2 \beta x \right) +
 		\alpha \cos^2 \left( \beta x \right) \sin \left( 2 \alpha x \right)
@@ -76,8 +76,9 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
-	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  The result obtained using the cubicFit scheme on the basic terrain-following mesh is shown at $t=\SI{0}{\second}$, $t=\SI{5000}{\second}$ and $t=\SI{10000}{\second}$ with solid black contours. The analytic solution at $t=\SI{10000}{\second}$ is shown with dotted contours. \TODO{try to mask off below the mountain to hide the messy contouring} \\
-	\TODO{plot a box around the region that is visible in figure~\ref{fig:mountainAdvection-errors}}}
+	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  The result obtained using the cubicFit scheme on the basic terrain-following mesh is shown at $t=\SI{0}{\second}$, $t=\SI{5000}{\second}$ and $t=\SI{10000}{\second}$ with solid black contours. The analytic solution at $t=\SI{10000}{\second}$ is shown with dotted contours.
+	The shaded box indicates the region that is plotted in figure~\ref{fig:mountainAdvection-errors}.
+	\TODO{try to mask off below the mountain to hide the messy contouring}}
 	\label{fig:mountainAdvection-tracer}
 \end{figure}
 
@@ -86,7 +87,7 @@ Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{50
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
-	\caption{Tracer contours at $t=\SI{10000}{\second}$ for the two-dimensional tracer transport tests.  Results are presented on BTF, cut cell and slanted cell meshes (shown in figure~\ref{fig:mountainAdvection-meshes}) using the linearUpwind and cubicFit transport schemes.  The numerical solutions are marked by solid black lines.  The analytic solution is marked by dotted lines.  Contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  Regions of positive error are shaded using warm colours and regions of negative error using cool colours.}
+	\caption{Tracer contours at $t=\SI{10000}{\second}$ for the two-dimensional tracer transport tests.  A region in the lee of the mountain is plotted corresponding to the shaded area in figure~\ref{fig:mountainAdvection-tracer}.  Results are presented on BTF, cut cell and slanted cell meshes (shown in figure~\ref{fig:mountainAdvection-meshes}) using the linearUpwind and cubicFit transport schemes.  The numerical solutions are marked by solid black lines.  The analytic solution is marked by dotted lines.  Contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  Areas of positive error are shaded using warm colours and areas of negative error using cool colours.}
 	\label{fig:mountainAdvection-errors}
 \end{figure}
 

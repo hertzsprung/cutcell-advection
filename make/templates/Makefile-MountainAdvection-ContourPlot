@@ -4,7 +4,8 @@ define MountainAdvectionPlots
 
 $(eval $(call GmtPlot,$1,src/mountainAdvection/tracerContours,10000,pdf))
 $(eval $(call GmtPlot,$1,src/mountainAdvection/errorContours$2,10000,pdf))
-$(eval $(call GmtPlot,$1,src/mountainAdvection/mesh$2,constant,pdf))
+$(eval $(call GmtPlot,$1,src/mountainAdvection/mesh,constant,pdf))
+$(eval $(call GmtPlot,$1,src/mountainAdvection/meshW,constant,pdf))
 
 $1/constant/mesh.pdf $1/constant/meshW.pdf: \
   $(addprefix $1/,$(systemFiles)) \

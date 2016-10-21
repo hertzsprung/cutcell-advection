@@ -15,10 +15,12 @@ projection "X1.8i/1.4i";
 projection2D XZ;
 boundaryPatch ground;
 plotBoundaryDots false;
+separateLegend true;
 
 FieldsToPlot (
-    [T_diff contours 0.01 3 0.01 "black"]
-    [T_diff contours -3 -0.01 0.01 "red,3_3:0"]
+    [T_diff rawValues -1 1 0.1 "$GMTU/colours/red_white_blue.cpt"]
+    [T contours 0.1 1 0.1 "black"]
+    [T_analytic contours 0.1 1 0.1 "black,1_1:0"]
 );
 
 region "25e3/90e3/0/18e3";

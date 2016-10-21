@@ -19,7 +19,10 @@ $1/10000/tracerContours.pdf: \
   $(addprefix $1/,$(meshFiles))
 
 $1/10000/errorContours$2.pdf: \
+  $1/10000/T \
   $1/10000/T_diff \
+  $1/10000/T_analytic \
+  src/gmt/colours/red_white_blue.cpt \
   $(addprefix $1/,$(systemFiles)) \
   $(addprefix $1/,$(meshFiles))
 

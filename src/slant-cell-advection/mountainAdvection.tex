@@ -71,12 +71,13 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 	t &= \frac{x}{u_0} - \frac{h_0}{16 u_0 H} \left[ 4x + \frac{\sin 2 (\alpha + \beta) x}{\alpha + \beta} \right.+ \nonumber \\
    &\ \left. \frac{\sin 2(\alpha - \beta) x}{\alpha - \beta} + 2 \left( \frac{\sin 2\alpha x}{\alpha} + \frac{\sin 2\beta x}{\beta} \right) \right]
 \end{align}
-This equation is solved numerically to find that \(x(t=\SI{10000}{\second}) = \SI{51577.4}{\meter}\).  
+\TODO{By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{51234.5}{\meter}\).}
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
-	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}. \TODO{try to mask off below the mountain to hide the messy contouring}}
+	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  The result obtained using the cubicFit scheme on the basic terrain-following mesh is shown at $t=\SI{0}{\second}$, $t=\SI{5000}{\second}$ and $t=\SI{10000}{\second}$ with solid black contours. The analytic solution at $t=\SI{10000}{\second}$ is shown with dotted contours. \TODO{try to mask off below the mountain to hide the messy contouring} \\
+	\TODO{plot a box around the region that is visible in figure~\ref{fig:mountainAdvection-errors}}}
 	\label{fig:mountainAdvection-tracer}
 \end{figure}
 
@@ -90,11 +91,10 @@ Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{50
 \end{figure}
 
 Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
-Results are most accurate on the BTF mesh.  This is to be expected because the velocity field is exactly aligned with the mesh \citep{shaw-weller2016}.   Small phase errors are visible using linearUpwind (figure~\ref{fig:mountainAdvection-errors}a), while slightly larger phase errors are apparent using cubicFit (figure~\ref{fig:mountainAdvection-errors}d).
-We surmise that errors are larger using cubicFit because the scheme's larger stencil includes data from cells above and below those cells that lie along the trajectory.
 
-Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c), but the error's shape remains the same.
-The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}e) and slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}f).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshe.  Nevertheless, errors on the BTF mesh are at least four times smaller than errors on cut cell or slanted cell meshes using the cubicFit scheme.
+\TODO{analyse results}
+%Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c), but the error's shape remains the same.
+%The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}e) and slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}f).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshe.  Nevertheless, errors on the BTF mesh are at least four times smaller than errors on cut cell or slanted cell meshes using the cubicFit scheme.
 
 \begin{figure}
 	\centering

@@ -20,7 +20,8 @@ FieldsToPlot (
     [T0 contours 0.1 3 0.1 "black"]
     [T5000 contours 0.1 3 0.1 "black"]
     [T contours 0.1 3 0.1 "black"]
+    [T_analytic contours 0.1 3 0.1 "black,1_1:0"]
 );
 
-region "-75e3/75e3/0/15e3";
+region "-75e3/80e3/0/15e3";
 boundaryMarks "25e3/5e3WSen";

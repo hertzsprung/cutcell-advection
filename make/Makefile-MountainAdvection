@@ -7,8 +7,8 @@ build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf: \
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-tracer,fig-mountainAdvection-tracer))
 
-build/fig-mountainAdvection-error/fig-mountainAdvection-tracer.pdf: \
-  build/mountainAdvection-btf-linearUpwind-1000/10000/tracerContours.pdf
+build/fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf: \
+  build/mountainAdvection-btf-cubicUpwind-1000/10000/tracerContours.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-error,fig-mountainAdvection-error))
 

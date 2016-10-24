@@ -1,3 +1,24 @@
+Justify our choices:
+- finite volume method
+- arbitrary meshes
+- multidimensional?
+  - moot?  if the mesh is arbitrary then I fail to see how dimension splitting could work
+  - nevertheless, multidimensional schemes avoid splitting errors
+- Eulerian
+  - when so many NWP models use [flux form] semi-Lagragian
+
+What advection schemes are we competing with?
+- ones that are cheap to compute
+- ones that have good treatment at the boundary
+- second-order
+
+Find evidence that advection schemes can have difficulties near the ground in NWP models
+What order are transport schemes that are in operational use?
+
+citations
+=========
+
+
 why are multidimensional advection schemes desirable?
 -----------------------------------------------------
 Find examples of dimensional splitting errors

@@ -34,7 +34,12 @@
 \address[uor]{Department of Meteorology, University of Reading, Reading, United Kingdom}
 
 \begin{abstract}
-	\TODO{abstract}
+The inclusion of terrain in atmospheric models gives rise to mesh distortions and nonuniformities near the lower boundary that can degrade the accuracy of transport schemes.  In addition, low-order transport schemes are often preferred over high-order schemes because of stringent time-to-solution constraints on operational weather forecast models.
+
+This paper presents a finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order polynomial terms in distorted regions of the mesh, or near boundaries where there is insufficient information.  This technique achieves stable, non-oscillatory solutions on arbitrarily distorted, nonuniform meshes.  The least squares reconstruction method is computationally cheap because most calculations depend upon the mesh only.
+
+The cubicFit scheme is evaluated using two, idealised numerical tests of atmospheric flow.  The first test assesses accuracy near the ground by transporting a tracer over steep terrain on severely distorted terrain-following meshes and cut cell meshes.  The second test deforms a tracer in non-divergent and divergent flows on hexagonal icosahedra and cubed-sphere meshes.
+In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a standard linear upwind transport scheme.
 \end{abstract}
 
 \begin{keyword}
@@ -43,8 +48,6 @@
 \end{frontmatter}
 
 \section{Introduction}
-
-First, we present a multidimensional advection scheme that is computationally cheap and suitable for complex flows on a variety of meshes.  Second, we present a new type of Cartesian mesh, the slanted cell mesh, that avoids the small cell problem associated with cut cell meshes.   We apply the advection scheme to tests over steep orography and show that accurate results are obtained on slanted cell meshes.  Finally, we challenge the multidimensional advection scheme using a test of deformational flow on a geodesic mesh.
 
 slantedCell motivation
 \begin{itemize}
@@ -56,14 +59,13 @@ slantedCell motivation
 cubicFit motivation
 \begin{itemize}
 	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
-	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
-	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution $\Rightarrow$ accurate advection is desirable
+	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
+	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
+	\item cubicFit uses a \TODO{new?} approximation technique that enables cheap computations at runtime \TODO{(is this true? what about OpenFOAM's existing \texttt{xxxFit} schemes?)}
 	\item cubicFit offers a good balance between accuracy and computational cost, and achieves accurate results near the ground
 \end{itemize}
 
 \TODO{why isn't linearUpwind good enough?  what other schemes compete with cubicFit and what can cubicFit offer in comparison with these competitors?}
-
-\TODO{cubicFit belongs to a new class of finite volume transport scheme that use a least squares fit to approximate face values (is this true? what about OpenFOAM's existing \texttt{xxxFit} schemes?)}
 
 \section{Types of meshes}
 \subsection{Meshes for representing terrain}
@@ -77,7 +79,7 @@ cubicFit motivation
 
 \subsection{Meshing a spherical Earth}
 
-\TODO{Describe icosahedral meshes (cite one or more of \citep{thuburn2014,heikes-randall1995a,heikes-randall1995b})} \\
+\TODO{Describe hexagonal icosahedral meshes (cite one or more of \citep{thuburn2014,heikes-randall1995a,heikes-randall1995b})} \\
 \TODO{Describe cubed-sphere mesh (cite someone?)}
 
 Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as

@@ -2,7 +2,7 @@
 
 Problem/Intro
 =============
-We want to present two pieces of work: the cubicUpwindCPCFit advection scheme and the slanted cell mesh.  What problems do each of these pieces of work address?
+We want to present two pieces of work: the cubicFit advection scheme and the slanted cell mesh.  What problems do each of these pieces of work address?
 
 cubicUpwindCPCFit
 -----------------
@@ -50,7 +50,6 @@ Mesh
 ====
 Describe mesh generation method (or just cite Shaw & Weller 2016?)
 - justify choice of 'snap' tolerance (how close does a point have to be for it to be snapped to the surface?)
-  - it might be nice to justify this using some real orography, maybe even 3D orography (to demonstrate that our technique extends to 3D)
 
 Advection scheme
 ================
@@ -88,9 +87,6 @@ Pure advection tests -- similar setup to the thermal advection tests from Shaw &
 - same BTF velocity profile as usual?
 - can we better explain why we get these stripey patterns of error through cut/slanted cells? (as seen in figure 8 of TF/cut cell comparison article)
 
-
-Resting atmosphere test?
-- one of the often-cited advantages of cut cells over TF meshes are more accurate pressure gradients.  Hence, it would be nice to show that we have smaller KE errors with the slantedCell mesh versus cutCell or TF meshes.
 
 Other least squares fit publications
 ====================================

@@ -14,6 +14,7 @@
 @STRING{ASL       = "Atmos. Sci. Lett."}		% added by jshaw
 @STRING{AUMET     = "Aust.\ Meteor.\ Mag."}
 @STRING{BAMS      = "Bull.\ Amer.\ Meteor.\ Soc."}
+@STRING{CMAME     = "Comput.\ Methods\ Appl.\ Mech.\ Engrg"} % added by jshaw
 @STRING{CAP       = "Contrib.\ Atmos.\ Phys."}
 @STRING{CC        = "Climate Change"}      % Climate Change 
 @STRING{CCH       = "Climatic Change"}			% Climatic Change
@@ -35,11 +36,13 @@
 @STRING{HP        = "Health Phys."}
 @STRING{IAOP      = "Izv.\ Atmos.\ Ocean.\ Phys.\ (Engl.\ Transl.)"}
 @STRING{IJC       = "Int.\ J.\ Climatol."}
+@STRING{IJNME     = "Int.\ J.\ Numer.\ Meth.\ Engng"}   % added by jshaw
 @STRING{JAM       = "J.\ Appl.\ Meteor."}		% renamed to name below in 2006
 @STRING{JAMC      = "J.\ Appl.\ Meteor.\ Climatol."}  	% Journal of Applied Meteorology and Climatology (this journal used to be called the Journal of Applied Meteorology before 2006)
 @STRING{JAS       = "J.\ Atmos.\ Sci."}
 @STRING{JAOT      = "J.\ Atmos.\ Oceanic Technol."}
 @STRING{JCAM      = "J.\ Climate Appl.\ Meteor."}	% from 1983--87, now JAMC
+@String{JCAMath   = "J.\ Comput.\ Appl.\ Math."}        % added by jshaw
 @STRING{JCLI      = "J.\ Climate"}
 @STRING{JCR       = "J.\ Coastal Res."}
 @string{JCP       = "J.\ Comp.\ Phys."}                 % added by jshaw
@@ -145,6 +148,28 @@
 	doi={10.1006/jcph.1999.6369}
 }
 
+@article{cuetofelgueroso2006,
+	title={High-order finite volume schemes on unstructured grids using moving least-squares reconstruction. Application to shallow water dynamics},
+	author={Cueto-Felgueroso, L and Colominas, I and Fe, J and Navarrina, F and Casteleiro, M},
+	journal=IJNME,
+	volume={65},
+	pages={295--331},
+	year={2006},
+	publisher={John Wiley \& Sons},
+	doi={10.1002/nme.1442}
+}
+
+@article{cuetofelgueroso2007,
+	title={Finite volume solvers and Moving Least-Squares approximations for the compressible {Navier--Stokes} equations on unstructured grids},
+	author={Cueto-Felgueroso, Luis and Colominas, Ignasi and Nogueira, Xesus and Navarrina, Fermin and Casteleiro, Manuel},
+	journal=CMAME,
+	volume={196},
+	pages={4712--4736},
+	year={2007},
+	publisher={Elsevier},
+	doi={10.1016/j.cma.2007.06.003}
+}
+
 @article{good2014,
 	author = {Good, Beth and Gadian, Alan and Lock, Sarah-Jane and Ross, Andrew},
 	title = {Performance of the cut-cell method of representing orography in idealized simulations},
@@ -178,6 +203,16 @@
 	doi={10.1175/1520-0493(1995)123<1881:NIOTSW>2.0.CO;2}
 }
 
+@article{jayantha-turner2003,
+	title={On the use of surface interpolation techniques in generalised finite volume strategies for simulating transport in highly anisotropic porous media},
+	author={Jayantha, Pasdunkorale A and Turner, Ian W},
+	journal=JCAMath,
+	volume={152},
+	pages={199--216},
+	year={2003},
+	publisher={Elsevier},
+	doi={10.1016/S0377-0427(02)00706-9}
+}
 
 @article{jebens2011,
 	title={Partially implicit peer methods for the compressible {Euler} equations},
@@ -286,6 +321,26 @@
 	journal=MWR,
 	year={2016},
 	doi={10.1175/MWR-D-15-0226.1}
+}
+
+@article{skamarock-gassmann2011,
+	title={Conservative transport schemes for spherical geodesic grids: {High-order} flux operators for {ODE}-based time integration},
+	author={Skamarock, William C and Gassmann, Almut},
+	journal=MWR,
+	volume={139},
+	pages={2962--2975},
+	year={2011},
+	doi={10.1175/MWR-D-10-05056.1}
+}
+
+@article{skamarock-menchaca2010,
+	title={Conservative transport schemes for spherical geodesic grids: High-order reconstructions for forward-in-time schemes},
+	author={Skamarock, William C and Menchaca, Maximo},
+	journal=MWR,
+	volume={138},
+	pages={4497--4508},
+	year={2010},
+	doi={10.1175/2010MWR3390.1}
 }
 
 @article{smolarkiewicz-szmelter2011,

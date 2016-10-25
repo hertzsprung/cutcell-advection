@@ -36,7 +36,7 @@
 \begin{abstract}
 The inclusion of terrain in atmospheric models gives rise to mesh distortions and nonuniformities near the lower boundary that can degrade the accuracy of transport schemes.  In addition, low-order transport schemes are often preferred over high-order schemes because of stringent time-to-solution constraints on operational weather forecast models.
 
-This paper presents a finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order polynomial terms in distorted regions of the mesh, or near boundaries where there is insufficient information.  This technique achieves stable, non-oscillatory solutions on arbitrarily distorted, nonuniform meshes.  The least squares reconstruction method is computationally cheap because most calculations depend upon the mesh only.
+This paper presents an Eulerian finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order polynomial terms in distorted regions of the mesh, or near boundaries where there is insufficient information.  This technique achieves stable, non-oscillatory solutions on arbitrarily distorted, nonuniform meshes.  The least squares reconstruction method is computationally cheap because most calculations depend upon the mesh only.
 
 The cubicFit scheme is evaluated using two, idealised numerical tests of atmospheric flow.  The first test assesses accuracy near the ground by transporting a tracer over steep terrain on severely distorted terrain-following meshes and cut cell meshes.  The second test deforms a tracer in non-divergent and divergent flows on hexagonal icosahedra and cubed-sphere meshes.
 In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a standard linear upwind transport scheme.
@@ -49,23 +49,42 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 
 \section{Introduction}
 
-slantedCell motivation
+cubicFit motivation
+\begin{itemize}
+	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
+	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
+	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
+	\item numerical methods must be computationally efficient so that timely forecasts can be produced
+	\item cubicFit uses a \TODO{new?} approximation technique that enables cheap computations at runtime \TODO{(is this true? what about OpenFOAM's existing \texttt{xxxFit} schemes?)}
+	\item cubicFit offers a good balance between accuracy and computational cost, and achieves accurate results near the ground
+\end{itemize}
+
+slantedCell motivation (not the focus of this paper)
 \begin{itemize}
 	\item operational models use terrain-following coordinates that can degrade the accuracy of pressure gradient calculations and horizontal transport
 	\item the cut cell method can improve pressure gradient accuracy and more accurately represent horizontal transport, but the cut cell method suffers from the small cell problem
 	\item the slanted cell method is an alternative presented in \citep{shaw-weller2016} that avoids the small cell problem whilst retaining accurate pressure gradient calculations and horizontal transport
 \end{itemize}
 
-cubicFit motivation
-\begin{itemize}
-	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
-	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
-	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
-	\item cubicFit uses a \TODO{new?} approximation technique that enables cheap computations at runtime \TODO{(is this true? what about OpenFOAM's existing \texttt{xxxFit} schemes?)}
-	\item cubicFit offers a good balance between accuracy and computational cost, and achieves accurate results near the ground
-\end{itemize}
 
 \TODO{why isn't linearUpwind good enough?  what other schemes compete with cubicFit and what can cubicFit offer in comparison with these competitors?}
+
+\subsection{Review of existing techniques}
+\textbf{How are weighted least-squares polynomial reconstructions (LSPR) used elsewhere?}
+\begin{itemize}
+	\item OpenFOAM has a variety of surface interpolation methods that use WLSPR, but I don't know what contexts they're used in
+	\item \citep{lashley2002} developed a swept-area transport scheme that uses WLSPR.  For time-varying velocity fields, a matrix-vector multiply must be calculated for every face at every timestep.
+	\item \citep{skamarock-menchaca2010} also developed a swept-area scheme using WLSPR closely following \citep{lashley2002}.
+	\item \citep{skamarock-gassmann2011} use LSPR to calculate second derivatives that are used in high-order finite volume flux calculations.  Like us, coefficients are precomputed and only vector-vector multiplies are performed at runtime.  Also like us, they use multi-stage Runge-Kutta timestepping.
+	\item \citep{jayantha-turner2003} use WLSPR to approximate fluxes of $\nabla \phi$ at faces in the 2D unsteady orthotropic diffusion equation
+	\item Moving least squares reconstructions are applied to shallow-water equations \citep{cuetofelgueroso2006} and viscous Navier-Stokes \citep{cuetofelgueroso2007}.  They are ``moving'' because the local stencil is moved to the position of reconstruction.  They also treat cell-centre averages as point values, just as we do.
+	\citep{cuetofelgueroso2007} also note that most calculations can be precomputed for static meshes.
+		However, much of the description and mathematics is beyond me right now.  
+	\item \TODO{oliviergooch-vanaltena2002}
+\end{itemize}
+
+
+\TODO{2nd order schemes that are more accurate than centred linear approximations: lipscomb-ringler2005, yeh2007, miura2007}
 
 \section{Types of meshes}
 \subsection{Meshes for representing terrain}
@@ -93,7 +112,6 @@ where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e =
 \section{Results}
 \label{sec:results}
 
-\TODO{the `slug' advection test case makes slanted cells look bad compared to BTF.  should we redress the balance with a different test?}
 \TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
 \TODO{should I do eigenmode analysis?  this would prove stability for particular meshes for arbitrary wind fields} \\
 \TODO{somewhere define error norms}

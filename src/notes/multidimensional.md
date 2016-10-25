@@ -16,7 +16,6 @@ answers
 - lashley2002's multidimensional scheme requires recomputation when the wind field changes (TODO: double-check this is true for the 2D arbitrary mesh variant)
 - bott2010 developed a dimensionally split scheme
 - smolarkiewicz2006: MPDATA is multidimensional and suitable for arbitrary meshes
-- 
 
 TODO
 ----

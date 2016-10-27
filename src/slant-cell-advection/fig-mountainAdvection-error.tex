@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[paperwidth=6.5in,paperheight=3.4in,margin=0in]{geometry}
+\usepackage[paperwidth=6.5in,paperheight=3.9in,margin=0in]{geometry}
 \usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
@@ -27,19 +27,19 @@
 \hspace*{1.4em}$\ell_2 = \num{1.234}$
 \hspace*{1.4em}$\ell_\infty = \num{1.234}$
 \end{textblock}
-\begin{textblock}{4}(1.2,8.3)
+\begin{textblock}{4}(1.2,7.3)
 \normalsize
 (d) BTF cubicFit \\
 \hspace*{1.4em}$\ell_2 = \num{1.234}$
 \hspace*{1.4em}$\ell_\infty = \num{1.234}$
 \end{textblock}
-\begin{textblock}{4}(6.3,8.3)
+\begin{textblock}{4}(6.3,7.3)
 \normalsize
 (e) Cut cell cubicFit \\
 \hspace*{1.4em}$\ell_2 = \num{1.234}$
 \hspace*{1.4em}$\ell_\infty = \num{1.234}$
 \end{textblock}
-\begin{textblock}{4}(11.4,8.3)
+\begin{textblock}{4}(11.4,7.3)
 \normalsize
 (f) Slanted cell cubicFit \\
 \hspace*{1.4em}$\ell_2 = \num{1.234}$
@@ -52,5 +52,7 @@
 \includegraphics{../mountainAdvection-slantedCell-linearUpwind-1000/10000/errorContours.pdf} \\
 \includegraphics{../mountainAdvection-btf-cubicUpwind-1000/10000/errorContoursSW.pdf}
 \includegraphics{../mountainAdvection-cutCell-cubicUpwind-1000/10000/errorContoursS.pdf}
-\includegraphics{../mountainAdvection-slantedCell-cubicUpwind-1000/10000/errorContoursS.pdf}
+\includegraphics{../mountainAdvection-slantedCell-cubicUpwind-1000/10000/errorContoursS.pdf} \\
+\centering
+\includegraphics[height=5.5in,angle=270]{mountainAdvectionErrorLegend.eps}
 \end{document}

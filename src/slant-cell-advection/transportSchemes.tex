@@ -18,6 +18,6 @@ where $\phi_u$ is the upwind value of $\phi$, and $\mathbf{x}_f$ and $\mathbf{x}
 \end{align}
 where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.
 
-\TODO{cite something? OpenFOAM docs? OpenFOAM github?}
+\TODO{cite OpenFOAM docs}
 \TODO{Explain what linearUpwind does at the lower boundary.  I need to mention that we use a Dirichlet boundary condition of $\phi = \SI{0}{\kilogram\per\meter\cubed}$ at the ground.  Results are somewhat unstable on slanted cells if I use zero gradient boundary condition.  Or I could just use results with zeroGradient and mention the instability.  Using zeroGradient avoids the tracer becoming ``detached'' from the ground.}
 

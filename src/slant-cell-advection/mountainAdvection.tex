@@ -5,7 +5,7 @@ A two-dimensional transport test over mountains was developed in \citep{schaer20
 Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
-A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet and the outlet, ground and top boundary conditions are $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ where the derivative is normal to the boundary.
+A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet boundary.  The outlet, ground and top boundary conditions are $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ where the derivative is normal to the boundary.
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}

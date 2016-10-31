@@ -57,14 +57,6 @@ cubicFit motivation
 	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
 \end{itemize}
 
-slantedCell motivation (not the focus of this paper)
-\begin{itemize}
-	\item operational models use terrain-following coordinates that can degrade the accuracy of pressure gradient calculations and horizontal transport
-	\item the cut cell method can improve pressure gradient accuracy and more accurately represent horizontal transport, but the cut cell method suffers from the small cell problem
-	\item the slanted cell method is an alternative presented in \citep{shaw-weller2016} that avoids the small cell problem whilst retaining accurate pressure gradient calculations and horizontal transport
-\end{itemize}
-
-
 \TODO{why isn't linearUpwind good enough?  what other schemes compete with cubicFit and what can cubicFit offer in comparison with these competitors?}
 
 \subsection{Review of existing techniques}
@@ -91,11 +83,7 @@ I've yet to find an instance where this has occurred.
 \TODO{2nd order schemes that are more accurate than centred linear approximations: lipscomb-ringler2005, yeh2007, miura2007}
 
 \section{Types of meshes}
-\subsection{Meshes for representing terrain}
-\label{sec:meshes-terrain}
-
-\TODO{describe BTF, cut cell method and slanted cell method.  Cite ASAM for the cut cell method.  Describe slanted cell method and cite \citep{shaw-weller2016}.}
-
+\TODO{might ditch this section and just describe things in the intro/results sections}
 
 \subsection{Meshing a spherical Earth}
 

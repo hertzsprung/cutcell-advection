@@ -1,6 +1,7 @@
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection))
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
+  src/slant-cell-advection/intro.tex \
   src/slant-cell-advection/transportSchemes.tex \
   src/slant-cell-advection/cubicFit.tex \
   src/slant-cell-advection/mountainAdvection.tex \

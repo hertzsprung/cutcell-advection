@@ -25,7 +25,7 @@
 \begin{document}
 
 \begin{frontmatter}
-\title{A finite volume transport scheme for atmospheric flows over steep terrain \\ \TODO{(working title)}}
+\title{An Eulerian finite volume transport scheme for atmospheric flows on arbitrary meshes over steep terrain \\ \TODO{(working title)}}
 \author[uor]{James Shaw\corref{cor}}
 \ead{js102@zepler.net}
 \author[uor]{Hilary Weller}
@@ -48,24 +48,14 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 \end{frontmatter}
 
 \section{Introduction}
+\input{intro}
 
 cubicFit motivation
 \begin{itemize}
 	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
 	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
 	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
-	\item numerical methods must be computationally efficient so that timely forecasts can be produced
-	\item cubicFit uses an approximation technique that enables cheap computations at runtime
-	\item cubicFit offers a good balance between accuracy and computational cost, and achieves accurate results near the ground
 \end{itemize}
-
-slantedCell motivation (not the focus of this paper)
-\begin{itemize}
-	\item operational models use terrain-following coordinates that can degrade the accuracy of pressure gradient calculations and horizontal transport
-	\item the cut cell method can improve pressure gradient accuracy and more accurately represent horizontal transport, but the cut cell method suffers from the small cell problem
-	\item the slanted cell method is an alternative presented in \citep{shaw-weller2016} that avoids the small cell problem whilst retaining accurate pressure gradient calculations and horizontal transport
-\end{itemize}
-
 
 \TODO{why isn't linearUpwind good enough?  what other schemes compete with cubicFit and what can cubicFit offer in comparison with these competitors?}
 
@@ -93,14 +83,7 @@ I've yet to find an instance where this has occurred.
 \TODO{2nd order schemes that are more accurate than centred linear approximations: lipscomb-ringler2005, yeh2007, miura2007}
 
 \section{Types of meshes}
-\subsection{Meshes for representing terrain}
-\label{sec:meshes-terrain}
-
-\TODO{describe BTF, cut cell method and slanted cell method.  Cite ASAM for the cut cell method.  Describe slanted cell method and cite \citep{shaw-weller2016}.}
-
-\begin{equation}
-	z = \left( H - h \right) \left( z^\star / H \right) + h \label{eqn:btf}
-\end{equation}
+\TODO{might ditch this section and just describe things in the intro/results sections}
 
 \subsection{Meshing a spherical Earth}
 

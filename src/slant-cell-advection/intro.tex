@@ -1,0 +1,34 @@
+% problem?
+Numerical simulations of atmospheric flows solve equations of motion that result in the transport of momentum, temperature, water species and trace gases.  The numerical representation of Earth's terrain complicates the transport problem because the mesh is necessarily distorted by the modification of the lower boundary.  Further, operational weather forecasts must often balance numerical accuracy and computational efficiency in order to satisfy strict time-to-solution constraints.  Hence, an efficient transport scheme is desired that yields accurate solutions, particularly near the surface where the weather affects us directly.
+We present a new transport scheme that is generally insensitive to mesh distortions created by steep slopes, and achieves computational efficiency because most calculations depend upon the mesh geometry only.
+
+As new atmospheric models use increasingly fine mesh spacing, their meshes are able to resolve steep, small-scale slopes.  Steep slopes result in larger mesh distortions that can reduce the accuracy of pressure gradient calculations \citep{klemp2011} that produce spurious velocities or even cause numerical instabilities \citep{webster2003}.  Additionally, transport across mesh surfaces tends to be more common near steep slopes, and this misalignment between the flow and mesh surfaces introduces additional errors \citep{schaer2002,shaw-weller2016}.
+
+\TODO{talk about accuracy near the ground: what is there in the literature about this?  there's a bunch of stuff that's not met-specific}
+
+There are two main methods for representing terrain in atmospheric models: terrain-following layers and cut cells.  Both methods modify regular quadrilateral meshes to produce meshes with cells that are aligned in vertical columns.  Most operational models use some form of terrain-following method in which the horizontal mesh surfaces are moved upwards to accommodate the terrain.  A vertical decay function is used so that mesh surfaces slope less steeply with increasing height.  The basic terrain-following method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
+\begin{equation}
+	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
+\end{equation}
+where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
+Subsequent terrain-following methods use more complex decay functions so that mesh surfaces are smoother \citep{simmons-burridge1981,schaer2002,leuenberger2010,klemp2011}.
+
+An alternative to terrain-following layers is the cut cell method.  Cut cell meshes are constructed by `cutting' a regular quadrilateral mesh with a piecewise-linear representation of the terrain.  New vertices are created in where the terrain intersects mesh edges and cell volumes that lie beneath the ground are removed.  The cut cell method results in meshes that have arbitrarily small cells that impose severe timestep constraints for explicit transport schemes.  Several techniques have been developed to allieviate this problem, known as the `small-cell problem': small cells can be merged with adjacent cells \citep{yamazaki2016}, a `thin-wall approximation' can be used to artificially increase cell volumes \citep{steppeler2002}, or an implicit scheme can be used near the ground with the explicit scheme used aloft \citep{jebens2011}.
+
+Another method for avoiding the small-cell problem was proposed by \citep{shaw-weller2016} in which cell vertices are moved vertically so that they are positioned at the terrain surface.  In this paper the method is referred to as the slanted cell method in order to distinguish it from the traditional cut cell method.  Slanted cell meshes do not suffer from arbitrarily small cells because the horizontal cell dimensions are not modified.
+
+% finer mesh spacing leads to steep slopes being resolved by the model
+% say something about 
+
+% second transport schemes
+% existing schemes aren't good enough because...
+% they are designed for a particular type of mesh, e.g. terrain-following
+%
+
+
+% something about different types of horizontal and vertical meshing methods
+% something about why we want accuracy near the ground for weather forecasts: clouds can form near the surface, fog, pollution etc
+% describe existing classes of transport schemes used in atmospheric models (use lauritzen2014)
+% existing uses of least squares fit
+
+

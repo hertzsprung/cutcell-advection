@@ -25,7 +25,7 @@
 \begin{document}
 
 \begin{frontmatter}
-\title{A finite volume transport scheme for atmospheric flows over steep terrain \\ \TODO{(working title)}}
+\title{An Eulerian finite volume transport scheme for atmospheric flows on arbitrary meshes over steep terrain \\ \TODO{(working title)}}
 \author[uor]{James Shaw\corref{cor}}
 \ead{js102@zepler.net}
 \author[uor]{Hilary Weller}
@@ -48,15 +48,13 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 \end{frontmatter}
 
 \section{Introduction}
+\input{intro}
 
 cubicFit motivation
 \begin{itemize}
 	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
 	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
 	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
-	\item numerical methods must be computationally efficient so that timely forecasts can be produced
-	\item cubicFit uses an approximation technique that enables cheap computations at runtime
-	\item cubicFit offers a good balance between accuracy and computational cost, and achieves accurate results near the ground
 \end{itemize}
 
 slantedCell motivation (not the focus of this paper)
@@ -98,9 +96,6 @@ I've yet to find an instance where this has occurred.
 
 \TODO{describe BTF, cut cell method and slanted cell method.  Cite ASAM for the cut cell method.  Describe slanted cell method and cite \citep{shaw-weller2016}.}
 
-\begin{equation}
-	z = \left( H - h \right) \left( z^\star / H \right) + h \label{eqn:btf}
-\end{equation}
 
 \subsection{Meshing a spherical Earth}
 

@@ -44,8 +44,8 @@ yamazaki-satomura2012
 - uses Building-Cube Method with sub-timestepping for small cells
 - non-conforming mesh with hanging nodes
 
-yamazaki2015 (preprint)
------------------------
+yamazaki2016
+------------
 
 - extension of yamazaki-satomura2012 into 3D
 - cell merging procedure need terrain to be well-resolved to avoid very small cells

@@ -12,7 +12,6 @@ What advection schemes are we competing with?
 - ones that have good treatment at the boundary
 - second-order
 
-Find evidence that advection schemes can have difficulties near the ground in NWP models
 What order are transport schemes that are in operational use?
 
 citations

@@ -2,9 +2,7 @@
 Numerical simulations of atmospheric flows solve equations of motion that result in the transport of momentum, temperature, water species and trace gases.  The numerical representation of Earth's terrain complicates the transport problem because the mesh is necessarily distorted by the modification of the lower boundary.  Further, operational weather forecasts must often balance numerical accuracy and computational efficiency in order to satisfy strict time-to-solution constraints.  Hence, an efficient transport scheme is desired that yields accurate solutions, particularly near the surface where the weather affects us directly.
 We present a new transport scheme that is generally insensitive to mesh distortions created by steep slopes, and achieves computational efficiency because most calculations depend upon the mesh geometry only.
 
-As new atmospheric models use increasingly fine mesh spacing, their meshes are able to resolve steep, small-scale slopes.  Steep slopes result in larger mesh distortions that can reduce the accuracy of pressure gradient calculations \citep{klemp2011} that produce spurious velocities or even cause numerical instabilities \citep{webster2003}.  Additionally, transport across mesh surfaces tends to be more common near steep slopes, and this misalignment between the flow and mesh surfaces introduces additional errors \citep{schaer2002,shaw-weller2016}.
-
-\TODO{talk about accuracy near the ground: what is there in the literature about this?  there's a bunch of stuff that's not met-specific}
+As new atmospheric models use increasingly fine mesh spacing, their meshes are able to resolve steep, small-scale slopes.  Steep slopes result in larger mesh distortions that can reduce the accuracy of pressure gradient calculations \citep{klemp2011} that produce spurious velocities \citep{zaengl2004} or even cause numerical instabilities \citep{webster2003}.  Additionally, transport across mesh surfaces tends to be more common near steep slopes, and this misalignment between the flow and mesh surfaces introduces additional errors \citep{schaer2002,shaw-weller2016}.
 
 There are two main methods for representing terrain in atmospheric models: terrain-following layers and cut cells.  Both methods modify regular quadrilateral meshes to produce meshes with cells that are aligned in vertical columns.  Most operational models use some form of terrain-following method in which the horizontal mesh surfaces are moved upwards to accommodate the terrain.  A vertical decay function is used so that mesh surfaces slope less steeply with increasing height.  The basic terrain-following method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
 \begin{equation}
@@ -13,14 +11,138 @@ There are two main methods for representing terrain in atmospheric models: terra
 where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
 Subsequent terrain-following methods use more complex decay functions so that mesh surfaces are smoother \citep{simmons-burridge1981,schaer2002,leuenberger2010,klemp2011}.
 
-An alternative to terrain-following layers is the cut cell method.  Cut cell meshes are constructed by `cutting' a regular quadrilateral mesh with a piecewise-linear representation of the terrain.  New vertices are created in where the terrain intersects mesh edges and cell volumes that lie beneath the ground are removed.  The cut cell method results in meshes that have arbitrarily small cells that impose severe timestep constraints for explicit transport schemes.  Several techniques have been developed to allieviate this problem, known as the `small-cell problem': small cells can be merged with adjacent cells \citep{yamazaki2016}, a `thin-wall approximation' can be used to artificially increase cell volumes \citep{steppeler2002}, or an implicit scheme can be used near the ground with the explicit scheme used aloft \citep{jebens2011}.
+An alternative to terrain-following layers is the cut cell method.  Cut cell meshes are constructed by `cutting' a regular quadrilateral mesh with a piecewise-linear representation of the terrain.  New vertices are created in where the terrain intersects mesh edges and cell volumes that lie beneath the ground are removed.  The cut cell method results in meshes that have arbitrarily small cells that impose severe timestep constraints for explicit transport schemes.  Several techniques have been developed to allieviate this problem, known as the `small-cell problem': small cells can be merged with adjacent cells \citep{yamazaki2016}, cell volumes can be artificially increased \citep{steppeler2002}, or an implicit scheme can be used near the ground with the explicit scheme used aloft \citep{jebens2011}.
 
 Another method for avoiding the small-cell problem was proposed by \citep{shaw-weller2016} in which cell vertices are moved vertically so that they are positioned at the terrain surface.  In this paper the method is referred to as the slanted cell method in order to distinguish it from the traditional cut cell method.  Slanted cell meshes do not suffer from arbitrarily small cells because the horizontal cell dimensions are not modified.
 
-% finer mesh spacing leads to steep slopes being resolved by the model
-% say something about 
+Atmospheric models are used to simulate either the entire globe, or limited domains spanning an area of about \SIrange{1}{1e6}{\kilo\meter\squared}.  Limited-area models typically use rectangular horizontal meshes, but a much wider variety of horizontal meshes are used in global models \citep{staniforth-thuburn2012}.  The latitude--longitude mesh is in widespread use because it is orthogonal and can be represented by a computationally rectangular mesh.  However, small cells near the poles constraint the timestep for explicit methods and parallel computation becomes inefficient.  Because of these problems there has been increased interest in alternative, quasi-uniform meshes.
 
-% second transport schemes
+The cubed-sphere mesh retains the quadrilateral cells found on the latitude--longitude mesh, and improves uniformity at the expense of orthogonality.  Starting with a cube with each face being a Cartesian mesh, the cubed-sphere mesh is constructed by a gnomic projection of each face onto the sphere.  A gnomic projection using a uniform Cartesian mesh results is known as an equi-distant projection \citep{staniforth-thuburn2012}.
+
+\TODO{hexagonal icosahedra}
+% hexagonal icosahedra
+% a regular icosahedron is successively refined
+% Thuburn uses Delauney triangulation and Voronoi tesselation
+
+
+% can I tackle transport schemes starting with their reconstruction method?
+% do all schemes use reconstruction methods?
+%
+
+% flux-form finite volume
+% =======================
+% involves the approximation of the flux divergence
+%
+% two-dimensional swept-area
+% ---------------------------
+% also called flux-form semi-Lagrangian, term coined by lin-rood1996
+% also called incremental remapping (dukowicz-baumgardner2000)
+% a variety of area approximations and reconstruction methods exist (see lauritzen2011b)
+%
+% SFF-CSLAM lauritzen2011a, ullrich2013 (3rd/4th order)
+% ICON-FFSL miura2007 first-order in space, second-order in time, stable up to ~0.8
+% SLFV-SL miura2007 on hexagonal icosahedra (2nd order)
+% SLFV-ML laurizten2014 A14 method-of-lines
+%
+% dimensional splitting
+% ---------------------
+% CAM-FV lin-rood1996 for ortho grids
+% putman-lin2007 for quasi-ortho grids
+% both second-order accurate
+%
+% taylor series
+% -------------
+% MPAS skamarock-gassmann2011
+%
+% semi-Lagrangian FV
+% ==================
+% also called cell-integrated schemes (nair-machenhauer2002)
+%
+% two-dimensional semi-Lagrangian FV
+% ----------------------------------
+% conservative mesh remapping
+% CSLAM lauritzen2010 for cubed-spheres (3rd order)
+% - integrate overlap between Eulerian and Lagrangian cells
+%
+% flow-dependent dimensional splitting
+% ------------------------------------
+% also called cascade schemes
+% see lauritzen2006
+% CCSRG tolstykh-shashkin2012
+%
+% global minimization of basis functions
+% ======================================
+% HOMME includes spectral element thomas-loft2005, dennis2005; DG nair2005, nair2009; finite volume earth2012
+% CG method (taylor-fournier2010) is used in the intercomparison
+% HOMME used in CAM-SE (4th order)
+
+Transport schemes may be classified as dimensionally-split or multidimensional.  Dimensionally-split schemes calculate transport in each dimension separately before the flux contributions are combined.  Such schemes can suffer from `splitting errors' in which the tracer is artificially distorted when the velocity field is misaligned with the grid \citep{leonard1993}.  Errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are nevertheless apparently for flows over steep terrain \citep{weller2017}.
+
+
+
+%Almost all transport schemes used in atmospheric models employ some form of dimensional splitting in which horizontal and vertical motions are treated separately.  
+%treat horizontal and vertical motion separately because the aspect ratio of typical meshes is much larger than the ratio between horizontal and vertical velocities.  
+
+% almost all transport schemes use dimensional splitting between horizontal and vertical motion.  why?
+% dimensional splitting in the horizontal is sometimes used:
+% - more computationally efficient?
+% - easier to handle corners of cubed-spheres
+
+
+% issues with steep terrain motivate us to use a multidimensional upwind-biased advection scheme
+% centred schemes require explicit diffusion for stability, and this diffusion gets tricky (zaengl)
+% dimensionally-split schemes can suffer from splitting errors in highly-distorted mesh regions (weller2017)
+%\TODO{talk about accuracy near the ground: what is there in the literature about this?  there's a bunch of stuff that's not met-specific}
+% walko-avissar Weak oscillations generated near the lower boundary in OLAM 
+% almgren1997 says that losing 2nd order accuracy at boundary should not be a problem for atmospheric flows over orography -- **do we think this is (still) true?**
+% ye1999 achieve 2nd order near the boundary but use dimensional splitting
+% zaengl2012: ICON, noisy small-scale circulations with weak/no ambient flow, see zaengl2002, zaengl2004, klemp2011
+
+% transport schemes
+% go kinda chronologically, traditional models were finite difference, dimensionally-split
+% semi-Lagragian avoids timestep constraints
+% finite volume is conservative
+% modern transport schemes combine conservativeness and semi-Lagrangian (lauritzen2014)
+% few are genuinely multidimensional in 3D
+
+% TODO: categorise these:
+% OLAM refs wenneker2002 who try both first-order upwind and second-order centred
+% OLAM uses crowley1968 and tremback1987, upwind-biased, seems to be multidimensional?
+% is OLAM then truly 3D multidimensional? -- don't think so, uses different "control volumes" for horizontal and vertical motion
+% ullrich2010 via (kattal2015)
+% chen-xiao2008 (via kattal2015)
+
+
+% dimensionally-split schemes
+% 
+% lin-rood1996
+% leonard1996
+% brassington-sanderson1999
+% putman-lin2007
+% kattal2015
+% - two central-upwind finite-volume (CUFV) schemes, Godunov-type methods, WENO5, 1D 5th order
+
+% multidimensional schemes
+% swept area
+% lashley2002
+% lipscomb-ringler2005
+% miura2007
+% thuburn2014
+%
+% MOL
+% weller2009
+% skamarock-gassmann2011
+% weller-shahrokhi2014
+% kattal2015 use 2D 4th order from kurganov-liu2012
+%
+% conservative semi-Lagrangian
+% iske-kaser2004
+% lauritzen2010
+% zerroukat2004
+
+% how do advection schemes treat vertical advection?
+% IMEX?
+
 % existing schemes aren't good enough because...
 % they are designed for a particular type of mesh, e.g. terrain-following
 %

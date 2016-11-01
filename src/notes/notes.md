@@ -1,22 +1,11 @@
 **need to read gattibono-collela2006** (cited by klein2009)
 
-Problem/Intro
-=============
-We want to present two pieces of work: the cubicFit advection scheme and the slanted cell mesh.  What problems do each of these pieces of work address?
-
 cubicUpwindCPCFit
 -----------------
 - using a multidimensional scheme avoids splitting errors (present evidence that splitting errors cause problems in atmospheric models)
 - the scheme is computationally cheap (compared to what?)
 - accurate on arbitrary meshes: insensitive to choice of terrain representation
-- why is an Eulerian scheme desirable?  because it straightfowardly conserves the dependent variable?  or is this 
-
-slanted cell mesh
------------------
-- we hope to reduce pressure gradient errors while avoiding the small cell problem associated with the cut cell method (there are already several ways of doing this, what advantages can we offer?)
-- compared to cut cell meshes, slanted cell meshes are more straightfoward to construct
-- apart from the cut cell method, no other type of hybrid structured/unstructured mesh has been tried in an atmospheric model before
-
+- why is an Eulerian scheme desirable?  because it straightfowardly conserves the dependent variable?  because it makes it cheap to compute
 
 detailed intro
 --------------
@@ -79,12 +68,9 @@ The small cell problem is about timestep constraints, so we need to demonstrate:
 - that the upwind-biased advection scheme is better than other variants of the same scheme/other reasonable advection scheme(s)?
 
 Pure advection tests -- similar setup to the thermal advection tests from Shaw & Weller 2016
-- run at Co close to 1 and report timesteps
 - l2 error norms, min/max values?
 - compare with a more standard advection scheme? linear upwind (2nd order)?
-- compare variants of the advection scheme?
 - different resolutions/mountain heights? (we want steep slopes)
-- same BTF velocity profile as usual?
 - can we better explain why we get these stripey patterns of error through cut/slanted cells? (as seen in figure 8 of TF/cut cell comparison article)
 
 

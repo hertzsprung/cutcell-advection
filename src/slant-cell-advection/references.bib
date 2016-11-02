@@ -39,6 +39,7 @@
 @STRING{IJNME     = "Int.\ J.\ Numer.\ Meth.\ Engng"}   % added by jshaw
 @STRING{JAM       = "J.\ Appl.\ Meteor."}		% renamed to name below in 2006
 @STRING{JAMC      = "J.\ Appl.\ Meteor.\ Climatol."}  	% Journal of Applied Meteorology and Climatology (this journal used to be called the Journal of Applied Meteorology before 2006)
+@STRING{JAMES     = "J.\ Adv.\ Model.\ Earth\ Sy."}     % added by jshaw
 @STRING{JAS       = "J.\ Atmos.\ Sci."}
 @STRING{JAOT      = "J.\ Atmos.\ Oceanic Technol."}
 @STRING{JCAM      = "J.\ Climate Appl.\ Meteor."}	% from 1983--87, now JAMC
@@ -70,6 +71,7 @@
 @STRING{NAT       = "Nature"}
 @STRING{NHR       = "Nat.\ Hazards Rev."}
 @STRING{NWD       = "Natl.\ Weather Dig."}
+@String{NMPDE	  = "Numer.\ Methods.\ Partial\ Differ.\ Equ."} % added by jshaw
 @STRING{OA        = "Oceanol. Aeta"}
 @STRING{OCEAN     = "Oceanography"}                	% a quarterly journal of The Oceanography Society
 @STRING{PAG       = "Pure Appl.\ Geophys."}
@@ -127,7 +129,7 @@
 }
 
 @article{bonaventura2000,
-	title={A Semi-implicit Semi-Lagrangian Scheme Using the Height Coordinate for a Nonhydrostatic and Fully Elastic Model of Atmospheric Flows},
+	title={A Semi-implicit {semi-Lagrangian} Scheme Using the Height Coordinate for a Nonhydrostatic and Fully Elastic Model of Atmospheric Flows},
 	author={Bonaventura, Luca},
 	journal=JCP,
 	volume={158},
@@ -170,6 +172,17 @@
 	doi={10.1016/j.cma.2007.06.003}
 }
 
+@article{dubey2014,
+        title={A flux-form conservative {semi-Lagrangian} multitracer transport scheme ({FF-CSLAM}) for icosahedral-hexagonal grids},
+        author={Dubey, Sarvesh and Mittal, Rashmi and Lauritzen, Peter H},
+        journal=JAMES,
+        volume={6},
+        number={2},
+        pages={332--356},
+        year={2014},
+        publisher={Wiley Online Library}
+}
+
 @article{galchen-somerville1975,
 	title={On the Use of a Coordinate Transformation for the Solution of the {Navier-Stokes} Equations},
 	author={Gal-Chen, Tzvi and Somerville, Richard CJ},
@@ -178,6 +191,30 @@
 	pages={209--228},
 	year={1975},
 	doi={10.1016/0021-9991(75)90037-6}
+}
+
+@article{garimella2007,
+	title={An efficient linearity and bound preserving conservative interpolation (remapping) on polyhedral meshes},
+	author={Garimella, Rao and Kucharik, Milan and Shashkov, Mikhail},
+	journal={Computers \& fluids},
+	volume={36},
+	number={2},
+	pages={224--237},
+	year={2007},
+	publisher={Elsevier},
+	doi={10.1016/j.compfluid.2006.01.014}
+}
+
+@article{gassmann2013,
+	title={A global hexagonal {C-grid} non-hydrostatic dynamical core ({ICON-IAP}) designed for energetic consistency},
+	author={Gassmann, Almut},
+	journal=QJRMS,
+	volume={139},
+	number={670},
+	pages={152--175},
+	year={2013},
+	publisher={Wiley Online Library},
+	doi={10.1002/qj.1960}
 }
 
 @article{good2014,
@@ -211,6 +248,18 @@
 	pages={1881--1887},
 	year={1995},
 	doi={10.1175/1520-0493(1995)123<1881:NIOTSW>2.0.CO;2}
+}
+
+@article{iske-kaeser2004,
+	title={Conservative {semi-Lagrangian} advection on adaptive unstructured meshes},
+	author={Iske, Armin and K{\"a}ser, Martin},
+	journal=NMPDE,
+	volume={20},
+	number={3},
+	pages={388--411},
+	year={2004},
+	publisher={Wiley Online Library},
+	doi={ 10.1002/num.10100}
 }
 
 @article{jayantha-turner2003,
@@ -286,6 +335,17 @@
 	school={University of Reading}
 }
 
+@article{lauritzen2010,
+	title={A conservative semi-Lagrangian multi-tracer transport scheme (CSLAM) on the cubed-sphere grid},
+	author={Lauritzen, Peter H and Nair, Ramachandran D and Ullrich, Paul A},
+	journal=JCP,
+	volume={229},
+	number={5},
+	pages={1401--1424},
+	year={2010},
+	publisher={Elsevier}
+}
+
 @article{lauritzen2012,
 	title={A standard test case suite for two-dimensional linear transport on the sphere},
 	author={Lauritzen, Peter Hjort and Skamarock, William C and Prather, MJ and Taylor, MA},
@@ -294,6 +354,18 @@
 	pages={887--901},
 	year={2012},
 	doi={10.5194/gmd-5-887-2012}
+}
+
+@article{lauritzen2011,
+	title={On simplifying ‘incremental remap’--based transport schemes},
+	author={Lauritzen, Peter H and Erath, Christoph and Mittal, Rashmi},
+	journal=JCP,
+	volume={230},
+	number={22},
+	pages={7957--7963},
+	year={2011},
+	publisher={Elsevier},
+	doi={10.1016/j.jcp.2011.06.030}
 }
 
 @article{lauritzen2014,
@@ -444,6 +516,7 @@
 	author={Skamarock, William C and Menchaca, Maximo},
 	journal=MWR,
 	volume={138},
+	number={12},
 	pages={4497--4508},
 	year={2010},
 	doi={10.1175/2010MWR3390.1}
@@ -521,6 +594,17 @@
 	year={2003},
 	publisher={Wiley Online Library},
 	doi={10.1256/qj.02.133}
+}
+
+@article{weller2009, 
+        title={Voronoi, Delaunay, and block-structured mesh refinement for solution of the shallow-water equations on the sphere}, 
+        author={Weller, Hilary and Weller, Henry G and Fournier, Aim{\'e}}, 
+        journal=MWR, 
+        volume={137}, 
+        number={12}, 
+        pages={4208--4224}, 
+        year={2009},
+	doi={10.1175/2009MWR2917.1}
 }
 
 @article{weller2017,

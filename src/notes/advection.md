@@ -1,9 +1,56 @@
+
+% flux-form finite volume
+% =======================
+% involves the approximation of the flux divergence
+%
+% two-dimensional swept-area
+% ---------------------------
+% also called flux-form semi-Lagrangian, term coined by lin-rood1996
+% also called incremental remapping (dukowicz-baumgardner2000)
+% a variety of area approximations and reconstruction methods exist (see lauritzen2011b)
+%
+% SFF-CSLAM lauritzen2011a, ullrich2013 (3rd/4th order)
+% ICON-FFSL miura2007 first-order in space, second-order in time, stable up to ~0.8
+% SLFV-SL miura2007 on hexagonal icosahedra (2nd order)
+% SLFV-ML laurizten2014 A14 method-of-lines
+%
+% dimensional splitting
+% ---------------------
+% CAM-FV lin-rood1996 for ortho grids
+% putman-lin2007 for quasi-ortho grids
+% both second-order accurate
+%
+% taylor series
+% -------------
+% MPAS skamarock-gassmann2011
+%
+% semi-Lagrangian FV
+% ==================
+% also called cell-integrated schemes (nair-machenhauer2002)
+%
+% two-dimensional semi-Lagrangian FV
+% ----------------------------------
+% conservative mesh remapping
+% CSLAM lauritzen2010 for cubed-spheres (3rd order)
+% - integrate overlap between Eulerian and Lagrangian cells
+%
+% flow-dependent dimensional splitting
+% ------------------------------------
+% also called cascade schemes
+% see lauritzen2006
+% CCSRG tolstykh-shashkin2012
+%
+% global minimization of basis functions
+% ======================================
+% HOMME includes spectral element thomas-loft2005, dennis2005; DG nair2005, nair2009; finite volume earth2012
+% CG method (taylor-fournier2010) is used in the intercomparison
+% HOMME used in CAM-SE (4th order)
+
+
 Justify our choices:
 - finite volume method
 - arbitrary meshes
-- multidimensional?
-  - moot?  if the mesh is arbitrary then I fail to see how dimension splitting could work
-  - nevertheless, multidimensional schemes avoid splitting errors
+- multidimensional
 - Eulerian
   - when so many NWP models use [flux form] semi-Lagragian
 

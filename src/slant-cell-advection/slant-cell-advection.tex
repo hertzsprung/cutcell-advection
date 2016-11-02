@@ -50,18 +50,7 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 \section{Introduction}
 \input{intro}
 
-cubicFit motivation
-\begin{itemize}
-	\item finite volume is desirable because it's inherently conservative, \TODO{what else?  FV3 do it, ECMWF are doing it}
-	\item a transport scheme for arbitrary meshes is desirable because different meshes offer different trade-offs (\TODO{e.g. provide example for hexagonal icosahedra vs cubed-sphere and citation}).  supporting arbitrary meshes lets us defer the choice of mesh.
-	\item predicting meteorological variables at or near the surface is important because it's where we live, clouds can form near the surface, fog, pollution etc $\Rightarrow$ accurate advection is desirable
-\end{itemize}
-
-\TODO{why isn't linearUpwind good enough?  what other schemes compete with cubicFit and what can cubicFit offer in comparison with these competitors?}
-
 \subsection{Review of existing techniques}
-\textbf{What types of transport scheme are used in atmospheric models?} \\
-\citep{lauritzen2014} provide a useful overview.
 
 \textbf{How are weighted least-squares polynomial reconstructions (LSPR) used elsewhere?}
 \begin{itemize}

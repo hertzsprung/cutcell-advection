@@ -76,18 +76,19 @@ The cubed-sphere mesh retains the quadrilateral cells found on the latitude--lon
 % CG method (taylor-fournier2010) is used in the intercomparison
 % HOMME used in CAM-SE (4th order)
 
-Transport schemes may be classified as dimensionally-split or multidimensional.  Dimensionally-split schemes calculate transport in each dimension separately before the flux contributions are combined.  Such schemes can suffer from `splitting errors' in which the tracer is artificially distorted when the velocity field is misaligned with the grid \citep{leonard1993}.  Errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are nevertheless apparently for flows over steep terrain \citep{weller2017}.
+Transport schemes may be classified as dimensionally-split, 2D multidimensional or 3D multidimensional.  2D multidimensional schemes are often called multidimensional schemes since very few 3D multidimensional schemes have been used in atmospheric models.
+Confusingly, dimensionally-split schemes are sometimes called multidimensional, too, because a one-dimensional technique is extended for multidimensional transport.
+Dimensionally-split schemes such as \citep{lin-rood1996,putman-lin2007,katta2015} calculate transport in each dimension separately before the flux contributions are combined.  Such schemes are computationally efficient and allow existing one-dimensional high-order methods to be used.
+  Dimensionally-split schemes can suffer from `splitting errors' in which the tracer is artificially distorted when the velocity field is misaligned with the grid \citep{leonard1993}.  Errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are nevertheless apparent in flows over steep terrain where meshes are highly distorted \citep{weller2017}.
 
+2D multidimensional schemes are so-called because the horizontal dimensions are considered together.  Such schemes are extended for three-dimensional transport by using splitting techniques in the vertical dimension.
+There are several subclasses of 2D multidimensional schemes including swept-area schemes (also called flux-form finite volume or incremental remapping), 2D semi-Lagrangian finite volume schemes (also called conservative mesh remapping), and method-of-lines schemes.
+% TODO: describe each briefly and cite some examples from lauritzen2014
 
+% TODO: three-dimensional schemes: gassmann and the SL one in the book
+Many more types transport schemes have been used in atmospheric modelling, but all can be classified according to their treatment of the three spatial dimensions.  A more comprehensive overview is presented in \cite{lauritzen2014}.
 
-%Almost all transport schemes used in atmospheric models employ some form of dimensional splitting in which horizontal and vertical motions are treated separately.  
-%treat horizontal and vertical motion separately because the aspect ratio of typical meshes is much larger than the ratio between horizontal and vertical velocities.  
-
-% almost all transport schemes use dimensional splitting between horizontal and vertical motion.  why?
-% dimensional splitting in the horizontal is sometimes used:
-% - more computationally efficient?
-% - easier to handle corners of cubed-spheres
-
+% TODO: next say that centred schemes can require explicit diffusion, and that diffusion must be treated correctly near steep slopes (see zaengl).  upwind-biased schemes are implicitly diffusive, and third-order upwind-biasing (cite leonard1993, maybe zaengl).
 
 % issues with steep terrain motivate us to use a multidimensional upwind-biased advection scheme
 % centred schemes require explicit diffusion for stability, and this diffusion gets tricky (zaengl)
@@ -109,8 +110,8 @@ Transport schemes may be classified as dimensionally-split or multidimensional. 
 % OLAM refs wenneker2002 who try both first-order upwind and second-order centred
 % OLAM uses crowley1968 and tremback1987, upwind-biased, seems to be multidimensional?
 % is OLAM then truly 3D multidimensional? -- don't think so, uses different "control volumes" for horizontal and vertical motion
-% ullrich2010 via (kattal2015)
-% chen-xiao2008 (via kattal2015)
+% ullrich2010 via (katta2015)
+% chen-xiao2008 (via katta2015)
 
 
 % dimensionally-split schemes
@@ -119,7 +120,7 @@ Transport schemes may be classified as dimensionally-split or multidimensional. 
 % leonard1996
 % brassington-sanderson1999
 % putman-lin2007
-% kattal2015
+% katta2015
 % - two central-upwind finite-volume (CUFV) schemes, Godunov-type methods, WENO5, 1D 5th order
 
 % multidimensional schemes
@@ -133,7 +134,7 @@ Transport schemes may be classified as dimensionally-split or multidimensional. 
 % weller2009
 % skamarock-gassmann2011
 % weller-shahrokhi2014
-% kattal2015 use 2D 4th order from kurganov-liu2012
+% katta2015 use 2D 4th order from kurganov-liu2012
 %
 % conservative semi-Lagrangian
 % iske-kaser2004

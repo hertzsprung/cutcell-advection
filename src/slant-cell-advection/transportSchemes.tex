@@ -1,14 +1,39 @@
 \section{Transport schemes for arbitrary meshes}
-The cubicFit transport scheme is described here for arbitrary two-dimensional meshes and arbitrary, single-layer spherical meshes.  Section \ref{sec:results} compares results using the cubicFit scheme with results using the linearUpwind transport scheme, and so a description of the linearUpwind scheme is also provided here.
+The transport of a dependent variable $\phi$ in a prescribed wind field $\mathbf{u}$ is given by the equation
+\begin{align}
+	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
+\end{align}
+In the mass continuity equation, $\phi = \rho$ where $\rho$ is the air density.  In the continuity equation for tracer density $\phi = \rho q$ where $q$ is the tracer mixing ratio.  For the special case of a non-divergent velocity field then $\rho$ is constant hence $\phi = q$.
+The time derivative is discretised using a three-stage, second-order Runge-Kutta method,
+\begin{subequations}
+\begin{align}
+	\phi^\star &= \phi^{(n)} + \Delta t f(\phi^{(n)}) \\
+	\phi^{\star\star} &= \phi^{(n)} + \frac{\Delta t}{2} \left( f(\phi^{(n)}) + f(\phi^\star) \right) \\
+	\phi^{(n+1)} &= \phi^{(n)} + \frac{\Delta t}{2} \left( f(\phi^{(n)}) + f(\phi^{\star\star}) \right)
+\end{align}
+\end{subequations}
+where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).  The same time-stepping method is used for both cubicFit and linearUpwind schemes.
+\TODO{or Hilary suggested we could use a two-stage 2nd-order RK scheme because it's cheaper.  we expect it to be equally stable.}
 
-\TODO{move the derivation from the advection equation and timestepping details to here since they're common to both cubicFit and linearUpwind}
+Using the finite volume method, the wind field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
+\begin{align}
+	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
+\end{align}
+where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, $\phi_F$ is an approximation of the value of the dependent variable at the face, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.
 
-\TODO{somewhere in here we need to state the multidimensional Courant number and note that the Courant number may vary between cells belonging to the same mesh.  We should then say that the stability limit for both schemes is $\max{\mathrm{Co}} \leq 1$.}
+This discretisation is applicable to arbitrary meshes.  A neccesary condition for stability is given by the multidimensional Courant number,
+\begin{align}
+	\mathrm{Co}_c = \frac{\Delta t}{2 \mathcal{V}_c} \sum_{f \in\: c} \mathbf{u} \cdot \mathbf{S}_f
+\end{align}
+such that $\mathrm{Co}_c \leq 1$ for all cells $c$ in the domain.  Hence, stability is constrained by the maximum Courant number of any cell in the domain.
+
+The accurate approximation of the dependent variable at the face, $\phi_F$, is key to the overall accuracy of the transport scheme. The cubicFit and linearUpwind schemes differ in their approximations of $\phi_F$, and these approximation methods described next.
+
 
 \input{cubicFit}
 
-\subsection{linearUpwind transport scheme}
-The linearUpwind scheme is documented here since it provides a baseline accuracy for the experiments in section~\ref{sec:results}.  The approximation for $\phi$ at a face $f$ is calculated using a gradient reconstruction:
+\subsection{Linear upwind transport scheme}
+The linearUpwind scheme is documented here since it provides a baseline accuracy for the experiments in section~\ref{sec:results}.  The approximation of $\phi_F$ is calculated using a gradient reconstruction,
 \begin{align}
 	\phi_F &= \phi_u + \nabla_c\: \phi \cdot \left(\mathbf{x}_f - \mathbf{x}_c \right)
 \end{align} 
@@ -16,8 +41,5 @@ where $\phi_u$ is the upwind value of $\phi$, and $\mathbf{x}_f$ and $\mathbf{x}
 \begin{align}
 	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \tilde{\phi_F} \mathbf{S}_f
 \end{align}
-where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.
-
-\TODO{cite OpenFOAM docs}
-\TODO{Explain what linearUpwind does at the lower boundary.  I need to mention that we use a Dirichlet boundary condition of $\phi = \SI{0}{\kilogram\per\meter\cubed}$ at the ground.  Results are somewhat unstable on slanted cells if I use zero gradient boundary condition.  Or I could just use results with zeroGradient and mention the instability.  Using zeroGradient avoids the tracer becoming ``detached'' from the ground.}
+where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.  An implementation of the linearUpwind scheme is included in the OpenFOAM software distribution \citep{openfoam}.
 

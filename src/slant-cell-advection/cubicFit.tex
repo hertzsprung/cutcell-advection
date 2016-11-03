@@ -1,26 +1,6 @@
-\subsection{cubicFit transport scheme}
+\subsection{Cubic fit transport scheme}
 
 \TODO{I haven't said exactly how we do 2D stencils on the sphere: how local coordinates are established, projection onto a local 2D plane}
-
-The transport of a dependent variable $\phi$ in a prescribed, non-divergent wind field $\mathbf{u}$ is given by the equation
-\begin{align}
-	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
-\end{align}
-The time derivative is discretised using a three-stage, second-order Runge-Kutta scheme:
-\begin{subequations}
-\begin{align}
-	\phi^\star &= \phi^{(n)} + \Delta t f(\phi^{(n)}) \\
-	\phi^{\star\star} &= \phi^{(n)} + \frac{\Delta t}{2} \left( f(\phi^{(n)}) + f(\phi^\star) \right) \\
-	\phi^{(n+1)} &= \phi^{(n)} + \frac{\Delta t}{2} \left( f(\phi^{(n)}) + f(\phi^{\star\star}) \right)
-\end{align}
-\end{subequations}
-where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).
-
-Using the finite volume method, the wind field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
-\begin{align}
-	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
-\end{align}
-where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.  The value of the dependent variable at the face, $\phi_F$, is approximated by a least squares fit over a stencil of surrounding cell centre values.  The approximation method to calculate $\phi_F$ is described here.
 
 \begin{figure}
 	\centering
@@ -29,6 +9,7 @@ where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescr
 	\label{fig:interiorStencils}
 \end{figure}
 
+The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding cell centre values.
 To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}b.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
@@ -39,7 +20,7 @@ The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a na
 \end{align}
 A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  If the stencil geometry is expressed in a local coordinate system with the face centroid as the origin, then the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
 
-The remainder of this section generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
+The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
 \subsubsection{Stencil construction}
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
@@ -149,7 +130,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
-	\caption{\TODO{This example is confused because boundary values are not included in the diagram, but they are in the implementation.}  Upwind-biased stencils for faces near the left-hand boundary of a rectangular mesh, with (a) a $2 \times 3$ stencil for the face immediately adjacent to the left-hand boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
+	\caption{\TODO{This example is confusing because boundary values are not included in the diagram, but they are in the implementation.}  Upwind-biased stencils for faces near the left-hand boundary of a rectangular mesh, with (a) a $2 \times 3$ stencil for the face immediately adjacent to the left-hand boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
 	\label{fig:boundaryStencils}
 \end{figure}
 

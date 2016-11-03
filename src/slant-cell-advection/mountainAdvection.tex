@@ -6,6 +6,7 @@ Here we present a variation of this standard test that challenges transport sche
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
 A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet boundary.  The outlet, ground and top boundary conditions are $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ where the derivative is normal to the boundary.
+\TODO{for consistency, I think I should include ground boundary values in cubicFit.  it makes little difference to the results.}
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}

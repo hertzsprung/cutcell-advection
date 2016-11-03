@@ -50,29 +50,7 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 \section{Introduction}
 \input{intro}
 
-\subsection{Review of existing techniques}
-
-\textbf{How are weighted least-squares polynomial reconstructions (LSPR) used elsewhere?}
-\begin{itemize}
-	\item OpenFOAM has a variety of surface interpolation methods that use WLSPR, but I don't know what contexts they're used in
-	\item \citep{lashley2002} developed a swept-area transport scheme that uses WLSPR.  For time-varying velocity fields, a matrix-vector multiply must be calculated for every face at every timestep.
-	\item \citep{skamarock-menchaca2010} also developed a swept-area scheme using WLSPR closely following \citep{lashley2002}.
-	\item \citep{skamarock-gassmann2011} use LSPR to calculate second derivatives that are used in high-order finite volume flux calculations.  Like us, coefficients are precomputed and only vector-vector multiplies are performed at runtime.  Also like us, they use multi-stage Runge-Kutta timestepping.
-	\item \citep{jayantha-turner2003} use WLSPR to approximate fluxes of $\nabla \phi$ at faces in the 2D unsteady orthotropic diffusion equation
-	\item Moving least squares reconstructions are applied to shallow-water equations \citep{cuetofelgueroso2006} and viscous Navier-Stokes \citep{cuetofelgueroso2007}.  They are ``moving'' because the local stencil is moved to the position of reconstruction.  They also treat cell-centre averages as point values, just as we do.
-	\citep{cuetofelgueroso2007} also note that most calculations can be precomputed for static meshes.
-	However, much of the description and mathematics is beyond me right now.  
-	\item Another study used a least-squares reconstruction for viscous fluxes in the advection--diffusion equation \citep{olliviergooch-vanaltena2002}.  They describe a technique for constraining the fit near curved boundaries.
-\end{itemize}
-
-\textbf{Have von Neumann analyses ever been used in online numerical codes before?} \\
-I've yet to find an instance where this has occurred.
-
-
-\TODO{2nd order schemes that are more accurate than centred linear approximations: lipscomb-ringler2005, yeh2007, miura2007}
-
-\section{Types of meshes}
-\TODO{might ditch this section and just describe things in the intro/results sections}
+\section{Meshes}
 
 The basic terrain-following method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
 \begin{equation}

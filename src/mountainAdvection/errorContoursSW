@@ -18,7 +18,7 @@ plotBoundaryDots false;
 separateLegend true;
 
 FieldsToPlot (
-    [T_diff rawValues -1 1 0.1 "$GMTU/colours/red_white_blue.cpt"]
+    [T_diff rawValues -0.2 0.2 0.05 "$GMTU/colours/red_white_blue.cpt"]
     [T contours 0.1 1 0.1 "black"]
     [T_analytic contours 0.1 1 0.1 "black,1_1:0"]
 );

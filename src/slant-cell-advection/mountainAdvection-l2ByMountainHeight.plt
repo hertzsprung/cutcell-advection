@@ -8,11 +8,11 @@ set style data linespoints
 set xlabel "Peak mountain height $h_0$ (\\si{\\kilo\\meter})"
 set ylabel "$\\ell_2$ error" offset 2
 
-set label "BTF linearUpwind" at 6.2,0.077 textcolor rgb "dark-violet"
+set label "\\textit{BTF linearUpwind}" at 6.2,0.077 textcolor rgb "dark-violet"
 set label "BTF cubicUpwind" at 6.2,0.045 textcolor rgb "dark-violet"
-set label "Cut cells linearUpwind" at 5.75,0.14 textcolor rgb "#009e73"
+set label "\\textit{Cut cells linearUpwind}" at 5.75,0.14 textcolor rgb "#009e73"
 set label "Cut cells cubicUpwind" at 6,0.061 textcolor rgb "#009e73"
-set label "Slanted cells linearUpwind" at 5.2,0.185 textcolor rgb "#1a8acb"
+set label "\\textit{Slanted cells linearUpwind}" at 5.2,0.185 textcolor rgb "#1a8acb"
 set label "Slanted cells cubicUpwind" at 5.6,0.095 textcolor rgb "#1a8acb"
 
 unset key

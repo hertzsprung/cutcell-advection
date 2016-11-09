@@ -91,7 +91,15 @@ Tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{50
 	\label{fig:mountainAdvection-errors}
 \end{figure}
 
-Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
+%Numerical errors are calculated by subtracting the analytic solution from the numerical solution.  Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf}
+%
+	\caption{\TODO{l2 by mountain height}}
+	\label{fig:mountainAdvection-l2ByMountainHeight}
+\end{figure}
 
 \TODO{analyse results}
 %Results are least accurate using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b).  The final tracer is distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c), but the error's shape remains the same.

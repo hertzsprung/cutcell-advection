@@ -1,31 +1,32 @@
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-meshes,fig-mountainAdvection-meshes))
 
 build/fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf: \
-  build/mountainAdvection-btf-6km-linearUpwind-1000/constant/meshW.pdf \
-  build/mountainAdvection-cutCell-6km-linearUpwind-1000/constant/meshW.pdf \
-  build/mountainAdvection-slantedCell-6km-linearUpwind-1000/constant/mesh.pdf
+  build/mountainAdvection-btf-5000-linearUpwind-1000/constant/meshW.pdf \
+  build/mountainAdvection-cutCell-5000-linearUpwind-1000/constant/meshW.pdf \
+  build/mountainAdvection-slantedCell-5000-linearUpwind-1000/constant/mesh.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-tracer,fig-mountainAdvection-tracer))
 
 build/fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf: \
-  build/mountainAdvection-btf-6km-cubicUpwind-1000/10000/tracerContours.pdf
+  build/mountainAdvection-btf-5000-cubicUpwind-1000/10000/tracerContours.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-error,fig-mountainAdvection-error))
 
 build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf: \
-  build/mountainAdvection-btf-6km-linearUpwind-1000/10000/errorContoursW.pdf \
-  build/mountainAdvection-cutCell-6km-linearUpwind-1000/10000/errorContours.pdf \
-  build/mountainAdvection-slantedCell-6km-linearUpwind-1000/10000/errorContours.pdf \
-  build/mountainAdvection-btf-6km-cubicUpwind-1000/10000/errorContoursSW.pdf \
-  build/mountainAdvection-cutCell-6km-cubicUpwind-1000/10000/errorContoursS.pdf \
-  build/mountainAdvection-slantedCell-6km-cubicUpwind-1000/10000/errorContoursS.pdf
+  build/mountainAdvection-btf-5000-linearUpwind-1000/10000/errorContoursW.pdf \
+  build/mountainAdvection-cutCell-5000-linearUpwind-1000/10000/errorContours.pdf \
+  build/mountainAdvection-slantedCell-5000-linearUpwind-1000/10000/errorContours.pdf \
+  build/mountainAdvection-btf-5000-cubicUpwind-1000/10000/errorContoursSW.pdf \
+  build/mountainAdvection-cutCell-5000-cubicUpwind-1000/10000/errorContoursS.pdf \
+  build/mountainAdvection-slantedCell-5000-cubicUpwind-1000/10000/errorContoursS.pdf \
+  src/slant-cell-advection/mountainAdvectionErrorLegend.eps
 
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-btf-6km-linearUpwind-1000,W))
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-cutCell-6km-linearUpwind-1000,))
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-slantedCell-6km-linearUpwind-1000,))
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-btf-6km-cubicUpwind-1000,SW))
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-cutCell-6km-cubicUpwind-1000,S))
-$(eval $(call MountainAdvectionPlots,build/mountainAdvection-slantedCell-6km-cubicUpwind-1000,S))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-btf-5000-linearUpwind-1000,W))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-cutCell-5000-linearUpwind-1000,))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-slantedCell-5000-linearUpwind-1000,))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-btf-5000-cubicUpwind-1000,SW))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-cutCell-5000-cubicUpwind-1000,S))
+$(eval $(call MountainAdvectionPlots,build/mountainAdvection-slantedCell-5000-cubicUpwind-1000,S))
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-maxdt,fig-mountainAdvection-maxdt))
 
@@ -35,9 +36,27 @@ build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf: \
 $(eval $(call Gnuplot,build/mountainAdvection-maxdt,mountainAdvection-maxdt.tex,src/slant-cell-advection/mountainAdvection-maxdt.plt))
 
 build/mountainAdvection-maxdt/mountainAdvection-maxdt.tex: \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-linearUpwind-collated/0/maxdt.txt \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-linearUpwind-collated/0/maxdt.txt \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-linearUpwind-collated/0/maxdt.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-6000-linearUpwind-collated/0/maxdt.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-6000-linearUpwind-collated/0/maxdt.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-6000-linearUpwind-collated/0/maxdt.txt \
 | build/mountainAdvection-maxdt
 
 $(eval $(call MakeDir,build/mountainAdvection-maxdt))
+
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-mountainAdvection-l2ByMountainHeight,fig-mountainAdvection-l2ByMountainHeight))
+
+build/fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf: \
+  build/mountainAdvection-l2ByMountainHeight/mountainAdvection-l2ByMountainHeight.tex
+
+$(eval $(call Gnuplot,build/mountainAdvection-l2ByMountainHeight,mountainAdvection-l2ByMountainHeight.tex,src/slant-cell-advection/mountainAdvection-l2ByMountainHeight.plt))
+
+build/mountainAdvection-l2ByMountainHeight/mountainAdvection-l2ByMountainHeight.tex: \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-collated-linearUpwind-1000/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-collated-cubicUpwind-1000/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-collated-linearUpwind-1000/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-collated-cubicUpwind-1000/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-collated-linearUpwind-1000/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-collated-cubicUpwind-1000/10000/l2errorT.txt \
+| build/mountainAdvection-l2ByMountainHeight
+
+$(eval $(call MakeDir,build/mountainAdvection-l2ByMountainHeight))

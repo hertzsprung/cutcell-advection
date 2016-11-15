@@ -24,31 +24,22 @@ Dimensionally-split schemes such as \citep{lin-rood1996,putman-lin2007,katta2015
   Dimensionally-split schemes can suffer from `splitting errors' in which the tracer is artificially distorted when the velocity field is misaligned with the grid \citep{leonard1993}.  Errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are nevertheless apparent in flows over steep terrain where meshes are highly distorted \citep{weller2017}.
 
 In 2D multidimensional schemes the horizontal dimensions are considered together.  Such schemes are extended for three-dimensional transport by using splitting techniques in the vertical dimension.
-There are several subclasses of 2D multidimensional schemes that include swept-area schemes (also called flux-form semi-Lagrangian or incremental remapping), 2D semi-Lagrangian finite volume schemes (also called conservative mesh remapping), and method-of-lines schemes.
-Swept area schemes such as \citep{lashley2002,skamarock-menchaca2010,lauritzen2011,thuburn2014} calculate the flux through a cell face by integrating over the upstream area that is swept out over one time-step.  Such schemes differ in their choice of area approximation and spatial integration method.
-2D semi-Lagrangian finite volume schemes such as \citep{iske-kaeser2004,lauritzen2010} integrate over departure cells that are found by tracing backward the trajectories of cell vertices.  These schemes are conservative because departure cells are constructed so that they do not overlap.
-Method-of-lines schemes such as \citep{weller2009,skamarock-gassmann2011} use a spatial discretisation to reduce the transport PDE to an ODE that is typically solved using a multi-stage timestepping method.
+There are several subclasses of 2D multidimensional schemes that include
+2D semi-Lagrangian finite volume schemes (also called conservative mesh remapping),
+swept-area schemes (also called flux-form semi-Lagrangian, incremental remapping, or forward-in-time),
+and method-of-lines schemes.
+2D semi-Lagrangian finite volume schemes such as \citep{iske-kaeser2004,lauritzen2010} integrate over departure cells that are found by tracing backward the trajectories of cell vertices.  These schemes are conservative because departure cells are constructed so that there are no overlaps or gaps, which requires that cell areas are simply-connected domains \citep{lauritzen2011book}.
+Swept area schemes such as \citep{lashley2002,skamarock-menchaca2010,lauritzen2011,thuburn2014} calculate the flux through a cell face by integrating over the upstream area that is swept out over one time-step.  Such schemes differ in their choice of area approximation, sub-grid reconstruction, and spatial integration method.
+Because swept area schemes integrate over the reconstructed field, they typically require a matrix-vector multiply per face \citep{thuburn2014,skamarock-menchaca2010}.
+Method-of-lines schemes such as \citep{weller2009,skamarock-gassmann2011} use a spatial discretisation to reduce the transport PDE to an ODE that is typically solved using a multi-stage timestepping method.  
+Unlike 2D semi-Lagrangian finite volume schemes, swept area and method-of-lines schemes achieve conservation for non-simply connected domains that can result from small-scale rotational flows \citep{lauritzen2011}.
+
+Very few 3D multidimensional schemes have been used in atmospheric models \citep[e.g.][]{gassmann2013} although such schemes might be expected to be more accurate on horizontally non-orthogonal, spherical meshes with steep terrain.
+The multidimensional method-of-lines schemes developed in \citep{weller2009,weller-shahrokhi2014} have only been used for two-dimensional flows on Cartesian planes and on the sphere, but the technique used naturally generalises to three dimensions.
 There are many more types of atmospheric transport schemes, but all can be classified according to their treatment of the three spatial dimensions.  A more comprehensive overview is presented in \cite{lauritzen2014}.
 
-Very few 3D multidimensional schemes have been used in atmospheric models \citep[e.g.][]{gassmann2013} although such schemes might be expected to be more accurate on horizontally non-orthogonal, spherical meshes with steep terrain.  The multidimensional method-of-lines schemes developed in \citep{weller2009,weller-shahrokhi2014} have only been used for two-dimensional flows on Cartesian planes and on the sphere, but the technique used naturally generalises to three dimensions.
 In this paper, we present a new multidimensional method-of-lines scheme, `cubicFit', that improves upon the scheme in \citep{weller-shahrokhi2014}.  To reconstruct face values, the scheme fits a multidimensional polynomial over a cubic, upwind-biased stencil using a least-squares approach.  The implementation uses constraints derived from a von Neumann stability analysis to select appropriate polynomial fits for stencils in highly-distorted mesh regions.  The least-squares procedure depends upon the mesh geometry only, hence the scheme is computationally efficient, requiring only $n$ multiplies per cell face per time-step where $n$ is the size of the stencil.
 \TODO{outline contents of subsequent sections}
-
-
-%* lauritzen's chapter says that constraints to ensure conservation are stricter with semi-Lagrangian scheme compared to Eulerian because they must ensure that departure areas have no overlaps nor gaps
-
-%how cheap are Eulerian schemes?
-%* cubicFit requires n multiplies per face
-%* what about skamarock-gassmann?
-%  - n multiplies per face (stencil is smaller than ours)
-%  * what about miura2007?
-%  * what about skamarock-menchaca?
-
-%  how cheap are swept-area schemes?
-%  * "simplified" flux integration uses sub-grid reconstruction of the immediate upstream cell
-%  * SFF-CSLAM has rigorous area approximation, traces each vertex upstream, integration by Gaussian quadrature
-%  * miura2007 (ICON) is simpler: one velocity per face, swept area is a rhomboid, first-order (linear) reconstruction polynomial -- first-order in space, second-order in time
-%  * are there any "cheap" swept-area schemes that are properly second-order?
 
 
 %\TODO{talk about accuracy near the ground: what is there in the literature about this?  there's a bunch of stuff that's not met-specific}

@@ -110,7 +110,7 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of
 where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
 
 In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
-It is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil, as shown by \citep{lashley2002}.
+It is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil, as shown by \citep{lashley2002,skamarock-menchaca2010}.
 To achieve this, we allow each cell to make an unequal contribution to the least squares fit.
 We assign an integer \textit{multiplier} to each cell in the stencil, $\mathbf{m} = m_1 \ldots m_{12}$, and multiply by equation~\eqref{eqn:unweightedLeastSquares} to obtain
 \begin{align}

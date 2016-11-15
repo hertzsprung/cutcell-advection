@@ -14,8 +14,7 @@ As well as vertical distortions over sloping terrain, transport schemes must als
 
 \TODO{this paragraph seems disjoint from the others}
 The quasi-uniform cubed-sphere mesh retains the quadrilateral cells found on the latitude--longitude mesh, and improves uniformity at the expense of orthogonality.  Starting with a cube with each face being a Cartesian mesh, the cubed-sphere mesh is constructed by a gnomic projection of each face onto the sphere.
-Another class of quasi-uniform spherical mesh is constructed by successive refinement of an icosahedron.  The resultant mesh can be modified in different ways to improve orthogonality and hence numerical accuracy \citep{heikes-randall1995b,tomita2002}.  A thorough review of spherical meshes for atmospheric models is presented in \citep{staniforth-thuburn2012}.
-\TODO{Most hexagonal icosahedral models use a completely orthogonal grid but skewness and uniformity can still be optimised}
+Another class of quasi-uniform spherical mesh is constructed by successive refinement of an icosahedron.  The resultant mesh can be modified in different ways to reduce skewness and hence improve numerical accuracy \citep{heikes-randall1995b,tomita2002}.  A thorough review of spherical meshes for atmospheric models is presented in \citep{staniforth-thuburn2012}.
 
 Transport schemes may be classified as dimensionally-split, 2D multidimensional, or 3D multidimensional.  2D multidimensional schemes are often simply called `multidimensional' schemes since very few 3D multidimensional schemes have been used in atmospheric models.
 Perhaps confusingly, dimensionally-split schemes are sometimes called multidimensional, too, because they use one-dimensional techniques for multidimensional transport.

@@ -34,7 +34,8 @@ Method-of-lines schemes such as \citep{weller2009,skamarock-gassmann2011} use a 
 Unlike 2D semi-Lagrangian finite volume schemes, swept area and method-of-lines schemes achieve conservation for non-simply connected domains that can result from small-scale rotational flows \citep{lauritzen2011}.
 
 Very few 3D multidimensional schemes have been used in atmospheric models \citep[e.g.][]{gassmann2013} although such schemes might be expected to be more accurate on horizontally non-orthogonal, spherical meshes with steep terrain.
-The multidimensional method-of-lines schemes developed in \citep{weller2009,weller-shahrokhi2014} have only been used for two-dimensional flows on Cartesian planes and on the sphere, but the technique used naturally generalises to three dimensions.
+%yeh2007 discusses generalisation to 3D?
+Additionally, the multidimensional method-of-lines schemes developed in \citep{weller-shahrokhi2014} has been used in two-dimensional flows on Cartesian $x$--$z$ planes with distorted meshes \citep{shaw-weller2016,weller2017}.
 There are many more types of atmospheric transport schemes, but all can be classified according to their treatment of the three spatial dimensions.  A more comprehensive overview is presented in \cite{lauritzen2014}.
 
 In this paper, we present a new multidimensional method-of-lines scheme, `cubicFit', that improves upon the scheme in \citep{weller-shahrokhi2014}.  To reconstruct face values, the scheme fits a multidimensional polynomial over a cubic, upwind-biased stencil using a least-squares approach.  The implementation uses constraints derived from a von Neumann stability analysis to select appropriate polynomial fits for stencils in highly-distorted mesh regions.  The least-squares procedure depends upon the mesh geometry only, hence the scheme is computationally efficient, requiring only $n$ multiplies per cell face per time-step where $n$ is the size of the stencil.

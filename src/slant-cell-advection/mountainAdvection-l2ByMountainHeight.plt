@@ -1,9 +1,10 @@
 set term epslatex color colortext size 4.5,3
 
 set xrange [0:10]
-set yrange [0:0.2]
+set yrange [7e-3:0.2]
 
 set style data linespoints
+set logscale y
 
 set xlabel "Peak mountain height $h_0$ (\\si{\\kilo\\meter})"
 set ylabel "$\\ell_2$ error" offset 2

@@ -2,6 +2,7 @@ build
 slant-cell-advection.pdf
 stability-analysis.pdf
 uniform-cubic-stability-analysis.pdf
+high-order-correction.pdf
 src/errors/convergence-horizontalAdvection.dat
 src/errors/convergence-horizontalAdvection.pdf
 src/errors/convergence-thermalAdvection.dat

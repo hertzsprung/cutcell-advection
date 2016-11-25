@@ -13,4 +13,8 @@ build/uniform-cubic-stability-analysis/uniform-cubic-stability-analysis.pdf: \
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-grid-generation,fig-grid-generation))
 
+$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,high-order-correction))
 
+build/slant-cell-advection/high-order-correction.pdf: \
+  src/slant-cell-advection/ametsoc2014.bst \
+  src/slant-cell-advection/references.bib

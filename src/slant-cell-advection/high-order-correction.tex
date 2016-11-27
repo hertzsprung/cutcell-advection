@@ -230,7 +230,7 @@ The cubic finite difference approximation given in equation~\eqref{eqn:fd-fluxdi
 Notice that the flux divergence has been rewritten as the difference between right and left fluxes (equation~\ref{eqn:fluxdiv}).
 
 \subsection*{Calculating the high-order correction}
-The high-order correction to the cubicFit scheme is calculated as the difference between the cubic finite difference approximation (equation~\ref{eqn:fd-fluxcoeffs}) and the uncorrection cubicFit approximation (equation~\ref{eqn:cubicfit-fluxcoeffs}),
+The high-order correction to the cubicFit scheme is calculated as the difference between the cubic finite difference approximation (equation~\ref{eqn:fd-fluxcoeffs}) and the uncorrected cubicFit approximation (equation~\ref{eqn:cubicfit-fluxcoeffs}),
 \begin{align}
 	\mathrm{correction}(\phi_{i+1/2})
 	&=
@@ -263,7 +263,7 @@ The high-order correction to the cubicFit scheme is calculated as the difference
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix} \\
+	\end{bmatrix} \label{eqn:correction} \\
 %
 \intertext{which can be decomposed into a linear combination of second derivatives where $\partial_x^2 \phi_i = \phi_{i-1} - 2 \phi_i + \phi_{i+1}$,}
 %
@@ -283,8 +283,38 @@ The high-order correction to the cubicFit scheme is calculated as the difference
 	\frac{1}{48}
 	\left( -3 \partial_x^2 \phi_{i-1} + \partial_x^2 \phi_i \right)
 \end{align}
+Applying this correction using the three-point approximation of the second derivative results in third-order convergence on uniform meshes and second-order convergence on non-uniform meshes.
 
-Applying this correction using the three-point approximation of the second derivative results in third-order convergence on uniform meshes and second-order convergence on non-uniform meshes.  Alternatively, the second derivative can be calculated from equation~\eqref{eqn:cubic} such that $\partial_x^2 \phi = 2a_3 + 6a_4x$ where $a_3$ and $a_4$ can be calculated using equation~\eqref{eqn:cubicfit-inverse}.  This approach results in fourth-order convergence on uniform meshes and second-order convergence on non-uniform meshes.
+Alternatively, the second derivative can be calculated from equation~\eqref{eqn:cubic} such that $\partial_x^2 \phi = 2a_3 + 6a_4x$ where $a_3$ and $a_4$ can be calculated using equation~\eqref{eqn:cubicfit-inverse}.  This approach results in fourth-order convergence on uniform meshes and second-order convergence on non-uniform meshes.  Curiously, this approach yields the correction
+\begin{align}
+	\mathrm{correction}(\phi_{i+1/2})
+	&=
+	\frac{1}{48}
+	\begin{bmatrix}
+		0.975 \\ -4.925 \\ 6.925 \\ -2.975
+	\end{bmatrix}
+	\cdot
+	\begin{bmatrix}
+		\phi_{i-2} \\
+		\phi_{i-1} \\
+		\phi_i \\
+		\phi_{i+1}
+	\end{bmatrix} 
+	\approx
+	\frac{1}{48}
+	\begin{bmatrix}
+		1 \\ -5 \\ 7 \\ -3
+	\end{bmatrix}
+	\cdot
+	\begin{bmatrix}
+		\phi_{i-2} \\
+		\phi_{i-1} \\
+		\phi_i \\
+		\phi_{i+1}
+	\end{bmatrix}
+\end{align}
+whose coefficients are similar to those in equation~\ref{eqn:correction}.
+
 
 \bibliographystyle{ametsoc2014}
 \bibliography{references}

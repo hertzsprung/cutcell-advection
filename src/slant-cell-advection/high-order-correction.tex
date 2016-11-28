@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{fullpage}
 \usepackage{amsmath}
+\usepackage{mathtools}
 \usepackage{tikz}
 \usepackage{bm}
 \usepackage{natbib}
@@ -75,12 +76,12 @@ The one-dimensional cubic interpolation is
 Assuming a uniform mesh with $\Delta x = 1$ and choosing the position of $\phi_{i+1/2}$ to be $x=0$, equation~\eqref{eqn:cubic} is evaluated at the cell centres $\phi_{i-2}, \ldots, \phi_{i+1}$ to form the matrix equation
 \begin{align}
 	\mathbf{B} \mathbf{a} &= \bm{\phi} \\
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		1 & -5/2 & 25/4 & -125/8 \\
 		1 & -3/2 &  9/4 & -27/8 \\
 		1 & -1/2 &  1/4 &  -1/8 \\
 		1 &  1/2 &  1/4 &   1/8 \\
-	\end{bmatrix}
+	\end{bmatrix*}
 	\begin{bmatrix}
 		a_1 \\
 		a_2 \\
@@ -88,49 +89,49 @@ Assuming a uniform mesh with $\Delta x = 1$ and choosing the position of $\phi_{
 		a_4
 	\end{bmatrix}
 	&=
-	\begin{bmatrix}
+	\begin{bmatrix*}[l]
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix} \text{.}
+	\end{bmatrix*} \text{.}
 \end{align}
 The unknown coefficients $\mathbf{a}$ are found by inverting $\mathbf{B}$ such that $\mathbf{a} = \mathbf{B}^{-1} \bm{\phi}$.  The inverse matrix is
 \begin{align}
 	\mathbf{B}^{-1} = 
 	\frac{1}{48}
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		3 & -15 & 45 & 15 \\
 		2 & -6 & -42 & 46 \\
 		-12 & 60 & -84 & 36 \\
 		-8 & 24 & -24 & 8
-	\end{bmatrix} \label{eqn:cubicfit-inverse}
+	\end{bmatrix*} \label{eqn:cubicfit-inverse}
 \end{align}
 Since $x=0$ was chosen to be the position $i+1/2$ then 
 \begin{align}
 	\phi_{i+1/2} = a_1 = 
 	\frac{1}{16}
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		1 \\ -5 \\ 15 \\ 5
-	\end{bmatrix}
+	\end{bmatrix*}
 	\cdot
-	\begin{bmatrix}
+	\begin{bmatrix*}[l]
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi{i+1}
-	\end{bmatrix} \text{.} \label{eqn:cubicfit-fluxcoeffs}
+	\end{bmatrix*} \text{.} \label{eqn:cubicfit-fluxcoeffs}
 \end{align}
 
 The finite difference method offers another way to discretise the flux divergence of cell $i$ with a cubic approximation using cell centre values $\phi_{i-2}, \ldots, \phi_{i+1}$.  A matrix equation is constructed using equation~\eqref{eqn:cubic} evaluated at every cell centre.  For convenience, assume that $\Delta x = 1$ and that $x=0$ at the cell centre position of $\phi_i$, hence the matrix equation becomes
 \begin{align}
 	\mathbf{B} \mathbf{a} &= \bm{\phi} \\
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		1 & -2 & 4 & -8 \\
 		1 & -1 & 1 & -1 \\
 		1 &  0 & 0 &  0\\
 		1 &  1 & 1 &  1\\
-	\end{bmatrix}
+	\end{bmatrix*}
 	\begin{bmatrix}
 		a_1 \\
 		a_2 \\
@@ -138,38 +139,38 @@ The finite difference method offers another way to discretise the flux divergenc
 		a_4
 	\end{bmatrix}
 	&=
-	\begin{bmatrix}
+	\begin{bmatrix*}[l]
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix}
+	\end{bmatrix*}
 \end{align}
 The unknown coefficients $\mathbf{a}$ are found by calculating the inverse matrix,
 \begin{align}
 	\mathbf{B}^{-1} = 
 	\frac{1}{6}
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		0 & 0 & 6 & 0 \\
 		1 & -6 & 3 & 2 \\
 		0 & 3 & -6 & 3 \\
 		-1 & 3 & -3 & 1
-	\end{bmatrix}
+	\end{bmatrix*}
 \end{align}
 To calculate the flux divergence I calculate the derivative $\partial \phi / \partial x = a_2 + 2 a_3 x + 3 a_4 x^2$.  Evaluating the flux divergence at $\phi_i$ where $x=0$ then $\partial \phi_i / \partial x = a_2$.  Hence I find that the finite difference weighted sum is
 \begin{align}
 	-u \frac{\partial \phi_i}{\partial x} = -u a_2 =
 	-u \cdot \frac{1}{6}
-	\begin{bmatrix}
+	\begin{bmatrix*}[r]
 		1 \\ -6 \\ 3 \\ 2
-	\end{bmatrix}
+	\end{bmatrix*}
 	\cdot
-	\begin{bmatrix}
+	\begin{bmatrix*}[l]
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix} \label{eqn:fd-fluxdiv}
+	\end{bmatrix*} \label{eqn:fd-fluxdiv}
 \end{align}
 The cubic finite difference approximation given in equation~\eqref{eqn:fd-fluxdiv} is conservative on uniform meshes.  This can be demonstrated by decomposing the weights vector,
 \begin{align}
@@ -281,29 +282,41 @@ The high-order correction to the cubicFit scheme is calculated as the difference
 	\end{bmatrix} \\
 	&=
 	\frac{1}{48}
-	\left( -3 \partial_x^2 \phi_{i-1} + \partial_x^2 \phi_i \right)
+	\left( -3 \partial_x^2 \phi_{i-1} + \partial_x^2 \phi_i \right) \text{.}
 \end{align}
 Applying this correction using the three-point approximation of the second derivative results in third-order convergence on uniform meshes and second-order convergence on non-uniform meshes.
 
-Alternatively, the second derivative can be calculated from equation~\eqref{eqn:cubic} such that $\partial_x^2 \phi = 2a_3 + 6a_4x$ where $a_3$ and $a_4$ can be calculated using equation~\eqref{eqn:cubicfit-inverse}.  This approach results in fourth-order convergence on uniform meshes and second-order convergence on non-uniform meshes.  Curiously, this approach yields the correction
+Alternatively, the second derivative can be calculated from equation~\eqref{eqn:cubic} such that $\partial_x^2 \phi = 2a_3 + 6a_4x$ where $a_3$ and $a_4$ can be calculated using equation~\eqref{eqn:cubicfit-inverse}.  This approach results in fourth-order convergence on uniform meshes and second-order convergence on non-uniform meshes.
+Curiously, this approach yields the correction
 \begin{align}
 	\mathrm{correction}(\phi_{i+1/2})
 	&=
 	\frac{1}{48}
+	\left(
+	-3
+	\cdot
+	\frac{4}{5} 
 	\begin{bmatrix}
-		0.975 \\ -4.925 \\ 6.925 \\ -2.975
+		-27 \\ 141 \\ -210 \\ 87
 	\end{bmatrix}
+	+
+	\frac{4}{5}
+	\begin{bmatrix}
+		-33 \\ 159 \\ -219 \\ 93
+	\end{bmatrix}
+	\right)
 	\cdot
 	\begin{bmatrix}
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix} 
-	\approx
+	\end{bmatrix} \\
+	&=
 	\frac{1}{48}
+	\cdot
 	\begin{bmatrix}
-		1 \\ -5 \\ 7 \\ -3
+		0.8 \\ -4.4 \\ 6.4 \\ -2.8
 	\end{bmatrix}
 	\cdot
 	\begin{bmatrix}
@@ -313,7 +326,7 @@ Alternatively, the second derivative can be calculated from equation~\eqref{eqn:
 		\phi_{i+1}
 	\end{bmatrix}
 \end{align}
-whose coefficients are similar to those in equation~\ref{eqn:correction}.
+whose coefficients are similar in reverse order to those in equation~\ref{eqn:correction}.
 
 
 \bibliographystyle{ametsoc2014}

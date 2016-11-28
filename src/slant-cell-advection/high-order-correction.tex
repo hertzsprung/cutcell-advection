@@ -295,14 +295,12 @@ Curiously, this approach yields the correction
 	\left(
 	-3
 	\cdot
-	\frac{4}{5} 
 	\begin{bmatrix}
-		-27 \\ 141 \\ -210 \\ 87
+		0 \\ 1 \\ -2 \\ 1
 	\end{bmatrix}
 	+
-	\frac{4}{5}
 	\begin{bmatrix}
-		-33 \\ 159 \\ -219 \\ 93
+		-1 \\ 4 \\ -5 \\ 2
 	\end{bmatrix}
 	\right)
 	\cdot
@@ -315,18 +313,44 @@ Curiously, this approach yields the correction
 	&=
 	\frac{1}{48}
 	\cdot
-	\begin{bmatrix}
-		0.8 \\ -4.4 \\ 6.4 \\ -2.8
-	\end{bmatrix}
+	\begin{bmatrix*}[r]
+		-1 \\ 1 \\ 1 \\ -1
+	\end{bmatrix*}
 	\cdot
-	\begin{bmatrix}
+	\begin{bmatrix*}[l]
 		\phi_{i-2} \\
 		\phi_{i-1} \\
 		\phi_i \\
 		\phi_{i+1}
-	\end{bmatrix}
+	\end{bmatrix*}
+	=
+	\frac{1}{48}
+	\left(
+	\begin{bmatrix*}[r]
+		-1 \\ 2 \\ -1 \\ 0
+	\end{bmatrix*}
+	+
+	\begin{bmatrix*}[r]
+		0 \\ -1 \\ 2 \\ -1
+	\end{bmatrix*}
+	\right)
+	\cdot
+	\begin{bmatrix*}[l]
+		\phi_{i-2} \\
+		\phi_{i-1} \\
+		\phi_i \\
+		\phi_{i+1}
+	\end{bmatrix*} \\
+	&=
+	-\frac{1}{48} \left( \partial_x^2 \phi_{i-1} + \partial_x^2 \phi_i \right)
+	\cdot
+	\begin{bmatrix*}[l]
+		\phi_{i-2} \\
+		\phi_{i-1} \\
+		\phi_i \\
+		\phi_{i+1}
+	\end{bmatrix*} \text{.}
 \end{align}
-whose coefficients are similar in reverse order to those in equation~\ref{eqn:correction}.
 
 
 \bibliographystyle{ametsoc2014}

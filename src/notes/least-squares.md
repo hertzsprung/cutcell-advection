@@ -15,7 +15,7 @@ or, in matrix form,
             [ 1  5 ]
 
             \______/
-	       = B
+	           = B
 
 We can solve the equation in a least-squares sense using the pseudo-inverse `B+`:
 

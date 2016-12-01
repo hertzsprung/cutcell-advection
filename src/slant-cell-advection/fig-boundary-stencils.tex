@@ -1,57 +1,56 @@
 \documentclass[tikz]{standalone}
 \usepackage{bm}
+\usetikzlibrary{patterns}
 \begin{document}
 \begin{tikzpicture}[
   scale=0.56,
   cpnt/.style={fill=gray},
 ]
 
-\node [above] at (-1,6) {(a)};
-\draw (-1,0) [fill=black!20,black!20] rectangle (0,6) node [midway,black] {\rotatebox{90}{Inlet boundary}};
-\draw (0,0) rectangle (4.8,6);
-\draw (0,2) -- (4.8,2);
-\draw (0,4) -- (4.8,4);
-\draw (0,0) -- (0,6);
-\draw (2.4,0) -- (2.4,6);
+\node [above] at (0,6) {(a)};
+\fill [pattern=north east lines] (0,-1) rectangle (9,0);
+\draw (0,0) rectangle (9,4);
+\draw (3,0) -- (3,4);
+\draw (6,0) -- (6,4);
+\draw (0,2) -- (9,2);
 
-\draw [ultra thick] (2.4,2) -- (2.4,4);
-\draw [thick] (2.4,3) circle [radius=0.2] node [anchor=south west] {$\phi_F$};
-\draw [thick, ->] (2.4,3) -- (2.9,2.3) node [anchor=west] {$\mathbf{u}_f$};
+\draw [ultra thick] (3,2) -- (6,2);
+\draw [thick] (4.5,2) circle [radius=0.2];
 
-\path [cpnt] (1.2,1) circle [radius=0.1];
-\path [cpnt] (1.2,3) circle [radius=0.1] node [right] {$\phi_u$};
-\path [cpnt] (1.2,5) circle [radius=0.1];
+\path [cpnt] (1.5,1) circle [radius=0.1];
+\path [cpnt] (4.5,1) circle [radius=0.1] node [right] {$\phi_u$};
+\path [cpnt] (7.5,1) circle [radius=0.1];
+\path [cpnt] (1.5,3) circle [radius=0.1];
+\path [cpnt] (4.5,3) circle [radius=0.1] node [right] {$\phi_d$};
+\path [cpnt] (7.5,3) circle [radius=0.1];
+\draw [thick, ->] (4.5,2) -- (5,2.4) node [anchor=west] {$\mathbf{u}_f$};
 
-\path [cpnt] (3.6,1) circle [radius=0.1];
-\path [cpnt] (3.6,3) circle [radius=0.1] node [right] {$\phi_d$};
-\path [cpnt] (3.6,5) circle [radius=0.1];
+\draw [<->] (6,5) node [left] {$y$} -- (7,5) -- (7,6) node [above] {$x$};
 
-\begin{scope}[shift={(8,0)}]
-\draw (-1,0) [fill=black!20,black!20] rectangle (0,6) node [midway,black] {\rotatebox{90}{Inlet boundary}};
-\node [above] at (-1,6) {(b)};
+\begin{scope}[shift={(10,0)}]
+\node [above] at (0,6) {(b)};
+\fill [pattern=north east lines] (0,-1) rectangle (9,0);
+\draw (0,0) rectangle (9,6);
+\draw (3,0) -- (3,6);
+\draw (6,0) -- (6,6);
+\draw (0,2) -- (9,2);
+\draw (0,4) -- (9,4);
 
-\draw (0,0) rectangle (7.2,6);
-\draw (0,2) -- (7.2,2);
-\draw (0,4) -- (7.2,4);
-\draw (0,0) -- (0,6);
-\draw (2.4,0) -- (2.4,6);
-\draw (4.8,0) -- (4.8,6);
+\draw [ultra thick] (3,4) -- (6,4);
+\draw [thick] (4.5,4) circle [radius=0.2];
 
-\draw [ultra thick] (4.8,2) -- (4.8,4);
-\draw [thick] (4.8,3) circle [radius=0.2] node [anchor=south west] {$\phi_F$};
-\draw [thick, ->] (4.8,3) -- (5.3,2.3) node [anchor=west] {$\mathbf{u}_f$};
+\path [cpnt] (1.5,1) circle [radius=0.1];
+\path [cpnt] (4.5,1) circle [radius=0.1];
+\path [cpnt] (7.5,1) circle [radius=0.1];
+\path [cpnt] (1.5,3) circle [radius=0.1];
+\path [cpnt] (4.5,3) circle [radius=0.1] node [right] {$\phi_u$};
+\path [cpnt] (7.5,3) circle [radius=0.1];
+\path [cpnt] (1.5,5) circle [radius=0.1];
+\path [cpnt] (4.5,5) circle [radius=0.1] node [right] {$\phi_d$};
+\path [cpnt] (7.5,5) circle [radius=0.1];
+\draw [thick, ->] (4.5,4) -- (5,4.4) node [anchor=west] {$\mathbf{u}_f$};
 
-\path [cpnt] (1.2,1) circle [radius=0.1];
-\path [cpnt] (1.2,3) circle [radius=0.1];
-\path [cpnt] (1.2,5) circle [radius=0.1];
-
-\path [cpnt] (3.6,1) circle [radius=0.1];
-\path [cpnt] (3.6,3) circle [radius=0.1] node [right] {$\phi_u$};
-\path [cpnt] (3.6,5) circle [radius=0.1];
-
-\path [cpnt] (6.0,1) circle [radius=0.1];
-\path [cpnt] (6.0,3) circle [radius=0.1] node [right] {$\phi_d$};
-\path [cpnt] (6.0,5) circle [radius=0.1];
+\draw [<->] (10,5) node [left] {$y$} -- (11,5) -- (11,6) node [above] {$x$};
 \end{scope}
 
 \end{tikzpicture}

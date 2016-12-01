@@ -1,18 +1,20 @@
 \subsection{Cubic fit transport scheme}
 
+\TODO{I haven't said that inlet boundary values are included in stencils}
 \TODO{I haven't said exactly how we do 2D stencils on the sphere: how local coordinates are established, projection onto a local 2D plane}
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-interior-stencils/fig-interior-stencils.pdf}
-	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) rectangular and (b) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The wind vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
+	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) rectangular and (b) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The velocity vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
 	\label{fig:interiorStencils}
 \end{figure}
 
 The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding cell centre values.
-To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.  For any mesh, every interior face connects two adjacent cells.  The wind direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the wind direction at that face for every timestep.
+To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.
+For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the velocity direction at that face for every timestep.
 
-The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}b.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
+The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}a.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
 The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$:
 \begin{align}
@@ -23,7 +25,9 @@ A least squares approach is needed because the system of equations is overconstr
 The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
 \subsubsection{Stencil construction}
-For every interior face, two stencils are constructed, one for each of the possible upwind cells.  For a given face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
+For every interior face, two stencils are constructed, one for each of the possible upwind cells.
+Stencils are not constructed for boundary faces because values of $\phi$ at boundaries are calculated from prescribed boundary conditions.
+For a given interior face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
 The opposing faces for face $f$ and upwind cell $c_u$ are determined as follows.
 Defining $G$ to be the set of faces other than $f$ that border cell $c_u$, we calculate the `opposedness', $\mathrm{Opp}$, between faces $f$ and $g \in G$, defined as
 \begin{align}
@@ -40,7 +44,7 @@ The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those f
 \begin{align}
 	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max_{g\:\in\:G}(\mathrm{Opp}(f, g)) \} 
 \end{align}
-On a rectangular mesh, there is always one opposing face that is exactly parallel to the face $f$.
+On a rectangular mesh, there is always one opposing face $g$ that is exactly parallel to the face $f$ such that $\mathrm{Opp}(f, g) = 1$.
 
 Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Having found these two sets of cells, the stencil is constructed to comprise all internal and external cells.
 
@@ -87,7 +91,7 @@ which can be written as
 The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is called the \textit{stencil matrix}, and it is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
-The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse of $\mathbf{B}^+$ found by singular value decomposition:
+The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition:
 \begin{align}
 	\mathbf{a} = \mathbf{B}^+ \bm{\phi}
 %
@@ -130,12 +134,12 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
-	\caption{\TODO{This example is confusing because boundary values are not included in the diagram, but they are in the implementation.}  Upwind-biased stencils for faces near the left-hand boundary of a rectangular mesh, with (a) a $2 \times 3$ stencil for the face immediately adjacent to the left-hand boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
+	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
 	\label{fig:boundaryStencils}
 \end{figure}
 
 The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}a), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}b).
-In all three cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
+In both cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
 
 For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  In two dimensions, a candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
 
@@ -153,7 +157,7 @@ Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is f
 The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsubsection{Stabilisation procedure}
-So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers so that the fit is numerically stable.
+So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers $\mathbf{m}$ so that the fit is numerically stable.
 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
 If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
@@ -168,6 +172,7 @@ A one-dimensional von Neumann analysis was performed to obtain stability constra
 \end{align}
 \end{subequations}
 where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell $p$.
+ The upwind, downwind and peripheral weights sum to one such that $w_u + w_d + \sum_{p \in P} w_p = 1$.
 
 The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
 If there are multiple candidates with the same number of terms, the candidate with the largest minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.

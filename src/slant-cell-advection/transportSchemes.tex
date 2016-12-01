@@ -19,7 +19,7 @@ Using the finite volume method, the wind field is prescribed at face centroids a
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F
 \end{align}
-where $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a wind vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, $\phi_F$ is an approximation of the value of the dependent variable at the face, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.
+where subscript $f$ denotes a value stored at a face and subscript $F$ denotes a value approximated at a face from surrounding values stored at cell centres.  $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a velocity vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, $\phi_F$ is an approximation of the dependent variable at the face, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.
 
 This discretisation is applicable to arbitrary meshes.  A neccesary condition for stability is given by the multidimensional Courant number,
 \begin{align}

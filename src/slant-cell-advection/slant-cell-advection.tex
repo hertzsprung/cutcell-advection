@@ -25,7 +25,7 @@
 \begin{document}
 
 \begin{frontmatter}
-\title{An Eulerian finite volume transport scheme for atmospheric flows on arbitrary meshes over steep terrain \\ \TODO{(working title)}}
+\title{An Eulerian finite volume transport scheme for atmospheric flows on arbitrary meshes over steep terrain}
 \author[uor]{James Shaw\corref{cor}}
 \ead{js102@zepler.net}
 \author[uor]{Hilary Weller}
@@ -37,11 +37,13 @@
 \address[mo]{Met Office, Exeter, United Kingdom}
 
 \begin{abstract}
-The inclusion of terrain in atmospheric models gives rise to mesh distortions and nonuniformities near the lower boundary that can degrade the accuracy of transport schemes.  In addition, accuracy may be compromised because of stringent time-to-solution constraints on operational weather forecast models.
+The inclusion of terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade the accuracy and challenge the stability of transport schemes \TODO{apart from linearUpwind results, what evidence to I have that other transport schemes struggle with stability over steep slopes?}.
+In addition, accuracy may be compromised because of stringent time-to-solution constraints on operational weather forecast models.
 
-This paper presents an Eulerian finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order polynomial terms in distorted regions of the mesh, or near boundaries where there is insufficient information.  This technique achieves stable, non-oscillatory solutions on arbitrarily distorted, nonuniform meshes.  The least squares reconstruction method is computationally cheap because most calculations depend upon the mesh only, with just one vector multiply per face needed per time-step.
+This paper presents an Eulerian finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order terms from the reconstruction polynomial in distorted regions of the mesh, or near boundaries where there is insufficient information.
+This technique achieves stable, non-oscillatory solutions on arbitrarily distorted, non-uniform meshes.  The least squares reconstruction method has a low computational cost because most calculations depend upon the mesh only, with just one vector multiply per face needed per time-step.
 
-The cubicFit scheme is evaluated using two, idealised numerical tests of atmospheric flow.  The first test assesses accuracy near the ground by transporting a tracer over steep terrain on severely distorted terrain-following meshes and cut cell meshes.  The second test deforms a tracer in non-divergent and divergent flows on hexagonal icosahedra and cubed-sphere meshes.
+The cubicFit scheme is evaluated using two, idealised numerical tests of atmospheric flow.  The first test assesses accuracy near the ground by transporting a tracer over steep terrain on severely distorted terrain-following meshes and cut-cell meshes.  The second test deforms a tracer in non-divergent and divergent flows on hexagonal icosahedra and cubed-sphere meshes.
 In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a standard linear upwind transport scheme.
 \end{abstract}
 

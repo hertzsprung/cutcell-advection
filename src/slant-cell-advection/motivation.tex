@@ -1,0 +1,66 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{siunitx}
+\usepackage{doi}
+\usetikzlibrary{decorations.pathreplacing}
+
+\newcommand{\Co}{C}
+\newcommand{\vect}{\bm}
+\newcommand{\iu}{{i\mkern1mu}}
+\newcommand{\TODO}[1]{\textcolor{purple}{TODO: \emph{#1}}}
+
+\title{Motivation for the cubicFit transport scheme}
+\author{James Shaw}
+
+\begin{document}
+\maketitle
+
+\subsection*{Stability}
+
+\begin{itemize}
+	\item The slanted cell method improves the numerical representation of hydrostatic balance over steep orography compared to terrain-following meshes but requires a new advection scheme that is stable (and accurate) --- \TODO{but the spurious velocities are small on terrain-following meshes anyway, so why should we use slanted cells?}
+	\item Application of von Neumann stability analysis is unique to the best of my knowledge --- \TODO{but it's not entirely effective, I'm still finding meshes and wind fields that satisfy the stability criteria but are actually unstable}
+	\item The stability analysis technique could be applied to any equation in any domain --- \TODO{perhaps, but this hasn't been done}
+\end{itemize}
+
+\subsection*{Computationally cheap}
+
+\begin{itemize}
+	\item Computationally cheap, just a vector dot product (unlike most swept-area schemes that require a matrix-vector multiply \citep{lashley2002,skamarock-menchaca2010,thuburn2014}) --- \TODO{but have we traded accuracy for computational efficiency and was it really worth it?}
+	\item Small stencil permits lots of parallelisation --- \TODO{surely true of any scheme with a Courant number $\leq 1$}
+\end{itemize}
+
+\subsection*{Multidimensionality}
+\begin{itemize}
+	\item Not susceptible to splitting errors (unlike models such as CAM-FV, UKMO Dynamo) --- \TODO{but \citep{weller2017} shows that splitting errors are negligible for all but the steepest of terrain, so does it really matter, especially given the gains in computational efficiency by using a dimensionally-split transport scheme?}
+	\item No special treatment for the corners of cubed-sphere panels (unlike \TODO{citation, check weller2017}) or for hexagonal geometry (unlike \TODO{citation, gassmann?}) --- \TODO{that's nice, but if the special treatments are effective, then does it matter?}
+	\item Multidimensional in arbitrary dimensions.  We use the scheme on an $x$--$z$ plane but no special treatment would be needed for 3D multidimensional --- \TODO{many other schemes would generalise to 3D multidimensional, too, but is there any motivation for doing so?}
+\end{itemize}
+
+\subsection*{Arbitrary meshes}
+\begin{itemize}
+	\item Suitable for arbitrary meshes including terrain-following meshes, cut cells, cubed-spheres and hexagonal icosahedra --- \TODO{but real models choose their grid upfront and choose a suitable transport scheme to go with it, do they really need this flexibility?}
+	\item Suitable for steep slopes --- \TODO{is this really a problem?  e.g. ECMWF say they have no problem with steep slopes}
+\end{itemize}
+
+\subsection*{Miscellaneous}
+\begin{itemize}
+	\item Second-order accurate on distorted meshes (really?) unlike \citep{skamarock-gassmann2011} --- \TODO{only demonstrated properly in 1D, in 2D sometimes the scheme diverges, it doesn't even converge!}
+	\item Conservative (unlike UKMO EndGame which suffers from eternal fountain of moisture) --- \TODO{so are all other finite volume transport schemes}
+	\item Eulerian schemes are less restrictive than semi-Lagrangian schemes for small-scale rotational flow because non-simply connected domains are permitted \citep{lauritzen2011book} --- \TODO{other Eulerian schemes already exist}
+	\item Eulerian schemes allow choice in timestepping, e.g. optimized Runge--Kutta schemes could allow Courant numbers $> 1$ (as mentioned by John Thuburn) --- \TODO{true for any Eulerian scheme}
+	\item Possibility of super-convergence --- \TODO{only been achieved in 1D, not in 2D/3D}
+	\item Standard limiters could be applied --- \TODO{hasn't been done, true of many schemes}
+\end{itemize}
+
+
+\bibliographystyle{ametsoc2014}
+\bibliography{references}
+
+\end{document}

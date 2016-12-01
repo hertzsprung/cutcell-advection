@@ -10,9 +10,10 @@ set xtics axis
 set ytics axis 1,1
 
 set xlabel "$x$"
+set ylabel "$\\phi$" offset 15.7,6.4 rotate by 0
 
 set multiplot 	layout 1,3  \
-		margins 0,0.95,0.15,0.95 \
+		margins 0,0.95,0.15,0.92 \
 		spacing 0.05,0.1
 
 centralQuad(x) = 1.7492178992983982 + 0.13068611504740824 * x + 0.18146888996940846 * x**2
@@ -27,7 +28,6 @@ set label "-0.352" at -1.2,2.2 offset char 0.3,char 0.6 textcolor lt 2
 set label "1.822" at -1,1.8 offset char -4,char -0.5 textcolor lt 7
 set label "0.361" at 0.4,1.9 offset char 1.5,0 textcolor lt 2
 
-set ylabel "$\\phi$"
 plot cubic(x) lc -1 lw 1.7 notitle, \
   "../stabilisation/cubic.dat" using 1:2:3 with points ps 1.5 lc variable notitle
 
@@ -41,7 +41,6 @@ set label "0.62" at -1,1.8 offset char -4,char -0.5 textcolor lt 2
 set label "0.502" at 0.4,1.9 offset char 1.5,char -0.3 textcolor lt 7
 
 
-unset ylabel
 plot centralQuad(x) lc -1 lw 1.7 notitle, \
   "../stabilisation/centralQuad.dat" using 1:2:3 with points ps 1.5 lc variable notitle
 

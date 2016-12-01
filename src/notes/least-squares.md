@@ -10,12 +10,12 @@ Let phi = [1, 3, 6] at positions [-1, 2, 5].  So, without using the phi values, 
 
 or, in matrix form,
 
-        [ 1 -1 ]
-phi = a [ 1  2 ]
-        [ 1  5 ]
+            [ 1 -1 ]
+    phi = a [ 1  2 ]
+            [ 1  5 ]
 
-        \______/
-	   = B
+            \______/
+	           = B
 
 We can solve the equation in a least-squares sense using the pseudo-inverse `B+`:
 

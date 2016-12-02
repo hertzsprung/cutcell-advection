@@ -37,7 +37,7 @@
 \address[mo]{Met Office, Exeter, United Kingdom}
 
 \begin{abstract}
-The inclusion of terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade the accuracy and challenge the stability of transport schemes \TODO{apart from linearUpwind results, what evidence to I have that other transport schemes struggle with stability over steep slopes?}.
+The inclusion of terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade the accuracy and challenge the stability of transport schemes \TODO{apart from linearUpwind results, what evidence do I have that other transport schemes struggle with stability over steep slopes?}.
 In addition, accuracy may be compromised because of stringent time-to-solution constraints on operational weather forecast models.
 
 This paper presents an Eulerian finite volume transport scheme, ``cubicFit'', that uses a multidimensional polynomial, least squares reconstruction method.  Constraints derived from a von Neumann stability analysis are imposed during model initialisation to remove high-order terms from the reconstruction polynomial in distorted regions of the mesh, or near boundaries where there is insufficient information.
@@ -79,7 +79,6 @@ where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e =
 \label{sec:results}
 
 \TODO{somewhere mention that the second-order convergence is a limitation of the divergence discretisation.  With more DoF a higher order should be achievable.} \\
-\TODO{somewhere define error norms}
 \TODO{I might need to estimate the number of floating-point ops to enable a comparison between linearUpwind and cubicFit in terms of computational expense versus numerical accuracy}
 
 \input{mountainAdvection}

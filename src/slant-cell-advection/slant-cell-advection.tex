@@ -57,11 +57,6 @@ In all tests, cubicFit is largely insensitive to mesh distortions, and cubicFit 
 
 \section{Meshes}
 
-The basic terrain-following method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
-\begin{equation}
-	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
-\end{equation}
-where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
 
 \subsection{Meshing a spherical Earth}
 

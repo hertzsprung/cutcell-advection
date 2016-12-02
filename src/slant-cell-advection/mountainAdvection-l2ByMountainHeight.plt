@@ -1,20 +1,20 @@
 set term epslatex color colortext size 4.5,3
 
 set xrange [0:10]
-set yrange [7e-3:0.2]
+set yrange [6e-3:0.3]
 
 set style data linespoints
 set logscale y
 
 set xlabel "Peak mountain height $h_0$ (\\si{\\kilo\\meter})"
-set ylabel "$\\ell_2$ error" offset 2
+set ylabel "$\\ell_2$ error" offset 3
 
 set label "\\textit{BTF linearUpwind}" at 6.2,0.077 textcolor rgb "dark-violet"
-set label "BTF cubicUpwind" at 6.2,0.045 textcolor rgb "dark-violet"
-set label "\\textit{Cut cells linearUpwind}" at 5.75,0.14 textcolor rgb "#009e73"
-set label "Cut cells cubicUpwind" at 6,0.061 textcolor rgb "#009e73"
-set label "\\textit{Slanted cells linearUpwind}" at 5.2,0.185 textcolor rgb "#1a8acb"
-set label "Slanted cells cubicUpwind" at 5.6,0.095 textcolor rgb "#1a8acb"
+set label "BTF cubicFit" at 6.2,0.045 textcolor rgb "dark-violet"
+set label "\\textit{Cut cells linearUpwind}" at 6.2,0.14 textcolor rgb "#009e73"
+set label "Cut cells cubicFit" at 6.2,0.061 textcolor rgb "#009e73"
+set label "\\textit{Slanted cells linearUpwind}" at 5.2,0.2 textcolor rgb "#1a8acb"
+set label "Slanted cells cubicFit" at 6.2,0.095 textcolor rgb "#1a8acb"
 
 unset key
 

@@ -7,6 +7,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/mountainAdvection.tex \
   src/slant-cell-advection/deformationSphere.tex \
   src/slant-cell-advection/vonNeumann.tex \
+  src/slant-cell-advection/spherical.tex \
   src/slant-cell-advection/ametsoc2014.bst \
   src/slant-cell-advection/references.bib \
   build/fig-interior-stencils/fig-interior-stencils.pdf \

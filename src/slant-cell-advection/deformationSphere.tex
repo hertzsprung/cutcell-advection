@@ -1,6 +1,23 @@
 \subsection{Deformational flow on a sphere}
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
 Results are compared between linearUpwind and cubicFit schemes using hexagonal icosahedra and cubed-spheres.
+Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
+Figure~\ref{fig:sphere-meshes}a shows an example of such a mesh that has been refined three times.
+Cubed-sphere meshes are constructed using an equi-distant gnomic projection of a cube having a uniform Cartesian mesh on each panel \citep{staniforth-thuburn2012}.
+Figure~\ref{fig:sphere-meshes}b shows an example of a cubed-sphere mesh having panels with $8 \times 8$ cells.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf}
+	\caption{Illustrations of coarse meshes of a spherical Earth using (a) a hexagonal icosahedron that has been refined three times, and (b) a cubed-sphere with each panel having $8 \times 8$ cells.}
+	\label{fig:sphere-meshes}
+\end{figure}
+
+Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
+\begin{align}
+	\Delta \lambda = \ang{360} \frac{\overline{\Delta x}}{2 \pi R_e}
+\end{align}
+where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e = \SI{6.3712e6}{\meter}$ is the radius of the Earth.
 
 The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \begin{enumerate}
@@ -12,24 +29,6 @@ The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \item a test using a divergent velocity field
 \end{enumerate}
 We assess the cubicFit scheme using only tests 1, 2 and 6.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.
-
-\begin{figure}
-	\centering
-	\includegraphics{../fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf}
-	\caption{Illustrations of coarse meshes of a spherical Earth using (a) a hexagonal icosahedron and (b) a cubed-sphere.  \TODO{say what refinement level the hex mesh is.}  Each panel of the cubed-sphere has $8 \times 8$ cells.}
-	\label{fig:sphere-meshes}
-\end{figure}
-
-\TODO{Describe hexagonal icosahedral meshes (cite one or more of \citep{thuburn2014,heikes-randall1995a,heikes-randall1995b})} \\
-\TODO{Describe cubed-sphere mesh (cite someone?)}
-
-Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
-\begin{align}
-	\Delta \lambda = \ang{360} \frac{\overline{\Delta x}}{2 \pi R_e}
-\end{align}
-where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e = \SI{6.3712e6}{\meter}$ is the radius of the Earth.
-\TODO{in an appendix, describe OpenFOAM's global Cartesian coordinates, one-cell deep atmosphere, and our correction for spherical geometry?}
-
 
 \subsubsection{Numerical order of convergence using Gaussian hills}
 \label{sec:deformationSphere-gaussian-nondiv}
@@ -98,6 +97,12 @@ The non-divergent velocity field is the same as convergence test in section~\ref
 \end{figure}
 
 \subsubsection{Transport under divergent flow conditions using cosine bells}
+
+\TODO{Velocity field specified by \citep{nair-lauritzen2010}}
+\begin{align}
+	u(\lambda, \theta, t) &= -5 \frac{R_e}{T} \sin^2 \left( \frac{\lambda'}{2} \right) \sin \left(2 \theta \right) \cos^2 \left( \theta \right) \cos \left( \frac{\pi t}{T} \right) + \frac{2 \pi R_e}{T} \cos \left( \theta \right) \text{,} \\
+	v(\lambda, \theta, t) &= \frac{5}{2} \frac{R_e}{T} \sin \left( \lambda' \right) \cos^3 \left( \theta \right) \cos \left( \frac{\pi t}{T} \right)
+\end{align}
 
 \begin{figure}
 	\centering

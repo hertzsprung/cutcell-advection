@@ -85,7 +85,7 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizon
 \hline
 \end{tabular}
 %
-	\caption{\TODO{timestep values for slug advection}}
+	\caption{Time-step values and corresponding maximum Courant numbers for the two-dimensional transport test over terrain.  The time-steps were chosen so that the maximum Courant number was about \num{0.4}.}
 	\label{tab:mountainAdvection:timesteps}
 \end{table}
 
@@ -97,7 +97,7 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 	t &= \frac{x}{u_0} - \frac{h_0}{16 u_0 H} \left[ 4x + \frac{\sin 2 (\alpha + \beta) x}{\alpha + \beta} \right.+ \nonumber \\
    &\ \left. \frac{\sin 2(\alpha - \beta) x}{\alpha - \beta} + 2 \left( \frac{\sin 2\alpha x}{\alpha} + \frac{\sin 2\beta x}{\beta} \right) \right]
 \end{align}
-\TODO{By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{51234.5}{\meter}\).}
+By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{54342.8}{\meter}\).
 
 \begin{figure}
 	\centering
@@ -132,13 +132,13 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 	\centering
 	\includegraphics{../fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf}
 %
-	\caption{Error measures for the two-dimensional tracer transport tests with peak mountain heights $h_0$ from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, slanted cell and cut cell meeshes using the linearUpwind and cubicFit schemes.  The linearUpwind scheme is unstable on the slanted cell mesh with a peak mountain height $h_0 = \SI{6}{\kilo\meter}$.}
+	\caption{Error measures for the two-dimensional tracer transport tests with peak mountain heights $h_0$ from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, cut cell and slanted cell meshes using the linearUpwind and cubicFit schemes.  At $h_0 = \SI{0}{\kilo\meter}$ the terrain is entirely flat and the BTF, cut cell and slanted cell meshes are identical.  At $h_0 = \SI{6}{\kilo\meter}$ the linearUpwind scheme is unstable on the slanted cell mesh.}
 	\label{fig:mountainAdvection-l2ByMountainHeight}
 \end{figure}
 
 To further examine the performance of the cubicFit scheme in the presence of steep terrain, a second series of tests were performed in which the peak mountain height was varied from \SIrange{0}{6}{\kilo\meter} keeping all other parameters constant.  Results were obtained on BTF, cut cell and slanted cell meshes using the linearUpwind scheme and cubicFit scheme.  \TODO{hold the max Courant number around 0.4 again}.  The $\ell_2$ error for these tests is presented in figure~\ref{fig:mountainAdvection-l2ByMountainHeight}.
 In all cases, error increases with increasing mountain height because steeper slopes lead to greater mesh distortions.
-Errors are identical for a given transport scheme when $h_0 = \SI{0}{\kilo\meter}$ and the ground is entirely flat because the BTF, slanted cell and cut cell meshes are identical.
+Errors are identical for a given transport scheme when $h_0 = \SI{0}{\kilo\meter}$ and the ground is entirely flat because the BTF, cut cell and slanted cell meshes are identical.
 Compared with the cubicFit scheme, the linearUpwind scheme is more sensitive to the mesh type and mountain height.  The linearUpwind scheme is unstable on the slanted cell mesh with a peak mountain height $h_0 = \SI{6}{\kilo\meter}$ despite using a stable Courant number of \TODO{\num{0.4}ish}.
 In contrast, the cubicFit scheme is less sensitive to the mesh type and errors grow more slowly with increasing mountain height.  The cubicFit scheme yields stable results in all tests.
 

@@ -1,0 +1,23 @@
+FoamFile {
+        version         1.4;
+        format          ascii;
+
+        root            "";
+        case            "";
+        instance        "constant";
+        local           "";
+
+        class           dictionary;
+        object          gmtDict;
+}
+
+projection "G110/20/1.6i";
+projection2D latLon;
+plotBoundaryDots false;
+plotZeroValuePolys false;
+
+FieldsToPlot (
+        [none mesh "black"]
+);
+
+region "-180/180/-90/90";

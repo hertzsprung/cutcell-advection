@@ -75,21 +75,22 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizon
 
 \begin{table}
 	\centering
-\begin{tabular}{l S S}
+\begin{tabular}{l S S S S S}
 \hline
-	Mesh type & {Time-step (\si{\second})} & {Maximum Courant number} \\
+	& \multicolumn{5}{c}{Peak mountain height $h_0$ (\si{\kilo\meter})} \\
+	Mesh type & 0 & 3 & 4 & 5 & 6 \\
 \hline
-	BTF & 8 & 0.417 \\
-	Cut cell & 0.5 & 0.376 \\
-	Slanted cell & 5 & 0.409 \\
+	BTF & 40 & 16 & 10 & 8 & 5 \\
+	Cut cell & 40 & 1.6 & 1.6 & 0.5 & 1.5  \\
+	Slanted cell & 40 & 8 & 6.25 & 5 & 4  \\
 \hline
 \end{tabular}
 %
-	\caption{Time-step values and corresponding maximum Courant numbers for the two-dimensional transport test over terrain.  The time-steps were chosen so that the maximum Courant number was about \num{0.4}.}
+	\caption{Time-steps (\si{\second}) for the two-dimensional transport test over terrain.  The time-steps were chosen so that the maximum Courant number was between \num{0.36} and \num{0.46}.}
 	\label{tab:mountainAdvection:timesteps}
 \end{table}
 
-Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.  Different time-steps were chosen for each mesh so that the maximum Courant number was approximately \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).
+Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.  Different time-steps were chosen for each mesh so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).
 An analytic solution at \SI{10000}{\second} is obtained by calculating the new horizontal position of the tracer.  Integrating along the trajectory yields $t$, the time taken to move from the left side of the mountain to the right:
 \begin{align}
 	\mathrm{d}t &= \mathrm{d}x / u(x) \\
@@ -136,10 +137,11 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 	\label{fig:mountainAdvection-l2ByMountainHeight}
 \end{figure}
 
-To further examine the performance of the cubicFit scheme in the presence of steep terrain, a second series of tests were performed in which the peak mountain height was varied from \SIrange{0}{6}{\kilo\meter} keeping all other parameters constant.  Results were obtained on BTF, cut cell and slanted cell meshes using the linearUpwind scheme and cubicFit scheme.  \TODO{hold the max Courant number around 0.4 again}.  The $\ell_2$ error for these tests is presented in figure~\ref{fig:mountainAdvection-l2ByMountainHeight}.
+To further examine the performance of the cubicFit scheme in the presence of steep terrain, a second series of tests were performed in which the peak mountain height was varied from \SIrange{0}{6}{\kilo\meter} keeping all other parameters constant.
+Results were obtained on BTF, cut cell and slanted cell meshes using the linearUpwind scheme and cubicFit scheme.  Again, the time-step was chosen for each test so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).  The $\ell_2$ error for these tests is presented in figure~\ref{fig:mountainAdvection-l2ByMountainHeight}.
 In all cases, error increases with increasing mountain height because steeper slopes lead to greater mesh distortions.
 Errors are identical for a given transport scheme when $h_0 = \SI{0}{\kilo\meter}$ and the ground is entirely flat because the BTF, cut cell and slanted cell meshes are identical.
-Compared with the cubicFit scheme, the linearUpwind scheme is more sensitive to the mesh type and mountain height.  The linearUpwind scheme is unstable on the slanted cell mesh with a peak mountain height $h_0 = \SI{6}{\kilo\meter}$ despite using a stable Courant number of \TODO{\num{0.4}ish}.
+Compared with the cubicFit scheme, the linearUpwind scheme is more sensitive to the mesh type and mountain height.  The linearUpwind scheme is unstable on the slanted cell mesh with a peak mountain height $h_0 = \SI{6}{\kilo\meter}$ despite using a stable Courant number of \num{0.428}.
 In contrast, the cubicFit scheme is less sensitive to the mesh type and errors grow more slowly with increasing mountain height.  The cubicFit scheme yields stable results in all tests.
 
 \begin{figure}
@@ -152,8 +154,8 @@ In contrast, the cubicFit scheme is less sensitive to the mesh type and errors g
 
 A final series of tests were performed on BTF, slanted cell and cut cell meshes using a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, timesteps were chosen so that the maximum Courant number was close to one.  \TODO{(check this is true:) Results were accurate in all tests and the scheme was largely insensitive to the choice of timestep.}
 
-This series of tests also enables a comparison of longest stable timesteps between mesh types.  The longest stable timestep for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max{\mathrm{Co}}$ where $\Delta t$ is the timestep used in a particular test run and $\max{\mathrm{Co}}$ is the maximum Courant number for that test run.
-\TODO{For example, on the BTF mesh with $\Delta x = \SI{123}{\meter}$ and $\Delta t = \SI{456}{\second}$ the maximum Courant number was $\max{\mathrm{Co}} = 789$.  The longest stable timestep is then $\Delta t_\mathrm{max} = \SI{345}{\second}$.}
+This series of tests also enables a comparison of longest stable timesteps between mesh types.  The longest stable timestep for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max(\mathrm{Co})$ where $\Delta t$ is the timestep used in a particular test run and $\max(\mathrm{Co})$ is the maximum Courant number for that test run.
+\TODO{For example, on the BTF mesh with $\Delta x = \SI{123}{\meter}$ and $\Delta t = \SI{456}{\second}$ the maximum Courant number was $\max(\mathrm{Co}) = 789$.  The longest stable timestep is then $\Delta t_\mathrm{max} = \SI{345}{\second}$.}
 
 The longest stable timesteps for BTF, cut cell and slanted cell meshes are presented in figure~\ref{fig:mountainAdvection-maxdt}.  BTF meshes permit the longest timesteps of all three meshes since cells are almost uniform in volume.  As expected, the longest stable timestep scales linearly with BTF mesh spacing.
 There is no such linear scaling on cut cell meshes because these meshes can have arbitrarily small cells.  The timestep constraints on cut cell meshes are the most severe of the three mesh types.  Slanted cell meshes have a slightly stronger timestep constraint than BTF meshes, but still exhibit the same, predictable linear scaling with mesh spacing.

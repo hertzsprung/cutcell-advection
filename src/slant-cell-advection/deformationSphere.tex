@@ -13,7 +13,22 @@ The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \end{enumerate}
 We assess the cubicFit scheme using only tests 1, 2 and 6.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.
 
-\TODO{how much detail do I need about OpenFOAM's global Cartesian coordinates, lack of 2D meshes and our correction for spherical geometry?}
+\begin{figure}
+	\centering
+	\includegraphics{../fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf}
+	\caption{Illustrations of coarse meshes of a spherical Earth using (a) a hexagonal icosahedron and (b) a cubed-sphere.  \TODO{say what refinement level the hex mesh is.}  Each panel of the cubed-sphere has $8 \times 8$ cells.}
+	\label{fig:sphere-meshes}
+\end{figure}
+
+\TODO{Describe hexagonal icosahedral meshes (cite one or more of \citep{thuburn2014,heikes-randall1995a,heikes-randall1995b})} \\
+\TODO{Describe cubed-sphere mesh (cite someone?)}
+
+Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
+\begin{align}
+	\Delta \lambda = \ang{360} \frac{\overline{\Delta x}}{2 \pi R_e}
+\end{align}
+where $\overline{\Delta x}$ is the mean distance between cell centres and $R_e = \SI{6.3712e6}{\meter}$ is the radius of the Earth.
+\TODO{in an appendix, describe OpenFOAM's global Cartesian coordinates, one-cell deep atmosphere, and our correction for spherical geometry?}
 
 
 \subsubsection{Numerical order of convergence using Gaussian hills}

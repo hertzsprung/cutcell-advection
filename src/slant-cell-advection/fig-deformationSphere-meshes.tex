@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage[paperwidth=6.1in,paperheight=2in,margin=0in]{geometry}
+\usepackage{mathptmx}%{times}
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage[absolute,overlay]{textpos}
+\usepackage{color}
+
+\setlength{\parindent}{0pt}
+\begin{document}
+\TPMargin{2pt}
+\textblockcolour{white}
+\begin{textblock}{5}(2.8,0.5)
+\normalsize
+(a) Hexagonal icosahedral mesh
+\end{textblock}
+\begin{textblock}{4}(8.5,0.5)
+\normalsize
+(b) Cubed-sphere mesh
+\end{textblock}
+\centering
+\vspace*{1em}
+\includegraphics{../deformationSphere-mesh-hex-3/constant/mesh.pdf}
+\hspace*{2em}
+\includegraphics{../deformationSphere-mesh-quad-8/constant/mesh.pdf}
+\end{document}

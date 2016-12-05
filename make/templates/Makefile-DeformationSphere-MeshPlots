@@ -1,0 +1,17 @@
+# $1 -- case
+define DeformationSphereMeshPlot
+
+$(eval $(call GmtPlot,$1,src/deformationSphere/mesh,constant,pdf))
+
+$1/constant/mesh.pdf: \
+  $(addprefix $1/,$(systemFiles)) \
+  $(addprefix $1/,$(meshFiles))
+
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/$1,$(meshFiles),$1))
+$(eval $(call CopyNamedFiles,$(ATMOSTESTS_DIR)/src/dummy,$(systemFiles),$1))
+
+$(eval $(call MakeDir,$1/system))
+$(eval $(call MakeDir,$1/$(polyMesh)))
+$(eval $(call MakeDir,$1/$(gmtDicts)))
+
+endef

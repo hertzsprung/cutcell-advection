@@ -1,4 +1,6 @@
 \subsection{Deformational flow on a sphere}
+\label{sec:deformationSphere}
+
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
 Results are compared between linearUpwind and cubicFit schemes using hexagonal icosahedra and cubed-spheres.
 Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
@@ -52,7 +54,7 @@ An individual hill $\phi_i$ is given by
 \end{align}
 where $\phi_0 = 0.95$ and $b = 5$.  The Cartesian position vector $\mathbf{x} = (x,y,z)$ is related to the spherical coordinates $(\lambda, \theta)$ by
 \begin{align}
-	(x,y,z) = (R_e \cos \theta \cos \lambda, R_e \cos \theta \sin \lambda, R_e \sin \theta)
+	(x,y,z) = (R_e \cos \theta \cos \lambda, R_e \cos \theta \sin \lambda, R_e \sin \theta) \label{eqn:spherical-cartesian}
 \end{align}
 The centre of hill $i$ is positioned at $\mathbf{x}_i$.  In spherical coordinates, two hills are centred at
 \begin{align}
@@ -97,6 +99,7 @@ The non-divergent velocity field is the same as convergence test in section~\ref
 \end{figure}
 
 \subsubsection{Transport under divergent flow conditions using cosine bells}
+\label{sec:deformationSphere:divergent}
 
 \TODO{Velocity field specified by \citep{nair-lauritzen2010}}
 \begin{align}

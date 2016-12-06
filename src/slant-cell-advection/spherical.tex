@@ -1,9 +1,81 @@
 \section*{Appendix B: Mesh geometry on a spherical Earth}
 
-\TODO{global Cartesian coordinates}
+The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these Cartesian coordinates.
 
-\TODO{One-cell deep atmosphere}
+%A position vector given in spherical coordinates $(\lambda, \theta, R_e)$ maybe be expressed in global Cartesian coordinates $(x, y, z)$ using equation~\eqref{eqn:spherical-cartesian}, and this equation is used to calculate the initial tracer distributions.
 
-\TODO{Corrections to finite volume mesh geometry}
+\subsection*{Velocity field specification}
+The non-divergent velocity field in section~\ref{sec:deformationSphere-gaussian-nondiv} is specified as a streamfunction $\Psi(\lambda, \theta)$.  Instead of calculating velocity vectors, the flux $\mathbf{u}_f \cdot \mathbf{S}_f$ through a face $f$ is calculated directly from the streamfunction,
+\begin{align}
+	\mathbf{u}_f \cdot \mathbf{S}_f	= \sum_{e\:\in\:f} \mathbf{e} \cdot \mathbf{x}_e \Psi(e) \label{eqn:nondiv-spherical-flux}
+\end{align}
+where $e \in f$ denotes the edges $e$ of face $f$, $\mathbf{e}$ is the edge vector joining its two vertices, $\mathbf{x}_e$ is the position vector of the edge midpoint, and $\Psi(e)$ is the streamfunction evaluated at the same position.
+Edge vectors are directed in a counter-clockwise orientation.
+
+The divergent velocity field in section~\ref{sec:deformationSphere:divergent} is specified as
+\begin{align}
+	\mathbf{u}(\lambda, \theta, R_e) = \left[ 
+	u(\lambda, \theta, R_e),
+	v(\lambda, \theta, R_e),
+	w(\lambda, \theta, R_e)
+	\right]^\intercal
+\end{align}
+given in local Cartesian coordinates on a plane tangent to the sphere at position $\mathbf{p} = \left[ \lambda, \theta, R_e \right]^\intercal$.  Position $\mathbf{p}$ can be expressed in global Cartesian coordinates using equation~\ref{eqn:spherical-cartesian}.
+The velocity vector can be expressed in global Cartesian coordinates using the unit vectors of the tangent plane,
+\begin{align}
+	\bm{\hat{\lambda}} = \left[ \hat{\lambda}_x, \hat{\lambda}_y, \hat{\lambda}_z \right]^\intercal \\
+	\bm{\hat{\theta}} = \left[ \hat{\theta}_x, \hat{\theta}_y, \hat{\theta}_z \right]^\intercal \\
+	\mathbf{\hat{r}} = \left[ \hat{r}_x, \hat{r}_y, \hat{r}_z \right]^\intercal
+\end{align}
+which are themselves expressed in global Cartesian coordinates.
+The radial unit vector $\mathbf{\hat{r}}$ is calculated first and is simply $\mathbf{\hat{r}} = \mathbf{p} / \left\lvert \mathbf{p} \right\rvert$.
+The latitudinal unit vector $\bm{\hat{\theta}}$ is calculated next.  If $\mathbf{\hat{r}}$ points towards one of the Earth's poles then $\left\lvert \mathbf{\hat{k}} \times \mathbf{\hat{r}}\right\rvert = 0$ where $\mathbf{\hat{k}} = \left[0, 0, 1\right]^\intercal$ is the unit vector pointing to the North pole.
+In this case, $\bm{\hat{\theta}} = \mathrm{sgn}(\mathbf{\hat{k}} \cdot \mathbf{\hat{r}}) \left[1, 0, 0\right]^\intercal$.  Otherwise, when $\mathbf{\hat{r}}$ does not point to a pole then
+\begin{align}
+	\bm{\hat{\theta}} = \frac{\mathbf{\hat{r}} \times \left( \mathbf{\hat{k}} \times \mathbf{\hat{r}} \right)}{\left\lvert\mathbf{\hat{r}} \times \left( \mathbf{\hat{k}} \times \mathbf{\hat{r}} \right)\right\rvert}
+\end{align}
+The longitudinal unit vector $\bm{\hat{\lambda}} = \bm{\hat{\theta}} \times \mathbf{\hat{r}}$.
+Finally, the velocity vector expressed in global Cartesian coordinates is
+\begin{align}
+	\mathbf{u}(x, y, z) = 
+	\begin{bmatrix}
+		\bm{\hat{\lambda}} &
+		\bm{\hat{\theta}} &
+		\mathbf{\hat{r}}
+	\end{bmatrix}^{-1}
+	\mathbf{u}(\lambda, \theta, R_e)
+\end{align}
+
+\subsection*{Spherical mesh construction}
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-spherical-correction/fig-spherical-correction.pdf}
+	\caption{Illustration of a radial face in a spherical mesh.  The uncorrected face marked by a dashed outline has straight edges.  The corrected face marked by a solid outline has arced surface edges.
+	The correction loses the small area tinted red and gains the larger area tinted green, resulting in a net gain in face area.
+	Edge midpoints, marked by black rings, are not corrected.}
+	\label{fig:spherical-correction}
+\end{figure}
+
+Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.
+By default, OpenFOAM meshes comprise polyhedral cells with straight edges and flat faces.  This is problematic for spherical meshes because face areas and cell volumes are too small.  This problem is illustrated by figure~\ref{fig:spherical-correction} in which a face with straight edges is shown with a dashed outline.
+Correcting for spherical geometry results in the desired face shown with a solid outline that joins vertices of equal radius with arced edges instead of straight edges.  Upon applying the correction, the small area tinted red is lost but the larger area tinted green is gained, hence there is a net gain in face area.
+
+For tests on a spherical Earth, we override the default configuration and calculate our own face areas, cell volumes, face centres and cell centres that account for the spherical geometry.  
+Faces are assumed to be either surface faces or radial faces.  Surface faces have any number of vertices, all of equal radius.  Radial faces have four vertices with two different radii, $r_1$ and $r_2$, and two different horizontal coordinates, $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.  The face illustrated in figure~\ref{fig:spherical-correction} is a radial face.
+Surface face centres are modified so that they have the radius $R_e$.  The latitudinal and longitudinal components of face centres need no modification.  Radial face centres need no modification, either.
+The face area $A_f$ for a radial face $f$ is the area of the annular sector,
+\begin{align}
+	A_f = \frac{d}{2} \left\lvert r_2^2 - r_1^2 \right\rvert
+\end{align}
+where $d$ is the great-circle distance between $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
+\TODO{surface face areas look more difficult --- I might need some help describing this}
+
+\TODO{cell centre and cell volume corrections}
+
+Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{x}_e$, are used to calculate the face flux for non-divergent winds (equation~\eqref{eqn:nondiv-spherical-flux}).
+For transport tests, corrections to edge midpoint calculations unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent winds.
+The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{x}_e = 0$.
+In figure~\ref{fig:spherical-correction} the edge midpoints are marked by black rings.
 
 \TODO{cubicFit stencil projection from 3D into 2D}

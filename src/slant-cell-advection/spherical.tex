@@ -71,11 +71,26 @@ The face area $A_f$ for a radial face $f$ is the area of the annular sector,
 where $d$ is the great-circle distance between $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
 \TODO{surface face areas look more difficult --- I might need some help describing this}
 
-\TODO{cell centre and cell volume corrections}
+\TODO{I don't know how these formulae were obtained}
+Cell centres and cell volumes are corrected by considering faces that are not normal to the sphere such that
+\begin{align}
+	\frac{\left(\mathbf{S}_f \cdot \mathbf{x}_f\right)^2}{\left\lvert \mathbf{S}_f \right\rvert^2 \left\lvert \mathbf{x}_f \right\rvert^2} > 0 \label{eqn:surface-faces}
+\end{align}
+\TODO{in this case we use a more general method for identifying surface faces than we used for face correction.  why?}
+Let $\mathcal{F}$ be the set of faces satisfying equation~\eqref{eqn:surface-faces}.  Then, the cell volume $\mathcal{V}_c$ is
+\begin{align}
+	\mathcal{V}_c = \frac{1}{3} \sum_{f\:\in\:\mathcal{F}} \mathbf{S}_f \cdot \mathbf{x}_f
+\end{align}
+where $\mathbf{x}_f$ is the centre of face $f$.
+The cell centre $\mathbf{x}_c$ is
+\begin{align}
+	\mathbf{x}_c = \frac{\sqrt{\frac{1}{3} \left(r_1^2 + r_1 r_2 + r_2^2\right)}\sum_{f\in\mathcal{F}} \mathbf{x}_f}{\left\lvert \sum_{f\in\mathcal{F}} \mathbf{x}_f \right\rvert}
+\end{align}
 
 Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{x}_e$, are used to calculate the face flux for non-divergent winds (equation~\eqref{eqn:nondiv-spherical-flux}).
 For transport tests, corrections to edge midpoint calculations unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent winds.
 The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{x}_e = 0$.
 In figure~\ref{fig:spherical-correction} the edge midpoints are marked by black rings.
 
+\subsection*{Tangent plane projection of the cubicFit stencil}
 \TODO{cubicFit stencil projection from 3D into 2D}

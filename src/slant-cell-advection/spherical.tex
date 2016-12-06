@@ -1,6 +1,6 @@
 \section*{Appendix B: Mesh geometry on a spherical Earth}
 
-The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these Cartesian coordinates.
+The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these global Cartesian coordinates.
 
 %A position vector given in spherical coordinates $(\lambda, \theta, R_e)$ maybe be expressed in global Cartesian coordinates $(x, y, z)$ using equation~\eqref{eqn:spherical-cartesian}, and this equation is used to calculate the initial tracer distributions.
 
@@ -57,9 +57,9 @@ Finally, the velocity vector expressed in global Cartesian coordinates is
 	\label{fig:spherical-correction}
 \end{figure}
 
-Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.
+Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.  \TODO{justify this choice of cell depth}
 By default, OpenFOAM meshes comprise polyhedral cells with straight edges and flat faces.  This is problematic for spherical meshes because face areas and cell volumes are too small.  This problem is illustrated by figure~\ref{fig:spherical-correction} in which a face with straight edges is shown with a dashed outline.
-Correcting for spherical geometry results in the desired face shown with a solid outline that joins vertices of equal radius with arced edges instead of straight edges.  Upon applying the correction, the small area tinted red is lost but the larger area tinted green is gained, hence there is a net gain in face area.
+Correcting for spherical geometry results in the desired face shown with a solid outline joining vertices of equal radius with arced edges instead of straight edges.  Upon applying the correction, the small area tinted red is lost but the larger area tinted green is gained, hence there is a net gain in face area.  A similar argument applies to the increase in cell volumes.
 
 For tests on a spherical Earth, we override the default configuration and calculate our own face areas, cell volumes, face centres and cell centres that account for the spherical geometry.  
 Faces are assumed to be either surface faces or radial faces.  Surface faces have any number of vertices, all of equal radius.  Radial faces have four vertices with two different radii, $r_1$ and $r_2$, and two different horizontal coordinates, $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.  The face illustrated in figure~\ref{fig:spherical-correction} is a radial face.
@@ -71,7 +71,7 @@ The face area $A_f$ for a radial face $f$ is the area of the annular sector,
 where $d$ is the great-circle distance between $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
 \TODO{surface face areas look more difficult --- I might need some help describing this}
 
-\TODO{I don't know how these formulae were obtained}
+\TODO{I don't know how the following formulae were obtained}
 Cell centres and cell volumes are corrected by considering faces that are not normal to the sphere such that
 \begin{align}
 	\frac{\left(\mathbf{S}_f \cdot \mathbf{x}_f\right)^2}{\left\lvert \mathbf{S}_f \right\rvert^2 \left\lvert \mathbf{x}_f \right\rvert^2} > 0 \label{eqn:surface-faces}
@@ -89,8 +89,9 @@ The cell centre $\mathbf{x}_c$ is
 
 Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{x}_e$, are used to calculate the face flux for non-divergent winds (equation~\eqref{eqn:nondiv-spherical-flux}).
 For transport tests, corrections to edge midpoint calculations unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent winds.
-The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{x}_e = 0$.
 In figure~\ref{fig:spherical-correction} the edge midpoints are marked by black rings.
+The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{x}_e = 0$.
+Edge lengths are the straight-line distance between the two vertices and not the great-circle distance.  Again, the edge lengths are not corrected because it makes no difference to the face flux calculation.
 
 \subsection*{Tangent plane projection of the cubicFit stencil}
 \TODO{cubicFit stencil projection from 3D into 2D}

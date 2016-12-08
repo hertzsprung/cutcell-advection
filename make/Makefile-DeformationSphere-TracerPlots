@@ -1,9 +1,10 @@
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-initialTracer,fig-deformationSphere-initialTracer))
 
 build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf: \
-  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/0/tracer.pdf \
-  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/518400/tracerW.pdf \
-  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/1.0368e+06/tracerW.pdf
+  build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-8/0/tracer.pdf \
+  build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-8/518400/tracerW.pdf \
+  build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-8/1.0368e+06/tracerW.pdf \
+  src/slant-cell-advection/deformationSphere-T-legend.eps
 
-$(eval $(call DeformationSphereTracerPlots,build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5))
+$(eval $(call DeformationSphereTracerPlots,build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-8))
 

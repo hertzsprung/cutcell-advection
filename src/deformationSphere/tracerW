@@ -17,7 +17,7 @@ separateLegend true;
 plotBoundaryDots false;
 
 FieldsToPlot (
-	[T rawValues -0.05 1 0.1 "$GMTU/colours/wh-bl-gr-ye-re.cpt"]
+	[T filledContours -0.05 1.15 0.05 "$GMTU/colours/wh-bl-gr-ye-re.cpt"]
 );
 
 region "-180/180/-90/90"; 

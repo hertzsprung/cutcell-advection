@@ -2,8 +2,6 @@
 
 The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these global Cartesian coordinates.
 
-%A position vector given in spherical coordinates $(\lambda, \theta, R_e)$ maybe be expressed in global Cartesian coordinates $(x, y, z)$ using equation~\eqref{eqn:spherical-cartesian}, and this equation is used to calculate the initial tracer distributions.
-
 \subsection*{Velocity field specification}
 The non-divergent velocity field in section~\ref{sec:deformationSphere-gaussian-nondiv} is specified as a streamfunction $\Psi(\lambda, \theta)$.  Instead of calculating velocity vectors, the flux $\mathbf{u}_f \cdot \mathbf{S}_f$ through a face $f$ is calculated directly from the streamfunction,
 \begin{align}
@@ -11,40 +9,6 @@ The non-divergent velocity field in section~\ref{sec:deformationSphere-gaussian-
 \end{align}
 where $e \in f$ denotes the edges $e$ of face $f$, $\mathbf{e}$ is the edge vector joining its two vertices, $\mathbf{x}_e$ is the position vector of the edge midpoint, and $\Psi(e)$ is the streamfunction evaluated at the same position.
 Edge vectors are directed in a counter-clockwise orientation.
-
-The divergent velocity field in section~\ref{sec:deformationSphere:divergent} is specified as
-\begin{align}
-	\mathbf{u}(\lambda, \theta, R_e) = \left[ 
-	u(\lambda, \theta, R_e),
-	v(\lambda, \theta, R_e),
-	w(\lambda, \theta, R_e)
-	\right]^\intercal
-\end{align}
-given in local Cartesian coordinates on a plane tangent to the sphere at position $\mathbf{p} = \left[ \lambda, \theta, R_e \right]^\intercal$.  Position $\mathbf{p}$ can be expressed in global Cartesian coordinates using equation~\ref{eqn:spherical-cartesian}.
-The velocity vector can be expressed in global Cartesian coordinates using the unit vectors of the tangent plane,
-\begin{align}
-	\bm{\hat{\lambda}} = \left[ \hat{\lambda}_x, \hat{\lambda}_y, \hat{\lambda}_z \right]^\intercal \\
-	\bm{\hat{\theta}} = \left[ \hat{\theta}_x, \hat{\theta}_y, \hat{\theta}_z \right]^\intercal \\
-	\mathbf{\hat{r}} = \left[ \hat{r}_x, \hat{r}_y, \hat{r}_z \right]^\intercal
-\end{align}
-which are themselves expressed in global Cartesian coordinates.
-The radial unit vector $\mathbf{\hat{r}}$ is calculated first and is simply $\mathbf{\hat{r}} = \mathbf{p} / \left\lvert \mathbf{p} \right\rvert$.
-The latitudinal unit vector $\bm{\hat{\theta}}$ is calculated next.  If $\mathbf{\hat{r}}$ points towards one of the Earth's poles then $\left\lvert \mathbf{\hat{k}} \times \mathbf{\hat{r}}\right\rvert = 0$ where $\mathbf{\hat{k}} = \left[0, 0, 1\right]^\intercal$ is the unit vector pointing to the North pole.
-In this case, $\bm{\hat{\theta}} = \mathrm{sgn}(\mathbf{\hat{k}} \cdot \mathbf{\hat{r}}) \left[1, 0, 0\right]^\intercal$.  Otherwise, when $\mathbf{\hat{r}}$ does not point to a pole then
-\begin{align}
-	\bm{\hat{\theta}} = \frac{\mathbf{\hat{r}} \times \left( \mathbf{\hat{k}} \times \mathbf{\hat{r}} \right)}{\left\lvert\mathbf{\hat{r}} \times \left( \mathbf{\hat{k}} \times \mathbf{\hat{r}} \right)\right\rvert}
-\end{align}
-The longitudinal unit vector $\bm{\hat{\lambda}} = \bm{\hat{\theta}} \times \mathbf{\hat{r}}$.
-Finally, the velocity vector expressed in global Cartesian coordinates is
-\begin{align}
-	\mathbf{u}(x, y, z) = 
-	\begin{bmatrix}
-		\bm{\hat{\lambda}} &
-		\bm{\hat{\theta}} &
-		\mathbf{\hat{r}}
-	\end{bmatrix}^{-1}
-	\mathbf{u}(\lambda, \theta, R_e)
-\end{align}
 
 \subsection*{Spherical mesh construction}
 

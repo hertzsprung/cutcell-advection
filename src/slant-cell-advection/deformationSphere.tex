@@ -30,10 +30,7 @@ The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \item a test of correlation preservation between two tracers
 \item a test using a divergent velocity field
 \end{enumerate}
-We assess the cubicFit scheme using only tests 1, 2 and 6.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.
-
-\subsubsection{Numerical order of convergence using Gaussian hills}
-\label{sec:deformationSphere-gaussian-nondiv}
+We assess the cubicFit scheme using the first two tests only.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  Stable results were obtained when testing cubicFit using a divergent velocity field, but no further analysis is made here.
 
 The first deformational flow test uses a $C^\infty$ initial tracer that is transported in a non-divergent, time-varying rotational velocity field.
 The velocity field deforms two Gaussian `hills' of tracer into thin vortical filaments.  Half-way through the integration the rotation reverses so that the filaments become circular hills once again.  The analytic solution at the end of integration is identical to the initial condition.
@@ -79,7 +76,8 @@ The results in figure~\ref{fig:deformationSphere-evolution} are obtained using t
 	\caption{\TODO{deformational flow l2 and linf convergence plots comparing cubed sphere and hexagons, cubicFit and linearUpwind.  This figure is comparable to \citet{lauritzen2012} figure 4.}}
 \end{figure}
 
-\subsubsection{``Minimal'' resolution using cosine bells}
+\TODO{``Minimal'' resolution using cosine bells}
+
 \TODO{what motivates us to perform this test?}
 
 The non-divergent velocity field is the same as convergence test in section~\ref{sec:deformationSphere-gaussian-nondiv}.  A quasi-smooth tracer field is defined as the sum of two cosine bells:
@@ -96,20 +94,5 @@ The non-divergent velocity field is the same as convergence test in section~\ref
 	\centering
 	\includegraphics{../fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf}
 	\caption{\TODO{$\ell_2$ convergence for non-divergent deformational flow using Cosine bells.  Used to find ``minimal'' resolution.  Plot for hexagons and cubed sphere, cubicFit and linearUpwind.  Plot a heavy line for minimal resolution, as in \citet{lauritzen2012} figure 5.}}
-\end{figure}
-
-\subsubsection{Transport under divergent flow conditions using cosine bells}
-\label{sec:deformationSphere:divergent}
-
-\TODO{Velocity field specified by \citep{nair-lauritzen2010}}
-\begin{align}
-	u(\lambda, \theta, t) &= -5 \frac{R_e}{T} \sin^2 \left( \frac{\lambda'}{2} \right) \sin \left(2 \theta \right) \cos^2 \left( \theta \right) \cos \left( \frac{\pi t}{T} \right) + \frac{2 \pi R_e}{T} \cos \left( \theta \right) \text{,} \\
-	v(\lambda, \theta, t) &= \frac{5}{2} \frac{R_e}{T} \sin \left( \lambda' \right) \cos^3 \left( \theta \right) \cos \left( \frac{\pi t}{T} \right)
-\end{align}
-
-\begin{figure}
-	\centering
-	\includegraphics{../fig-deformationSphere-divergentTracer/fig-deformationSphere-divergentTracer.pdf}
-	\caption{\TODO{divergent flow at $t=T/2$ and $t=T$ comparing cubed sphere and hexagons, cubicFit and linearUpwind.  Corresponds to \citet{lauritzen2012} figure 9.}}
 \end{figure}
 

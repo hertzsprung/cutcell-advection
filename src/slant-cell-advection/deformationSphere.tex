@@ -79,7 +79,7 @@ The results in figure~\ref{fig:deformationSphere-evolution} are obtained using t
 
 \TODO{what motivates us to perform this test?}
 
-The non-divergent velocity field is the same as convergence test in section~\ref{sec:deformationSphere-gaussian-nondiv}.  A quasi-smooth tracer field is defined as the sum of two cosine bells:
+A slightly more challenging variation of the same test is performed using a quasi-smooth tracer field is defined as the sum of two cosine bells,
 \begin{align}
 	\phi =
 	\begin{cases}
@@ -88,10 +88,13 @@ The non-divergent velocity field is the same as convergence test in section~\ref
 		b			      & \quad \text{otherwise}
 	\end{cases}
 \end{align}
+The velocity field is the same as before.
+
+\TODO{we use this test to find the ``minimal'' resolution.  state what this is for cubicFit (and linearUpwind?) and perhaps compare to similar schemes.  mention that \citep{lauritzen2014} has collated minimal resolutions for a number of other schemes.}
 
 \begin{figure}
 	\centering
 	\includegraphics{../fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf}
-	\caption{\TODO{$\ell_2$ convergence for non-divergent deformational flow using Cosine bells.  Used to find ``minimal'' resolution.  Plot for hexagons and cubed sphere, cubicFit and linearUpwind.  Plot a heavy line for minimal resolution, as in \citet{lauritzen2012} figure 5.}}
+	\caption{\TODO{remove this figure}  \TODO{$\ell_2$ convergence for non-divergent deformational flow using Cosine bells.  Used to find ``minimal'' resolution.}}
 \end{figure}
 

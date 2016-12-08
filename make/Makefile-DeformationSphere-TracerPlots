@@ -2,20 +2,8 @@ $(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-initial
 
 build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf: \
   build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/0/tracer.pdf \
-  build/deformationSphere-cosBells-nondiv-linearUpwind-hex-5/0/tracer.pdf \
-  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/518400/tracer.pdf \
-  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/1.0368e+06/tracer.pdf
+  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/518400/tracerW.pdf \
+  build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5/1.0368e+06/tracerW.pdf
 
 $(eval $(call DeformationSphereTracerPlots,build/deformationSphere-gaussians-nondiv-linearUpwind-hex-5))
-$(eval $(call DeformationSphereTracerPlots,build/deformationSphere-cosBells-nondiv-linearUpwind-hex-5))
 
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-divergentTracer,fig-deformationSphere-divergentTracer))
-
-build/fig-deformationSphere-divergentTracer/fig-deformationSphere-divergentTracer.pdf: \
-  build/deformationSphere-cosBells-div-linearUpwind-hex-5/518400/tracer.pdf \
-  build/deformationSphere-cosBells-div-linearUpwind-hex-5/1.0368e+06/tracer.pdf \
-  build/deformationSphere-cosBells-div-cubicUpwind-hex-5/518400/tracer.pdf \
-  build/deformationSphere-cosBells-div-cubicUpwind-hex-5/1.0368e+06/tracer.pdf
-
-$(eval $(call DeformationSphereTracerPlots,build/deformationSphere-cosBells-div-linearUpwind-hex-5))
-$(eval $(call DeformationSphereTracerPlots,build/deformationSphere-cosBells-div-cubicUpwind-hex-5))

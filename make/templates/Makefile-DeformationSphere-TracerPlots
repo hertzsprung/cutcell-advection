@@ -1,13 +1,14 @@
 # $1 -- case directory
 define DeformationSphereTracerPlots
 
-$(eval $(call GmtPlots,$1,src/deformationSphere/tracer,0 518400 1.0368e+06,pdf))
+$(eval $(call GmtPlot,$1,src/deformationSphere/tracer,0,pdf))
+$(eval $(call GmtPlots,$1,src/deformationSphere/tracerW,518400 1.0368e+06,pdf))
 
 $1/0/tracer.pdf: $1/0/T
-$1/518400/tracer.pdf: $1/518400/T
-$1/1.0368e+06/tracer.pdf: $1/1.0368e+06/T
+$1/518400/tracerW.pdf: $1/518400/T
+$1/1.0368e+06/tracerW.pdf: $1/1.0368e+06/T
 
-$1/0/tracer.pdf $1/518400/tracer.pdf $1/1.0368e+06/tracer.pdf: \
+$1/0/tracer.pdf $1/518400/tracerW.pdf $1/1.0368e+06/tracerW.pdf: \
   $(addprefix $1/,$(systemFiles)) \
   $(addprefix $1/,$(meshFiles))
 

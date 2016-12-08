@@ -30,7 +30,7 @@ The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \item a test of correlation preservation between two tracers
 \item a test using a divergent velocity field
 \end{enumerate}
-We assess the cubicFit scheme using the first two tests only.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  Stable results were obtained when testing cubicFit using a divergent velocity field, but no further analysis is made here.
+We assess the cubicFit scheme using the first two tests only.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  Stable results were obtained when testing cubicFit using a divergent velocity field, but no further analysis is made here.  \TODO{provide results as supplementary material?}
 
 The first deformational flow test uses a $C^\infty$ initial tracer that is transported in a non-divergent, time-varying rotational velocity field.
 The velocity field deforms two Gaussian `hills' of tracer into thin vortical filaments.  Half-way through the integration the rotation reverses so that the filaments become circular hills once again.  The analytic solution at the end of integration is identical to the initial condition.
@@ -62,13 +62,13 @@ The centre of hill $i$ is positioned at $\mathbf{x}_i$.  In spherical coordinate
 \begin{figure}
 	\centering
 	\includegraphics{../fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf}
-	\caption{Tracer fields for the deformational flow test using (a) initial Gaussian hills and (b) initial cosine bells.  The tracer is deformed by the velocity field before the rotation reverses to return the tracer to its original distribution: (c) by $t=T/2$ the Gaussian hills are stretched into a thin S-shaped filament; (d) at $t=T$ the tracer resembles the initial Gaussian hills except for some distortion and diffusion due to numerical errors.
+	\caption{Tracer fields for the deformational flow test using initial Gaussian hills.  The tracer is deformed by the velocity field before the rotation reverses to return the tracer to its original distribution: (a) the initial tracer distribution at $t = \SI{0}{\second}$; (b) by $t=T/2$ the Gaussian hills are stretched into a thin S-shaped filament; (c) at $t=T$ the tracer resembles the initial Gaussian hills except for some distortion and diffusion due to numerical errors.
 	\TODO{plot at a high resolution using whichever mesh gives better results.}\\
 	\TODO{would it be clearer to use contours?  or do heatmap plots aid intercomparison?}}
 	\label{fig:deformationSphere-evolution}
 \end{figure}
 
-The results in figure~\ref{fig:deformationSphere-evolution} are obtained using the cubicFit scheme on \TODO{whatever high-res mesh I choose}.  The initial Gaussian hills are shown in figure~\ref{fig:deformationSphere-evolution}a.  At $t=T/2$ the tracer has been deformed into an S-shaped filament (figure~\ref{fig:deformationSphere-evolution}c).  By $t=T$ the tracer has almost returned to its original distribution except for some distortion and diffusion that are the result of numerical errors (figure~\ref{fig:deformationSphere-evolution}d).
+The results in figure~\ref{fig:deformationSphere-evolution} are obtained using the cubicFit scheme on \TODO{whatever high-res mesh I choose}.  The initial Gaussian hills are shown in figure~\ref{fig:deformationSphere-evolution}a.  At $t=T/2$ the tracer has been deformed into an S-shaped filament (figure~\ref{fig:deformationSphere-evolution}b).  By $t=T$ the tracer has almost returned to its original distribution except for some distortion and diffusion that are the result of numerical errors (figure~\ref{fig:deformationSphere-evolution}c).
 
 \begin{figure}
 	\centering

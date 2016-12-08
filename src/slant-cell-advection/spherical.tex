@@ -3,7 +3,7 @@
 The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these global Cartesian coordinates.
 
 \subsection*{Velocity field specification}
-The non-divergent velocity field in section~\ref{sec:deformationSphere-gaussian-nondiv} is specified as a streamfunction $\Psi(\lambda, \theta)$.  Instead of calculating velocity vectors, the flux $\mathbf{u}_f \cdot \mathbf{S}_f$ through a face $f$ is calculated directly from the streamfunction,
+The non-divergent velocity field in section~\ref{sec:deformationSphere} is specified as a streamfunction $\Psi(\lambda, \theta)$.  Instead of calculating velocity vectors, the flux $\mathbf{u}_f \cdot \mathbf{S}_f$ through a face $f$ is calculated directly from the streamfunction,
 \begin{align}
 	\mathbf{u}_f \cdot \mathbf{S}_f	= \sum_{e\:\in\:f} \mathbf{e} \cdot \mathbf{x}_e \Psi(e) \label{eqn:nondiv-spherical-flux}
 \end{align}
@@ -21,7 +21,7 @@ Edge vectors are directed in a counter-clockwise orientation.
 	\label{fig:spherical-correction}
 \end{figure}
 
-Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.  \TODO{justify this choice of cell depth}
+Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.
 By default, OpenFOAM meshes comprise polyhedral cells with straight edges and flat faces.  This is problematic for spherical meshes because face areas and cell volumes are too small.  This problem is illustrated by figure~\ref{fig:spherical-correction} in which a face with straight edges is shown with a dashed outline.
 Correcting for spherical geometry results in the desired face shown with a solid outline joining vertices of equal radius with arced edges instead of straight edges.  Upon applying the correction, the small area tinted red is lost but the larger area tinted green is gained, hence there is a net gain in face area.  A similar argument applies to the increase in cell volumes.
 

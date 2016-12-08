@@ -21,4 +21,4 @@ FieldsToPlot (
 );
 
 region "-180/180/-90/90"; 
-boundaryMarks "90/45WSen";
+boundaryMarks "90/45wSen";

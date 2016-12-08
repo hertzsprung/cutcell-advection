@@ -23,7 +23,6 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \
   build/fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf \
   build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf \
-  build/fig-deformationSphere-divergentTracer/fig-deformationSphere-divergentTracer.pdf \
   build/fig-spherical-correction/fig-spherical-correction.pdf
 
 $(eval $(call LaTeX,src/slant-cell-advection,build/fig-interior-stencils,fig-interior-stencils))

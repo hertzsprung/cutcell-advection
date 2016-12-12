@@ -65,11 +65,7 @@ The cell centre position $\mathbf{c}_c$ is
 \begin{align}
 	\mathbf{c}_c = \frac{\sqrt{\frac{1}{3} \left(r_1^2 + r_1 r_2 + r_2^2\right)}\sum_{f\in\mathcal{F}} \mathbf{c}_f}{\left\lvert \sum_{f\in\mathcal{F}} \mathbf{c}_f \right\rvert}
 \end{align}
-\TODO{I still don't know where this comes from.  I would have calculated the centre of mass as follows: let $r_c$ be the radius of the cell centre, lying somewhere between $r_1$ and $r_2$.  The volume of the inner shell must be equal to the volume of the outer shell, so}
-\begin{align}
-	\frac{4}{3} \pi \left( r_2^3 - r_c^3 \right) = \frac{4}{3} \pi \left( r_c^3 - r_1^3 \right) \\
-	r_c = \sqrt[3]{\frac{r_1^3 + r_2^3}{2}}
-\end{align}
+\TODO{I still don't know where this comes from.}
 
 Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{c}_e$, are used to calculate the face flux for non-divergent winds (equation~\eqref{eqn:nondiv-spherical-flux}).
 For transport tests, corrections to edge midpoints are unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent winds.

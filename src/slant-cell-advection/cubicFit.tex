@@ -1,7 +1,5 @@
 \subsection{Cubic fit transport scheme}
 
-\TODO{I haven't said that inlet boundary values are included in stencils}
-
 \begin{figure}
 	\centering
 	\includegraphics{../fig-interior-stencils/fig-interior-stencils.pdf}
@@ -45,7 +43,13 @@ The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those f
 \end{align}
 On a rectangular mesh, there is always one opposing face $g$ that is exactly parallel to the face $f$ such that $\mathrm{Opp}(f, g) = 1$.
 
-Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Having found these two sets of cells, the stencil is constructed to comprise all internal and external cells.
+Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Finally, the \textit{stencil boundary faces} are boundary faces having Dirichlet boundary conditions\footnote{Boundary faces with Neumann boundary conditions would require extrapolated boundary values to be calculated.
+This would create a feedback loop in which boundary values are extrapolated from interior values, then interior values are transported using stencils that include boundary values.  
+We have not considered how such an extrapolation could made consistent with the multidimensional polynomial reconstruction.
+Using an inconsistent extrapolation, we found that the feedback loop is able to generate slow-growing numerical instabilities near some highly-distorted cells.
+Hence, boundary faces with Neumann boundary conditions are excluded from the set of stencil boundary faces.} that share a vertex with the internal cells.
+Having found these three sets, the stencil is constructed to comprise all internal cells, external cells and stencil boundary faces.
+
 
 \begin{figure}
 	\centering

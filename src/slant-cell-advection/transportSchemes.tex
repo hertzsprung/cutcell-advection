@@ -40,7 +40,8 @@ where $\phi_u$ is the upwind value of $\phi$, and $\mathbf{x}_f$ and $\mathbf{x}
 \TODO{the length of this vector should change when using the spherical correction, but doesn't.  don't worry about this for now}
 The gradient $\nabla_c \:\phi$ is calculated using Gauss' theorem:
 \begin{align}
-	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \tilde{\phi_F} \mathbf{S}_f
+	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \tilde{\phi_F} \mathbf{S}_f \label{eqn:linearUpwind-grad}
 \end{align}
-where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.  This implementation of the linearUpwind scheme is included in the OpenFOAM software distribution \citep{openfoam}.
+where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.  For cells adjacent to boundaries having zero gradient boundary conditions, the boundary value is set to be equal to the cell centre value before equation~\eqref{eqn:linearUpwind-grad} is evaluated.
+This implementation of the multidimensional linear upwind scheme is included in the OpenFOAM software distribution \citep{openfoam}.
 

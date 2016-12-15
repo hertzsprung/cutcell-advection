@@ -1,4 +1,4 @@
-set term epslatex color size 6,3.5
+set term epslatex color size 6,3.2
 
 set style data linespoints
 set logscale
@@ -21,15 +21,16 @@ plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwi
      "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 1 title 'Icosahedra cubicFit', \
      "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 2 dt 3 lw 2 title 'Cubed-sphere linearUpwind', \
      "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/l2errorT.txt" using 1:2 lc 2 title 'Cubed-sphere cubicFit', \
-     x * 1e-1 lc rgbcolor "black" dt 1 lw 1 title '1st order', \
-     x**2 * 1e-1 lc rgbcolor "black" dt 3 lw 3 title '2nd order'
+     x * 1e-1 lc rgbcolor "black" dt 1 lw 1 notitle, \
+     x**2 * 1e-1 lc rgbcolor "black" dt 3 lw 3 notitle
 
 ### linf
 
+set tmargin 5.2
 set ylabel "$\\ell_\\infty$ error" offset 1.5
-plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 dt 3 lw 2 title 'Icosahedra linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 title 'Icosahedra cubicFit', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 dt 3 lw 2 title 'Cubed-sphere linearUpwind', \
-     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 title 'Cubed-sphere cubicFit', \
+plot "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 dt 3 lw 2 notitle, \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-hex-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 1 notitle, \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-linearUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 dt 3 lw 2 notitle, \
+     "`echo $ATMOSTESTS_DIR`/build/deformationSphere-gaussians-nondiv-cubicUpwind-quad-collated/1.0368e+06/linferrorT.txt" using 1:2 lc 2 notitle, \
      x * 1e-1 lc rgbcolor "black" dt 1 lw 1 title '1st order', \
      x**2 * 1e-1 lc rgbcolor "black" dt 3 lw 3 title '2nd order'

@@ -94,6 +94,7 @@ which can be written as
 The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is called the \textit{stencil matrix}, and it is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
+A two-dimensional stencil is also used for the tests on spherical meshes in section~\ref{sec:deformationSphere}.  In these tests, cell centres are projected onto a plane that is tangent to the sphere at the face centre.
 The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition:
 \begin{align}
 	\mathbf{a} = \mathbf{B}^+ \bm{\phi}

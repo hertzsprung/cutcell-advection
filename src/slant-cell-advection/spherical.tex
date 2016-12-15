@@ -69,13 +69,8 @@ $\int_0^R{A(r)\:\mathrm{d}r} = \int_{r_1}^{r_2}{r^2 \Omega\:\mathrm{d}r} = \frac
 	\mathbf{c}_c = \frac{\sqrt{\frac{1}{3} \left(r_1^2 + r_1 r_2 + r_2^2\right)}\sum_{f\in\mathcal{F}} \mathbf{c}_f}{\left\lvert \sum_{f\in\mathcal{F}} \mathbf{c}_f \right\rvert}
 \end{align}}
 
-Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{c}_e$, are used to calculate the face flux for non-divergent winds (equation~\eqref{eqn:nondiv-spherical-flux}).
-For transport tests, corrections to edge midpoints are unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent winds.
+Edges can be classified in a similar manner to faces where surface edges are tangent to the sphere and radial faces are normal to the sphere.  The edge midpoints, $\mathbf{c}_e$, are used to calculate the face flux for non-divergent velocity fields (equation~\ref{eqn:nondiv-spherical-flux}).
+For transport tests, corrections to edge midpoints are unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent velocity fields.
 The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{c}_e = 0$.
 Edge lengths are the straight-line distance between the two vertices and not the great-circle distance.  Again, the edge lengths are not corrected because it makes no difference to the face flux calculation.
-
-\subsection*{Tangent plane projection of the cubicFit stencil}
-\TODO{this might be better off being included in the section describing cubicFit, or in the deformationSphere results section}
-
-A two-dimensional stencil is also used for the tests on spherical meshes in section~\ref{sec:deformationSphere}.  In these tests, cell centres are projected onto a plane that is tangent to the sphere at the face centre.
 

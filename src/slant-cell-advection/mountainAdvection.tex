@@ -121,8 +121,8 @@ A small phase lag is apparent when the numerical solution marked with solid cont
 
 Numerical errors are more clearly revealed by subtracting the analytic solution from the numerical solution.  This enables the calculation of error norms,
 \begin{align}
-	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \\
-	\ell_\infty &= \frac{\max_c |\phi - \phi_T|}{\max_c |\phi_T|}
+	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\
+	\ell_\infty &= \frac{\max_c |\phi - \phi_T|}{\max_c |\phi_T|} \label{eqn:linf-error}
 \end{align}
 where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ denotes a summation over all cells $c$ in the domain, and $\max_c$ denotes a maximum value of any cell.
 

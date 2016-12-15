@@ -1,10 +1,12 @@
 \section{Transport schemes for arbitrary meshes}
+\label{sec:transport}
+
 The transport of a dependent variable $\phi$ in a prescribed wind field $\mathbf{u}$ is given by the equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
 In the mass continuity equation, $\phi = \rho$ where $\rho$ is the air density.  In the continuity equation for tracer density $\phi = \rho q$ where $q$ is the tracer mixing ratio.  For the special case of a non-divergent velocity field then $\rho$ is constant hence $\phi = q$.
-The time derivative is discretised using a two-stage, second-order Runge-Kutta method,
+The time derivative is discretised using a two-stage, second-order Runge-Kutta method, \TODO{we should use a two-stage, second-order Heun scheme, not the mid-point scheme described below}
 \begin{subequations}
 \begin{align}
 	\phi^\star &= \phi^{(n)} + \frac{\Delta t}{2} f(\phi^{(n)}) \\

@@ -37,52 +37,30 @@
 \address[uor]{Department of Meteorology, University of Reading, Reading, United Kingdom}
 \address[mo]{Met Office, Exeter, United Kingdom}
 
-\begin{abstract}
-The inclusion of terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade accuracy and challenge the stability of transport schemes.
-Multidimensional transport schemes avoid all splitting errors on distorted and arbitrarily structured meshes, and Eulerian schemes have low computational cost, relying entirely on reconstructions at fixed points.
-
-This paper presents a multidimensional Eulerian finite volume transport scheme, ``cubicFit'', which is designed to be numerically stable on arbitrary meshes and which is second-order convergent regardless of mesh distortions.
-Constraints derived from a von Neumann stability analysis are imposed during model initialisation to obtain stability and improve accuracy in distorted regions of the mesh, and near steeply-sloping lower boundaries.
-The reconstruction method has a low computational cost because most calculations depend upon the mesh only, with just one vector multiply per face needed per time-step.
-
-The cubicFit scheme is evaluated using two, idealised numerical tests of atmospheric flow.  The first is a new test case that assesses accuracy near the ground by transporting a tracer over steep terrain on severely distorted terrain-following meshes and cut-cell meshes.
-The second is a standard test case that deforms a tracer in a vortical flow on hexagonal icosahedra and cubed-sphere meshes.
-In all tests, cubicFit is stable and largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a multidimensional linear upwind transport scheme.
-\end{abstract}
+\input{abstract}
 
 \begin{keyword}
 	Finite volume, unstructured mesh, atmospheric modelling, least-squares approximation, von Neumann stability analysis
 \end{keyword}
 \end{frontmatter}
 
-\section{Introduction}
 \input{intro}
 
 \input{transportSchemes}
 
 \section{Results}
 \label{sec:results}
-
 \input{mountainAdvection}
-
 \input{deformationSphere}
 
-\section{Conclusions}
-
-The advection scheme is
-\begin{itemize}
-	\item suitable for complex flows on a variety of meshes
-	\item computationally cheap at runtime, with more expensive computations depending only on the mesh geometry
-	\item \TODO{convergence}
-	\item stable for Courant numbers up to 1
-\end{itemize}
+\input{conclusion}
 
 \section{Acknowledgements}
 James Shaw acknowledges support from a PhD studentship funded jointly by NERC grant NE/K500860/1 and the University of Reading with CASE support from the Met Office.
 We are grateful to the Leibniz Institute for Tropospheric Research for providing their cut cell mesh generator, and to Dr Shing Hing Man for his assistance with candidate polynomial generation.  We also thank Dr Tristan Pryer for useful discussions about the cubicFit transport scheme.
 
+% appendices
 \input{vonNeumann}
-
 \input{spherical}
 
 \bibliographystyle{elsarticle-num}

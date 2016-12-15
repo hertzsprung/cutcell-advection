@@ -1,11 +1,13 @@
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection))
 
 build/slant-cell-advection/slant-cell-advection.pdf: \
+  src/slant-cell-advection/abstract.tex \
   src/slant-cell-advection/intro.tex \
   src/slant-cell-advection/transportSchemes.tex \
   src/slant-cell-advection/cubicFit.tex \
   src/slant-cell-advection/mountainAdvection.tex \
   src/slant-cell-advection/deformationSphere.tex \
+  src/slant-cell-advection/conclusion.tex \
   src/slant-cell-advection/vonNeumann.tex \
   src/slant-cell-advection/spherical.tex \
   src/slant-cell-advection/ametsoc2014.bst \

@@ -1,0 +1,41 @@
+\subsection{Horizontal transport over mountains}
+A two-dimensional transport test was developed by Sch\"{a}r \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped mountains.  The test challenges transport schemes because the tracer must cross mesh layers, which acts to reduce numerical accuracy \citep{schaer2002,shaw-weller2016}.
+Here we use a more challenging variant of this test that has steeper mountains, as described by Weller et al. \citep{weller2017}.
+Results are compared using the linearUpwind and cubicFit transport schemes using a range of mesh spacings.
+
+The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.
+Boundary conditions are imposed on the tracer $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
+$\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet, ground and top boundaries.
+A range of mesh spacings are chosen so that $\Delta x : \Delta z = 2:1$ to match Sch\"{a}r's original test specification.  The time-step is chosen proportional to the mesh spacing so that the maximum Courant number is about \num{0.4}.
+
+The terrain is wave-shaped, specified by the surface height $h$ such that
+\begin{subequations}
+\begin{align}
+   h(x) &= h^\star \cos^2 ( \alpha x )
+%
+\intertext{where}
+%
+   h^\star(x) &= \left\{ \begin{array}{l l}
+       h_0 \cos^2 ( \beta x ) & \quad \text{if $| x | < a$} \\
+	0 & \quad \text{otherwise}
+    \end{array} \right.
+\end{align}
+\end{subequations}
+where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
+
+A basic terrain-following (BTF) mesh is constructed by modifying the uniform mesh using this terrain profile.
+The BTF method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
+\begin{equation}
+	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
+\end{equation}
+where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
+
+A velocity field is prescribed with uniform horizontal flow aloft and zero flow near the ground,
+\begin{align}
+	u(z) = u_0 \left\{ \begin{array}{l l}
+		1 & \quad \text{if $z \geq z_2$} \\
+		\sin^2 \left( \frac{\pi}{2} \frac{z - z_1}{z_2 - z_1} \right) & \quad \text{if $z_1 < z < z_2$} \\
+		0 & \quad \text{otherwise}
+	\end{array} \right.	
+\end{align}
+where $u_0 = \SI{10}{\meter\per\second}$, $z_1 = \SI{7}{\kilo\meter}$ and $z_2 = \SI{8}{\kilo\meter}$, as specified by Weller et al. \citep{weller2017}.

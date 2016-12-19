@@ -1,34 +1,12 @@
 \subsection{Transport over a mountainous lower boundary}
 \label{sec:mountainAdvection}
 
-A two-dimensional transport test over mountains was developed in \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped terrain.  This test presents no particular challenge on cut cell meshes because there is zero velocity and zero tracer density near the ground \citep{good2014}.
-Here we present a variation of this standard test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
+\TODO{amend intro}
+The horizontal transport test in the previous section is useful for assessing numerical accuracy on terrain-following meshes, but it presents no particular challenge on cut cell meshes because there is no flow through the distorted cut cells near the ground \citep{good2014}.
+Here we present another variant of the standard horizontal transport test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
-The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.  The domain is subdivided into a $301 \times 50$ mesh such that $\Delta x = \SI{1}{\kilo\meter}$ and $\Delta z = \SI{500}{\meter}$.
-A boundary condition of $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ is imposed at the inlet boundary.  The outlet, ground and top boundary conditions are $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ where the derivative is normal to the boundary.
-Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, only inlet boundary values are included in this test case.
+%Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, only inlet boundary values are included in this test case.
 
-The terrain is wave-shaped, specified by the surface height $h$ such that
-\begin{subequations}
-\begin{align}
-   h(x) &= h^\star \cos^2 ( \alpha x )
-%
-\intertext{where}
-%
-   h^\star(x) &= \left\{ \begin{array}{l l}
-       h_0 \cos^2 ( \beta x ) & \quad \text{if $| x | < a$} \\
-	0 & \quad \text{otherwise}
-    \end{array} \right.
-\end{align}
-\end{subequations}
-where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{5}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
-
-Basic terrain-following, cut cell and slanted cell meshes are constructed by modifying the uniform $301 \times 50$ mesh using this terrain profile.
-The basic terrain-following method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
-\begin{equation}
-	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
-\end{equation}
-where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
 Cut cell meshes are constructed using the ASAM grid generator \citep{jaehn2015,asam2010}.  Slanted cell meshes are constructed following the approach by \citep{shaw-weller2016}: vertices that are underground are moved up to the surface and zero-area faces and zero-volume cells are removed.  Unlike \citep{shaw-weller2016}, vertices are never moved downwards.
 
 Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.

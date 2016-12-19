@@ -5,6 +5,7 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   src/slant-cell-advection/intro.tex \
   src/slant-cell-advection/transportSchemes.tex \
   src/slant-cell-advection/cubicFit.tex \
+  src/slant-cell-advection/horizontalAdvection.tex \
   src/slant-cell-advection/mountainAdvection.tex \
   src/slant-cell-advection/deformationSphere.tex \
   src/slant-cell-advection/conclusion.tex \

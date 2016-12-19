@@ -4,9 +4,9 @@ Here we use a more challenging variant of this test that has steeper mountains, 
 Results are compared using the linearUpwind and cubicFit transport schemes using a range of mesh spacings.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.
-Boundary conditions are imposed on the tracer $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
+Boundary conditions are imposed on the tracer density $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
 $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet, ground and top boundaries.
-A range of mesh spacings are chosen so that $\Delta x : \Delta z = 2:1$ to match Sch\"{a}r's original test specification.  The time-step is chosen proportional to the mesh spacing so that the maximum Courant number is about \num{0.4}.
+A range of mesh spacings are chosen so that $\Delta x \mathbin{:} \Delta z = 2\mathbin{:}1$ to match Sch\"{a}r's original test specification.
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}
@@ -39,3 +39,41 @@ A velocity field is prescribed with uniform horizontal flow aloft and zero flow 
 	\end{array} \right.	
 \end{align}
 where $u_0 = \SI{10}{\meter\per\second}$, $z_1 = \SI{7}{\kilo\meter}$ and $z_2 = \SI{8}{\kilo\meter}$, as specified by Weller et al. \citep{weller2017}.
+
+A tracer with density $\phi$ has the shape
+\begin{subequations}
+\begin{align}
+	\phi(x, z) &= \phi_0 \left\{ \begin{array}{l l}
+		\cos^2 \left( \frac{\pi r}{2} \right) & \quad \text{if $r \leq 1$} \\
+		0 & \quad \text{otherwise}
+	\end{array} \right.
+%
+\intertext{with radius $r$ given by}
+%
+	r &= \sqrt{
+		\left( \frac{x - x_0}{A_x} \right)^2 + 
+		\left( \frac{z - z_0}{A_z} \right)^2
+	}
+\end{align}
+%
+\label{eqn:tracer}
+\end{subequations}
+where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{9}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{12}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
+
+\begin{figure}
+	\centering
+	\includegraphics{../fig-horizontalAdvection-convergence/fig-horizontalAdvection-convergence.pdf}
+%
+	\caption{Numerical convergence of the two-dimensional horizontal transport test over mountains.  $\ell_2$ errors (equation~\ref{eqn:l2-error}) and $\ell_\infty$ errors (equation~\ref{eqn:linf-error}) are marked at mesh spacings between \SI{5000}{\meter} and \SI{250}{\meter} using linearUpwind and cubicFit transport schemes on basic terrain-following meshes.}
+	\label{fig:horizontalAdvection-convergence}
+\end{figure}
+
+Tests are integrated for \SI{10000}{\second} using time-steps that are proportional to the mesh spacing so that the maximum Courant number is about \num{0.4}.  By the end of integration the tracer is positioned downwind of the mountain.
+The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (\SI{50}{\kilo\meter}, \SI{10}{\kilo\meter})$.  Error norms are calculated by subtracting the analytic solution from the numerical solution,
+\begin{align}
+	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\
+	\ell_\infty &= \frac{\max_c |\phi - \phi_T|}{\max_c |\phi_T|} \label{eqn:linf-error}
+\end{align}
+where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ denotes a summation over all cells $c$ in the domain, and $\max_c$ denotes a maximum value of any cell.
+
+

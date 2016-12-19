@@ -28,6 +28,7 @@ include make/Makefile-Stabilisation
 include make/Makefile-DeformationSphere-Meshes
 include make/Makefile-DeformationSphere-Convergence
 include make/Makefile-DeformationSphere-TracerPlots
+include make/Makefile-HorizontalAdvection
 include make/Makefile-MountainAdvection
 include make/Makefile-Slant-Cell-Advection
 include make/Makefile-Supplementary

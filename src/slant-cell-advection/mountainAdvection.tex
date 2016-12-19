@@ -1,7 +1,6 @@
 \subsection{Transport over a mountainous lower boundary}
 \label{sec:mountainAdvection}
 
-\TODO{amend intro}
 The horizontal transport test in the previous section is useful for assessing numerical accuracy on terrain-following meshes, but it presents no particular challenge on cut cell meshes because there is no flow through the distorted cut cells near the ground \citep{good2014}.
 Here we present another variant of the standard horizontal transport test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
@@ -36,21 +35,6 @@ The horizontal and vertical components of velocity, $u$ and $w$, are then given 
 The flow is predominantly horizontal with non-zero vertical velocities only above sloping terrain.
 Unlike the horizontal transport test in \citep{schaer2002}, the velocity field presented here extends from the top of the domain all the way to the ground.
 
-At $t=\SI{0}{\second}$, a tracer with density $\phi$ is positioned upwind of the mountain at the ground.  It has the shape
-\begin{align}
-	\phi(x, z) &= \phi_0 \left\{ \begin{array}{l l}
-		\cos^2 \left( \frac{\pi r}{2} \right) & \quad \text{if $r \leq 1$} \\
-		0 & \quad \text{otherwise}
-	\end{array} \right.
-%
-\intertext{with radius $r$ given by}
-%
-	r &= \sqrt{
-		\left( \frac{x - x_0}{A_x} \right)^2 + 
-		\left( \frac{z - z_0}{A_z} \right)^2
-	}
-\end{align}
-where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
 
 \begin{table}
 	\centering
@@ -65,11 +49,12 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{10}{\kilo\meter}$ are the horizon
 \hline
 \end{tabular}
 %
-	\caption{Time-steps (\si{\second}) for the two-dimensional transport test over terrain.  The time-steps were chosen so that the maximum Courant number was between \num{0.36} and \num{0.46}.}
+	\caption{Time-steps (\si{\second}) for the two-dimensional transport test over a mountainous lower boundary.  The time-steps were chosen so that the maximum Courant number was between \num{0.36} and \num{0.46}.}
 	\label{tab:mountainAdvection:timesteps}
 \end{table}
 
-Tests are integrated forward for \SI{10000}{\second}, by which time the tracer has moved downwind of the mountain.  Different time-steps were chosen for each mesh so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).
+The tracer is again defined by equation~\eqref{eqn:tracer} but is now positioned at the ground with $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{0}{\kilo\meter})$ with half-widths $A_x = \SI{25}{\kilo\meter}$ and $A_z = \SI{10}{\kilo\meter}$.
+Tests are integrated forward for \SI{10000}{\second}.  The time-step was chosen for each mesh so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).
 An analytic solution at \SI{10000}{\second} is obtained by calculating the new horizontal position of the tracer.  Integrating along the trajectory yields $t$, the time taken to move from the left side of the mountain to the right:
 \begin{align}
 	\mathrm{d}t &= \mathrm{d}x / u(x) \\
@@ -82,7 +67,7 @@ By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{54342.8}{
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
-	\caption{Evolution of the tracer in the two-dimensional transport test over steep terrain.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  The result obtained using the cubicFit scheme on the basic terrain-following mesh is shown at $t=\SI{0}{\second}$, $t=\SI{5000}{\second}$ and $t=\SI{10000}{\second}$ with solid black contours. The analytic solution at $t=\SI{10000}{\second}$ is shown with dotted contours.
+	\caption{Evolution of the tracer in the two-dimensional transport test over a mountainous lower boundary.  The tracer is transported to the right over the wave-shaped terrain.  Tracer contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.  The result obtained using the cubicFit scheme on the basic terrain-following mesh is shown at $t=\SI{0}{\second}$, $t=\SI{5000}{\second}$ and $t=\SI{10000}{\second}$ with solid black contours. The analytic solution at $t=\SI{10000}{\second}$ is shown with dotted contours.
 	The shaded box indicates the region that is plotted in figure~\ref{fig:mountainAdvection-errors}.}
 	\label{fig:mountainAdvection-tracer}
 \end{figure}
@@ -93,17 +78,11 @@ A small phase lag is apparent when the numerical solution marked with solid cont
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-error/fig-mountainAdvection-error.pdf}
-	\caption{Tracer contours at $t=\SI{10000}{\second}$ for the two-dimensional tracer transport tests.  A region in the lee of the mountain is plotted corresponding to the shaded area in figure~\ref{fig:mountainAdvection-tracer}.  Results are presented on BTF, cut cell and slanted cell meshes (shown in figure~\ref{fig:mountainAdvection-meshes}) using the linearUpwind and cubicFit transport schemes.  The numerical solutions are marked by solid black lines.  The analytic solution is marked by dotted lines.  Contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.}
+	\caption{Tracer contours at $t=\SI{10000}{\second}$ for the two-dimensional tracer transport tests over a mountainous lower boundary.  A region in the lee of the mountain is plotted corresponding to the shaded area in figure~\ref{fig:mountainAdvection-tracer}.  Results are presented on BTF, cut cell and slanted cell meshes (shown in figure~\ref{fig:mountainAdvection-meshes}) using the linearUpwind and cubicFit transport schemes.  The numerical solutions are marked by solid black lines.  The analytic solution is marked by dotted lines.  Contours are every \SI{0.1}{\kilo\gram\per\meter\cubed}.}
 	\label{fig:mountainAdvection-errors}
 \end{figure}
 
-Numerical errors are more clearly revealed by subtracting the analytic solution from the numerical solution.  This enables the calculation of error norms,
-\begin{align}
-	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\
-	\ell_\infty &= \frac{\max_c |\phi - \phi_T|}{\max_c |\phi_T|} \label{eqn:linf-error}
-\end{align}
-where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ denotes a summation over all cells $c$ in the domain, and $\max_c$ denotes a maximum value of any cell.
-
+Numerical errors are more clearly revealed by subtracting the analytic solution from the numerical solution.
 Errors are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
 Results are least accurate using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c).  The final tracer is slightly distorted and does not extend far enough towards the ground.  The error magnitude is reduced by using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b), but the error's shape remains the same.
 The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the BTF mesh (figure~\ref{fig:mountainAdvection-errors}d), cut cell mesh (figure~\ref{fig:mountainAdvection-errors}e) and slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}f).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshes.
@@ -112,7 +91,7 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 	\centering
 	\includegraphics{../fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf}
 %
-	\caption{Error measures for the two-dimensional tracer transport tests with peak mountain heights $h_0$ from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, cut cell and slanted cell meshes using the linearUpwind and cubicFit schemes.  At $h_0 = \SI{0}{\kilo\meter}$ the terrain is entirely flat and the BTF, cut cell and slanted cell meshes are identical.  At $h_0 = \SI{6}{\kilo\meter}$ the linearUpwind scheme is unstable on the slanted cell mesh.}
+	\caption{Error measures for the two-dimensional tracer transport tests over a mountainous lower boundary.  Peak mountain heights $h_0$ are from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, cut cell and slanted cell meshes using the linearUpwind and cubicFit schemes.  At $h_0 = \SI{0}{\kilo\meter}$ the terrain is entirely flat and the BTF, cut cell and slanted cell meshes are identical.  At $h_0 = \SI{6}{\kilo\meter}$ the linearUpwind scheme is unstable on the slanted cell mesh.}
 	\label{fig:mountainAdvection-l2ByMountainHeight}
 \end{figure}
 
@@ -126,7 +105,7 @@ In contrast, the cubicFit scheme is less sensitive to the mesh type and errors g
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
-	\caption{Longest stable timesteps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  The tests were integrated with a maximum Courant number close to 1, while $\Delta t_\mathrm{max}$ is calculated as the timestep corresponding to a maximum Courant number of exactly 1.}
+	\caption{Longest stable timesteps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test over a mountainous lower boundary.  Results were obtained on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  The tests were integrated with a maximum Courant number close to 1, while $\Delta t_\mathrm{max}$ is calculated as the timestep corresponding to a maximum Courant number of exactly 1.}
 	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 

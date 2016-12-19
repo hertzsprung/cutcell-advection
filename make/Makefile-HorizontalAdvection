@@ -1,0 +1,16 @@
+$(eval $(call LaTeX,src/slant-cell-advection,build/fig-horizontalAdvection-convergence,fig-horizontalAdvection-convergence))
+
+build/fig-horizontalAdvection-convergence/fig-horizontalAdvection-convergence.pdf: \
+  build/horizontalAdvection-convergence/horizontalAdvection-convergence.tex
+
+$(eval $(call Gnuplot,build/horizontalAdvection-convergence,horizontalAdvection-convergence.tex,src/slant-cell-advection/horizontalAdvection-convergence.plt))
+
+build/horizontalAdvection-convergence/horizontalAdvection-convergence.tex: \
+  $(ATMOSTESTS_DIR)/build/horizontalAdvection-btf-linearUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/horizontalAdvection-btf-linearUpwind-collated/10000/linferrorT.txt \
+  $(ATMOSTESTS_DIR)/build/horizontalAdvection-btf-cubicUpwind-collated/10000/l2errorT.txt \
+  $(ATMOSTESTS_DIR)/build/horizontalAdvection-btf-cubicUpwind-collated/10000/linferrorT.txt \
+| build/horizontalAdvection-convergence
+
+$(eval $(call MakeDir,build/horizontalAdvection-convergence))
+

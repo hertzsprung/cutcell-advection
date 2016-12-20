@@ -39,7 +39,6 @@ The multidimensional linear upwind scheme, called ``linearUpwind'' hereafter, is
 	\phi_F &= \phi_u + \nabla_c\: \phi \cdot \left(\mathbf{x}_f - \mathbf{x}_c \right)
 \end{align} 
 where $\phi_u$ is the upwind value of $\phi$, and $\mathbf{x}_f$ and $\mathbf{x}_c$ are the position vectors of the face centroid and cell centroid respectively.
-\TODO{the length of this vector should change when using the spherical correction, but doesn't.  don't worry about this for now}
 The gradient $\nabla_c \:\phi$ is calculated using Gauss' theorem:
 \begin{align}
 	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \tilde{\phi_F} \mathbf{S}_f \label{eqn:linearUpwind-grad}

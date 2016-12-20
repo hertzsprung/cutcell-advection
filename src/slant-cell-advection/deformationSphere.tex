@@ -1,8 +1,6 @@
 \subsection{Deformational flow on a sphere}
 \label{sec:deformationSphere}
 
-\TODO{check timestep values and Courant numbers and state these.}
-
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
 Results are compared between linearUpwind and cubicFit schemes using hexagonal icosahedra and cubed-spheres.
 Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
@@ -41,7 +39,7 @@ The non-divergent velocity field is defined by the streamfunction $\Psi$:
 \begin{align}
 	\Psi(\lambda, \theta, t) = \frac{10 R_e}{T} \sin^2 \left(\lambda'\right) \cos^2 \left(\theta\right) \cos \left( \frac{\pi t}{T} \right) - \frac{2 \pi R_e}{T} \sin\left(\theta\right)
 \end{align}
-where $\lambda$ is a longitude, $\theta$ is a latitude, $T = \SI{1.0368e6}{\second}$ is the duration of integration, and $\lambda' = \lambda - 2 \pi t / T$.
+where $\lambda$ is a longitude, $\theta$ is a latitude, $\lambda' = \lambda - 2 \pi t / T$, and $T = \SI{1.0368e6}{\second}$ is the duration of integration.  The time-step is chosen such that the maximum Courant number is about 0.4.
 
 The initial tracer $\phi$ is defined as the sum of two Gaussian hills:
 \begin{align}

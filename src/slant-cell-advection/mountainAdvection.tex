@@ -4,7 +4,6 @@
 The horizontal transport test in the previous section is useful for assessing numerical accuracy on terrain-following meshes, but it presents no particular challenge on cut cell meshes because there is no flow through the distorted cut cells near the ground \citep{good2014}.
 Here we present another variant of the standard horizontal transport test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
-%Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, only inlet boundary values are included in this test case.
 
 Cut cell meshes are constructed using the ASAM grid generator \citep{jaehn2015,asam2010}.  Slanted cell meshes are constructed following the approach by \citep{shaw-weller2016}: vertices that are underground are moved up to the surface and zero-area faces and zero-volume cells are removed.  Unlike \citep{shaw-weller2016}, vertices are never moved downwards.
 
@@ -17,6 +16,7 @@ Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mo
 	\caption{Cell edges of (a) basic terrain-following, (b) cut cell, and (c) slanted cell two-dimensional $x$--$z$ meshes used for the tracer transport tests in section~\ref{sec:mountainAdvection}.  The peak mountain height $h_0 = \SI{5}{\kilo\meter}$.  Only the lowest \SI{10}{\kilo\meter} for the central region of the domain in shown.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
 	\label{fig:mountainAdvection-meshes}
 \end{figure}
+
 
 Similar to the approach by \citep{shaw-weller2016}, a velocity field is chosen that is everywhere tangential to the surfaces of a terrain-following coordinate, and the coordinate is chosen so that flow is misaligned with the BTF, cut cell and slanted cell meshes away from the ground.
 This ensures that flow always crosses mesh surfaces in order to challenge the transport scheme.   This choice also ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
@@ -64,6 +64,9 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 \end{align}
 By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{54342.8}{\meter}\).
 
+The tracer density boundary conditions are the same as those in the previous test.
+Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, cubicFit uses only inlet boundary values in this test case.
+
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-tracer/fig-mountainAdvection-tracer.pdf}
@@ -96,7 +99,8 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 \end{figure}
 
 To further examine the performance of the cubicFit scheme in the presence of steep terrain, a second series of tests were performed in which the peak mountain height was varied from \SIrange{0}{6}{\kilo\meter} keeping all other parameters constant.
-Results were obtained on BTF, cut cell and slanted cell meshes using the linearUpwind scheme and cubicFit scheme.  Again, the time-step was chosen for each test so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).  The $\ell_2$ error for these tests is presented in figure~\ref{fig:mountainAdvection-l2ByMountainHeight}.
+Results were obtained on BTF, cut cell and slanted cell meshes using the linearUpwind scheme and cubicFit scheme.  Again, the time-step was chosen for each test so that the maximum Courant number was about \num{0.4} (table~\ref{tab:mountainAdvection:timesteps}).  The $\ell_2$ error was calculated by subtracting the analytic solution from the numerical solution (figure~\ref{fig:mountainAdvection-l2ByMountainHeight}).
+Note that the analytic solution is a function of mountain height, with the tracer travelling farther over higher mountains.
 In all cases, error increases with increasing mountain height because steeper slopes lead to greater mesh distortions.
 Errors are identical for a given transport scheme when $h_0 = \SI{0}{\kilo\meter}$ and the ground is entirely flat because the BTF, cut cell and slanted cell meshes are identical.
 Compared with the cubicFit scheme, the linearUpwind scheme is more sensitive to the mesh type and mountain height.  The linearUpwind scheme is unstable on the slanted cell mesh with a peak mountain height $h_0 = \SI{6}{\kilo\meter}$ despite using a stable Courant number of \num{0.428}.

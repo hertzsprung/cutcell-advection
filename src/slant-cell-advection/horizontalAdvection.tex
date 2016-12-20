@@ -1,12 +1,12 @@
 \subsection{Horizontal transport over mountains}
-A two-dimensional transport test was developed by Sch\"{a}r \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped mountains.  The test challenges transport schemes because the tracer must cross mesh layers, which acts to reduce numerical accuracy \citep{schaer2002,shaw-weller2016}.
-Here we use a more challenging variant of this test that has steeper mountains, as described by Weller et al. \citep{weller2017}.
+A two-dimensional transport test was developed by Sch\"{a}r et al. \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped mountains.  The test challenges transport schemes because the tracer must cross mesh layers, which acts to reduce numerical accuracy \citep{schaer2002,shaw-weller2016}.
+Here we use a more challenging variant of this test, as described by Weller et al. \citep{weller2017}, that has steeper mountains and highly-distorted terrain-following meshes.
 Results are compared using the linearUpwind and cubicFit transport schemes using a range of mesh spacings.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.
 Boundary conditions are imposed on the tracer density $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
 $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet, ground and top boundaries.
-A range of mesh spacings are chosen so that $\Delta x \mathbin{:} \Delta z = 2\mathbin{:}1$ to match Sch\"{a}r's original test specification.
+A range of mesh spacings are chosen so that $\Delta x \mathbin{:} \Delta z = 2\mathbin{:}1$ to match the original test specification from Sch\"{a}r et al. \citep{schaer2002}.
 
 The terrain is wave-shaped, specified by the surface height $h$ such that
 \begin{subequations}
@@ -64,7 +64,7 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{9}{\kilo\meter}$ are the horizont
 	\centering
 	\includegraphics{../fig-horizontalAdvection-convergence/fig-horizontalAdvection-convergence.pdf}
 %
-	\caption{Numerical convergence of the two-dimensional horizontal transport test over mountains.  $\ell_2$ errors (equation~\ref{eqn:l2-error}) and $\ell_\infty$ errors (equation~\ref{eqn:linf-error}) are marked at mesh spacings between \SI{5000}{\meter} and \SI{250}{\meter} using linearUpwind and cubicFit transport schemes on basic terrain-following meshes.}
+	\caption{Numerical convergence of the two-dimensional horizontal transport test over mountains.  $\ell_2$ errors (equation~\ref{eqn:l2-error}) and $\ell_\infty$ errors (equation~\ref{eqn:linf-error}) are marked at mesh spacings between \SI{5000}{\meter} and \SI{250}{\meter} using linearUpwind and cubicFit transport schemes on basic terrain-following meshes. \TODO{get \SI{250}{\meter} result for cubicFit}}
 	\label{fig:horizontalAdvection-convergence}
 \end{figure}
 
@@ -76,4 +76,9 @@ The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (
 \end{align}
 where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ denotes a summation over all cells $c$ in the domain, and $\max_c$ denotes a maximum value of any cell.
 
+Tests were performed using the linearUpwind and cubicFit schemes at mesh spacings between $\Delta x = \SI{250}{\meter}$ and $\Delta x = \SI{5000}{\meter}$.
+Numerical convergence in the $\ell_2$ and $\ell_\infty$ norms is plotted in figure~\ref{fig:horizontalAdvection-convergence}.
+The linearUpwind scheme becomes second-order convergent only at higher resolutions, but the cubicFit scheme is second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
+
+This test demonstrates that, unlike linearUpwind, cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
 

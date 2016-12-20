@@ -14,9 +14,9 @@ Edge vectors are directed in a counter-clockwise orientation.
 
 Since OpenFOAM does not support two-dimensional spherical meshes, instead, we construct meshes that have a single layer of cells that are \SI{2000}{\meter} deep, having an inner radius $r_1 = R_e - \SI{1000}{\meter}$ and an outer radius $r_2 = R_e + \SI{1000}{\meter}$.
 By default, OpenFOAM meshes comprise polyhedral cells with straight edges and flat faces.  This is problematic for spherical meshes because face areas and cell volumes are too small.
-For tests on a spherical Earth, we override the default configuration and calculate our own face areas, cell volumes, face centres and cell centres that account for the spherical geometry.  
+For tests on a spherical Earth, we override the default configuration and calculate our own face areas, cell volumes, face centres and cell centres that account for the spherical geometry.  Note that the new centres are no longer centroids, but they are consistent with the horizontal transport tests on a sphere presented in section~\ref{sec:deformationSphere}.
 
-A face is assumed to be either a surface face or radial face.
+A face is classified as either a surface face or radial face.
 A surface face has any number of vertices, all of equal radius.
 A radial faces have four vertices with two different radii, $r_1$ and $r_2$, and two different horizontal coordinates, $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
 A radial face centre is modified so that it has a radius $R_e$.  The latitudinal and longitudinal components of a radial face centre need no modification.
@@ -69,4 +69,3 @@ Edges can be classified in a similar manner to faces where surface edges are tan
 For transport tests, corrections to edge midpoints are unnecessary.  Due to the choice of $r_1$ and $r_2$ during mesh construction, the midpoint of a radial edge is at a radial distance of $R_e$ which is necessary for the correct calculation of non-divergent velocity fields.
 The position of surface edge midpoints is unimportant because these edges do not contribute to the face flux since $\mathbf{e} \cdot \mathbf{c}_e = 0$.
 Edge lengths are the straight-line distance between the two vertices and not the great-circle distance.  Again, the edge lengths are not corrected because it makes no difference to the face flux calculation.
-

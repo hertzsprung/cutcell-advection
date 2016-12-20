@@ -15,11 +15,7 @@ Another method for avoiding the small-cell problem was proposed by \citep{shaw-w
 
 Smoothed terrain-following layers, cut cells and slanted cell methods all reduce the amount of mesh distortion but any mesh that represents sloping terrain must necessarily be distorted, at least near the ground.
 Even when distortions are minimal, transport across mesh surfaces tends to be more common near steep slopes, and this misalignment between the flow and mesh surfaces increases numerical errors \citep{leonard1993,schaer2002,shaw-weller2016}.
-% need citations for horizontal-vertical splitting
-% walko-avissar cut cell advection?
-% MPAS? skamarock-gassmann2011
-% CAM-FV lin-rood1996, lin2004, treats each horizontal dimension separately, too
-A huge variety of transport schemes have been developed for atmospheric models, but few are able to account for distortions associated with steep terrain because they treat horizontal and vertical transport separately \TODO{citations}, resulting in numerical errors called `splitting errors'.
+A huge variety of transport schemes have been developed for atmospheric models, but few are able to account for distortions associated with steep terrain because they treat horizontal and vertical transport separately \citep{kent2014}, resulting in numerical errors called `splitting errors'.
 Such errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are still apparent in flows over steep terrain where meshes are highly distorted and metric terms in a terrain-following coordinate transform are large \citep{weller2017}.
 
 Transport schemes are often classified as dimensionally-split or multidimensional.

@@ -1,7 +1,7 @@
 \section{Transport schemes for arbitrary meshes}
 \label{sec:transport}
 
-The transport of a dependent variable $\phi$ in a prescribed wind field $\mathbf{u}$ is given by the equation
+The transport of a dependent variable $\phi$ in a prescribed velocity field $\mathbf{u}$ is given by the equation
 \begin{align}
 	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
 \end{align}
@@ -15,7 +15,7 @@ The time derivative is discretised using a two-stage, second-order Heun method,
 \end{subequations}
 where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).  The same time-stepping method is used for both cubicFit and linearUpwind schemes.
 
-Using the finite volume method, the wind field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
+Using the finite volume method, the velocity field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F \label{eqn:gauss-div}
 \end{align}

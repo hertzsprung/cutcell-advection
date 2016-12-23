@@ -59,8 +59,8 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 \begin{align}
 	\mathrm{d}t &= \mathrm{d}x / u(x) \\
 	t &= \int_0^x \frac{H - h(x)}{u_0 H}\:\mathrm{d}x \\
-	t &= \frac{x}{u_0} - \frac{h_0}{16 u_0 H} \left[ 4x + \frac{\sin 2 (\alpha + \beta) x}{\alpha + \beta} \right.+ \nonumber \\
-   &\ \left. \frac{\sin 2(\alpha - \beta) x}{\alpha - \beta} + 2 \left( \frac{\sin 2\alpha x}{\alpha} + \frac{\sin 2\beta x}{\beta} \right) \right]
+	t &= \frac{x}{u_0} - \frac{h_0}{16 u_0 H} \left[ 4x + \frac{\sin 2 (\alpha + \beta) x}{\alpha + \beta} 
+ \frac{\sin 2(\alpha - \beta) x}{\alpha - \beta} + 2 \left( \frac{\sin 2\alpha x}{\alpha} + \frac{\sin 2\beta x}{\beta} \right) \right]
 \end{align}
 By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{54342.8}{\meter}\).
 

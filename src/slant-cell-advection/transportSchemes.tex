@@ -1,11 +1,9 @@
 \section{Transport schemes for arbitrary meshes}
 \label{sec:transport}
-
-The transport of a dependent variable $\phi$ in a prescribed velocity field $\mathbf{u}$ is given by the equation
-\begin{align}
-	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \label{eqn:advection}
+The transport of a dependent variable $\phi$ in a prescribed, non-divergent velocity field $\mathbf{u}$ is given by the equation		
+\begin{align}		
+	\frac{\partial \phi}{\partial t} + \nabla \cdot \left( \mathbf{u} \phi \right) = 0 \text{.} \label{eqn:advection}		
 \end{align}
-In the mass continuity equation, $\phi = \rho$ where $\rho$ is the air density.  In the continuity equation for tracer density $\phi = \rho q$ where $q$ is the tracer mixing ratio.  For the special case of a non-divergent velocity field then $\rho$ is constant hence $\phi = q$.
 The time derivative is discretised using a two-stage, second-order Heun method,
 \begin{subequations}
 \begin{align}
@@ -19,16 +17,16 @@ Using the finite volume method, the velocity field is prescribed at face centroi
 \begin{align}
 	\nabla \cdot \left( \mathbf{u} \phi \right) \approx \frac{1}{\mathcal{V}_c} \sum_{f \in\:c} \mathbf{u}_f \cdot \mathbf{S}_f \phi_F \label{eqn:gauss-div}
 \end{align}
-where subscript $f$ denotes a value stored at a face and subscript $F$ denotes a value approximated at a face from surrounding values stored at cell centres.  $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a velocity vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, $\phi_F$ is an approximation of the dependent variable at the face, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.
-Note that equation~\eqref{eqn:gauss-div} is a second-order approximation of the divergence term that limits the cubicFit transport scheme to second-order accuracy.
+where subscript $f$ denotes a value stored at a face and subscript $F$ denotes a value approximated at a face from surrounding values.  $\mathcal{V}_c$ is the cell volume, $\mathbf{u}_f$ is a velocity vector prescribed at a face, ${\mathbf{S}_f}$ is the surface area vector with a direction outward normal to the face and a magnitude equal to the face area, $\phi_F$ is an approximation of the dependent variable at the face, and $\sum_{f \in\:c}$ denotes a summation over all faces $f$ bordering cell $c$.
+Note that equation~\eqref{eqn:gauss-div} is a second-order approximation of the divergence term which limits the cubicFit transport scheme to second-order convergence.
 
-This discretisation is applicable to arbitrary meshes.  A neccesary condition for stability is given by the multidimensional Courant number,
+This discretisation is applicable to arbitrary meshes.  A necessary condition for stability is given by the multidimensional Courant number,
 \begin{align}
 	\mathrm{Co}_c = \frac{\Delta t}{2 \mathcal{V}_c} \sum_{f \in\: c} \mathbf{u} \cdot \mathbf{S}_f
 \end{align}
 such that $\mathrm{Co}_c \leq 1$ for all cells $c$ in the domain.  Hence, stability is constrained by the maximum Courant number of any cell in the domain.
 
-The accurate approximation of the dependent variable at the face, $\phi_F$, is key to the overall accuracy of the transport scheme. The cubicFit and linearUpwind schemes differ in their approximations of $\phi_F$, and these approximation methods described next.
+The accurate approximation of the dependent variable at the face, $\phi_F$, is key to the overall accuracy of the transport scheme. The cubicFit and linearUpwind schemes differ in their approximations, and these approximation methods described next.
 
 
 \input{cubicFit}

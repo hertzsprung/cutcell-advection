@@ -7,9 +7,9 @@
 	\label{fig:interiorStencils}
 \end{figure}
 
-The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding cell centre values.
+The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding known values.
 To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.
-For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased, two stencils must be constructed for every interior face, and the appropriate stencil is chosen for each face depending on the velocity direction at that face for every timestep.
+For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased and asymmetric, two stencils must be constructed for every interior face, and the appropriate stencil is chosen depending on the velocity direction at each face for every timestep.
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}a.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
@@ -41,7 +41,7 @@ The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those f
 \begin{align}
 	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max_{g\:\in\:G}(\mathrm{Opp}(f, g)) \} 
 \end{align}
-On a rectangular mesh, there is always one opposing face $g$ that is exactly parallel to the face $f$ such that $\mathrm{Opp}(f, g) = 1$.
+On a rectangular mesh, there is always one opposing face $g$, and it is exactly parallel to the face $f$ such that $\mathrm{Opp}(f, g) = 1$.
 
 Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Finally, the \textit{stencil boundary faces} are boundary faces having Dirichlet boundary conditions\footnote{Boundary faces with Neumann boundary conditions would require extrapolated boundary values to be calculated.
 This would create a feedback loop in which boundary values are extrapolated from interior values, then interior values are transported using stencils that include boundary values.  
@@ -55,11 +55,12 @@ Having found these three sets, the stencil is constructed to comprise all intern
 	\centering
 	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
 	%
-	\caption{A thirteen-cell, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular to $x$.}
+	\caption{A thirteen-point, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  Four stencil boundary faces, marked by black triangles, are also included.
+The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular to $x$.}
 	\label{fig:double-upwind-stencil}
 \end{figure}
 
-Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  The resultant stencil contains 13 cells.
+Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  A boundary at the far left has dirichlet boundary conditions, and so the four stencil boundary faces are also included in the stencil, where the boundary face centres are marked by black triangles.  The resultant stencil contains 13 points.
 
 
 \subsubsection{Least squares fit}

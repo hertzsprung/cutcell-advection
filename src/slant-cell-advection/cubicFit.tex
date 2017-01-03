@@ -64,7 +64,7 @@ Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for fa
 
 
 \subsubsection{Least squares fit}
-To approximate the value at a face $f$, a least squares fit is calculated from a stencil of surrounding cell centre values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  Finally, we will describe how the approach is applicable to faces of arbitrary meshes.  
+To approximate the value at a face $f$, a least squares fit is calculated from a stencil of surrounding known values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  
 
 For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
 \begin{align}
@@ -96,11 +96,12 @@ The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
 A two-dimensional stencil is also used for the tests on spherical meshes in section~\ref{sec:deformationSphere}.  In these tests, cell centres are projected onto a plane that is tangent to the sphere at the face centre.
-The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition:
+
+The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition,
 \begin{align}
-	\mathbf{a} = \mathbf{B}^+ \bm{\phi}
+	\mathbf{a} = \mathbf{B}^+ \bm{\phi} \text{.}
 %
-\intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is a weighted mean of $\bm{\phi}$:} 
+\intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is a weighted mean of $\bm{\phi}$,} 
 %
 	a_1 = \begin{bmatrix}
 		b_{1,1}^+ \\
@@ -134,23 +135,25 @@ where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{dia
 where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
 Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.  Values for $\mathbf{m}$ are chosen so that the cells connected to face $f$ make a greater contribution to the least squares fit, as discussed later in section~\ref{sec:stabilisation}.
 
-For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil cells and number of polynomial terms may differ: a stencil will have two or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
+For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil points and number of polynomial terms may differ: a stencil will have one or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
 \subsubsection{Polynomial generation}
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
-	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.}
+	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
+Here we have assumed that the lower boundary has a Neumann boundary condition and so boundary faces are excluded from the stencils.}
 	\label{fig:boundaryStencils}
 \end{figure}
 
 The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}a), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}b).
 In both cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
 
-For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.  In two dimensions, a candidate polynomial has between one and nine terms and includes a combination of the terms in equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
+For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.
+In two dimensions, a candidate polynomial has some combination of between one and nine terms from equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
 
 First, high-order terms may be included in a candidate polynomial only if the lower-order terms are also included.
-Let
+More precisely, let
 \begin{align}
 	M(x, y) = { x^i y^j : i,j \geq 0 \text{ and } i+j \leq 3 }
 \end{align}
@@ -158,9 +161,10 @@ be the set of all monomials of degree at most \num{3} in $x, y$.
 A subset $S$ of $M(x,y)$ is ``dense'' if, whenever $x^a y^b$ and $x^c y^d$ are in $S$ with $a \leq c$ and $b \leq d$, then $x^i y^j$ is also in $S$ for all $a < i < c$, $b < j < d$.
 For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6 x^2 y$ is a dense subset of $M(x,y)$, but $\phi = a_1 + a_2 x + a_3 y + a_4 x^2 y$ is not because $x^2 y$ can be included only if $xy$ and $x^2$ are also included.
 
-Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.  Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial would not be a candidate polynomial.
+Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.
+Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial is not a candidate polynomial.
 
-The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
+The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the cubicFit transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsubsection{Stabilisation procedure}
 \label{sec:stabilisation}
@@ -169,7 +173,7 @@ So far, we have constructed a stencil and found a set of candidate polynomials. 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
 If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
 
-A one-dimensional von Neumann analysis was performed to obtain stability constraints on the weights $\mathbf{w}$.  The analysis is presented in the appendix, and it shows that the weights must satisfy three constraints:
+A one-dimensional von Neumann analysis was performed to obtain stability constraints on the weights $\mathbf{w}$.  The analysis is presented in appendix A, and it shows that the weights must satisfy three constraints,
 \begin{subequations}
 \label{eqn:stability}
 \begin{align}
@@ -178,15 +182,15 @@ A one-dimensional von Neumann analysis was performed to obtain stability constra
 	w_u - w_d \geq \max_{p\:\in\:P}(|w_p|)
 \end{align}
 \end{subequations}
-where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral cells} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral cell $p$.
+where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral points} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral point $p$.
  The upwind, downwind and peripheral weights sum to one such that $w_u + w_d + \sum_{p \in P} w_p = 1$.
 
 The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
-If there are multiple candidates with the same number of terms, the candidate with the largest minimum singular value of $\mathbf{B}$ is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
+If there are multiple candidates with the same number of terms, the candidate with the larger minimum singular value of $\mathbf{B}$ is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
 
-In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral cells have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
+In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral points have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
 
-In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list. 
+In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list. 
 
 Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In fact, we have not encountered any stencil for which this last resort is required.
 
@@ -198,14 +202,14 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 	\label{fig:oscillatory1D}
 \end{figure}
 
-To illustrate the stabilisation procedure, figure~\ref{fig:oscillatory1D}a presents a one-dimensional example of a cubic polynomial fitted through five points, with the weight at each point printed above it.
+To illustrate the stabilisation procedure, figure~\ref{fig:oscillatory1D}a presents a one-dimensional example of a cubic polynomial fitted through five points, with the weight at each point printed beside it.
 In preference order, the candidate polynomials are
 \begin{align}
-	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \\
-	\phi &= a_1 + a_2 x + a_3 x^2 \\
+	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \label{eqn:cubicCandidate} \\
+	\phi &= a_1 + a_2 x + a_3 x^2 \label{eqn:quadCandidate} \\
 	\phi &= a_1 + a_2 x \\
 	\phi &= a_1
 \end{align}
-We begin with the cubic equation.  The multipliers are chosen so that the polynomial passes almost exactly through the upwind and downwind points that are immediately to the left and right of the $y$-axis respectively.
-The constraint on the upwind point is violated because $w_u = 1.822 > 1$ (equation~\ref{eqn:stabilityU}).  Reducing the downwind multiplier does not help to satisfy the constraint, so we start again with the quadratic equation (figure~\ref{fig:oscillatory1D}b).
+We begin with the cubic equation~\eqref{eqn:cubicCandidate}.  The multipliers are chosen so that the polynomial passes almost exactly through the upwind and downwind points that are immediately to the left and right of the $y$-axis respectively.
+The constraint on the upwind point is violated because $w_u = 1.822 > 1$ (equation~\ref{eqn:stabilityU}).  Reducing the downwind multiplier does not help to satisfy the constraint, so we start again with the quadratic equation~\eqref{eqn:quadCandidate}, and the new fit is presented in figure~\ref{fig:oscillatory1D}b.
 Again, the multipliers are chosen to force the polynomial through the upwind and downwind points, but this violates the constraint on the downwind point because $w_d = 0.502 > 0.5$ (equation~\ref{eqn:stabilityD}).  This time, however, stable weights are found by reducing $w_d$ to one (figure~\ref{fig:oscillatory1D}c) and these are the weights that will be used to approximate $\phi_F$, where the polynomial intercepts the $y$-axis.

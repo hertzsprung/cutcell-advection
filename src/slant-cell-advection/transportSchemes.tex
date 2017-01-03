@@ -39,8 +39,8 @@ The multidimensional linear upwind scheme, called ``linearUpwind'' hereafter, is
 where $\phi_u$ is the upwind value of $\phi$, and $\mathbf{x}_f$ and $\mathbf{x}_c$ are the position vectors of the face centroid and cell centroid respectively.
 The gradient $\nabla_c \:\phi$ is calculated using Gauss' theorem:
 \begin{align}
-	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \tilde{\phi_F} \mathbf{S}_f \label{eqn:linearUpwind-grad}
+	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \widetilde{\phi}_F \mathbf{S}_f \label{eqn:linearUpwind-grad}
 \end{align}
-where $\tilde{\phi_F}$ is linearly interpolated from the two neighbouring cells of face $f$.  For cells adjacent to boundaries having zero gradient boundary conditions, the boundary value is set to be equal to the cell centre value before equation~\eqref{eqn:linearUpwind-grad} is evaluated.
+where $\widetilde{\phi}_F$ is linearly interpolated from the two neighbouring cells of face $f$.  For cells adjacent to boundaries having zero gradient boundary conditions, the boundary value is set to be equal to the cell centre value before equation~\eqref{eqn:linearUpwind-grad} is evaluated.
 This implementation of the multidimensional linear upwind scheme is included in the OpenFOAM software distribution \citep{openfoam}.
 

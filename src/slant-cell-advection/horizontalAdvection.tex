@@ -1,14 +1,14 @@
 \subsection{Horizontal transport over mountains}
 A two-dimensional transport test was developed by Sch\"{a}r et al. \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped mountains.  The test challenges transport schemes because the tracer must cross mesh layers, which acts to reduce numerical accuracy \citep{schaer2002,shaw-weller2016}.
 Here we use a more challenging variant of this test, as described by Weller et al. \citep{weller2017}, that has steeper mountains and highly-distorted terrain-following meshes.
-Results are compared using the linearUpwind and cubicFit transport schemes using a range of mesh spacings.
+Convergence results are compared using the linearUpwind and cubicFit transport schemes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.
 Boundary conditions are imposed on the tracer density $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
 $\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet, ground and top boundaries.
 A range of mesh spacings are chosen so that $\Delta x \mathbin{:} \Delta z = 2\mathbin{:}1$ to match the original test specification from Sch\"{a}r et al. \citep{schaer2002}.
 
-The terrain is wave-shaped, specified by the surface height $h$ such that
+The terrain is wave-shaped, specified by the surface elevation $h$ such that
 \begin{subequations}
 \begin{align}
    h(x) &= h^\star \cos^2 ( \alpha x )
@@ -23,7 +23,7 @@ The terrain is wave-shaped, specified by the surface height $h$ such that
 \end{subequations}
 where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI{6}{\kilo\meter}$ is the maximum mountain height, $\lambda = \SI{8}{\kilo\meter}$ is the wavelength, \(\alpha = \pi / \lambda\) and \(\beta = \pi / (2a)\).  Note that, in order to make this test more challenging, the mountain height $h_0$ is double the mountain height used by \citep{schaer2002}.
 
-A basic terrain-following (BTF) mesh is constructed by modifying the uniform mesh using this terrain profile.
+A basic terrain-following (BTF) mesh is constructed by using the terrain profile to modify the uniform mesh.
 The BTF method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
 \begin{equation}
 	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
@@ -58,7 +58,7 @@ A tracer with density $\phi$ has the shape
 %
 \label{eqn:tracer}
 \end{subequations}
-where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{9}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{12}{\kilo\meter})$ so that the tracer is upwind of the mountain and centred at the ground.
+where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{3}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{12}{\kilo\meter})$ so that the tracer is upwind of the mountain.
 
 \begin{figure}
 	\centering
@@ -69,7 +69,7 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{9}{\kilo\meter}$ are the horizont
 \end{figure}
 
 Tests are integrated for \SI{10000}{\second} using time-steps that are proportional to the mesh spacing so that the maximum Courant number is about \num{0.4}.  By the end of integration the tracer is positioned downwind of the mountain.
-The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (\SI{50}{\kilo\meter}, \SI{10}{\kilo\meter})$.  Error norms are calculated by subtracting the analytic solution from the numerical solution,
+The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (\SI{50}{\kilo\meter}, \SI{12}{\kilo\meter})$.  Error norms are calculated by subtracting the analytic solution from the numerical solution,
 \begin{align}
 	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\
 	\ell_\infty &= \frac{\max_c |\phi - \phi_T|}{\max_c |\phi_T|} \label{eqn:linf-error}
@@ -78,7 +78,7 @@ where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ de
 
 Tests were performed using the linearUpwind and cubicFit schemes at mesh spacings between $\Delta x = \SI{250}{\meter}$ and $\Delta x = \SI{5000}{\meter}$.
 Numerical convergence in the $\ell_2$ and $\ell_\infty$ norms is plotted in figure~\ref{fig:horizontalAdvection-convergence}.
-The linearUpwind scheme becomes second-order convergent only at higher resolutions, but the cubicFit scheme is second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
+The linearUpwind scheme becomes second-order convergent only at finer mesh spacings, but the cubicFit scheme is second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
 
 This test demonstrates that, unlike linearUpwind, cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
 

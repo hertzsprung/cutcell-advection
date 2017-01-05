@@ -1,7 +1,7 @@
 \subsection{Deformational flow on a sphere}
 \label{sec:deformationSphere}
-
-To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth \citep{lauritzen2012}.  
+The tests so far have used flows that are mostly uniform on meshes that are based on rectangular cells.
+To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth, as specified by Lauritzen et al. \citep{lauritzen2012}.  
 Results are compared between linearUpwind and cubicFit schemes using hexagonal icosahedra and cubed-spheres.
 Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
 Figure~\ref{fig:sphere-meshes}a shows an example of such a mesh that has been refined three times.
@@ -35,13 +35,13 @@ We assess the cubicFit scheme using the first two tests only.  We do not conside
 The first deformational flow test uses a $C^\infty$ initial tracer that is transported in a non-divergent, time-varying rotational velocity field.
 The velocity field deforms two Gaussian `hills' of tracer into thin vortical filaments.  Half-way through the integration the rotation reverses so that the filaments become circular hills once again.  The analytic solution at the end of integration is identical to the initial condition.
 A rotational flow is superimposed on a time-invariant background flow in order to avoid error cancellation.
-The non-divergent velocity field is defined by the streamfunction $\Psi$:
+The non-divergent velocity field is defined by the streamfunction $\Psi$,
 \begin{align}
 	\Psi(\lambda, \theta, t) = \frac{10 R_e}{T} \sin^2 \left(\lambda'\right) \cos^2 \left(\theta\right) \cos \left( \frac{\pi t}{T} \right) - \frac{2 \pi R_e}{T} \sin\left(\theta\right)
 \end{align}
 where $\lambda$ is a longitude, $\theta$ is a latitude, $\lambda' = \lambda - 2 \pi t / T$, and $T = \SI{1.0368e6}{\second}$ is the duration of integration.  The time-step is chosen such that the maximum Courant number is about 0.4.
 
-The initial tracer $\phi$ is defined as the sum of two Gaussian hills:
+The initial tracer density $\phi$ is defined as the sum of two Gaussian hills,
 \begin{align}
 	\phi = \phi_1(\lambda, \theta) + \phi_2(\lambda, \theta)
 \end{align}
@@ -49,7 +49,7 @@ An individual hill $\phi_i$ is given by
 \begin{align}
 	\phi_i(\lambda, \theta) = \phi_0 \exp\left( -b \left( \frac{|\mathbf{x} - \mathbf{x}_i|}{R_e} \right)^2 \right)
 \end{align}
-where $\phi_0 = 0.95$ and $b = 5$.  The Cartesian position vector $\mathbf{x} = (x,y,z)$ is related to the spherical coordinates $(\lambda, \theta)$ by
+where $\phi_0 = \SI{0.95}{\kilo\gram\per\meter\cubed}$ and $b = 5$.  The Cartesian position vector $\mathbf{x} = (x,y,z)$ is related to the spherical coordinates $(\lambda, \theta)$ by
 \begin{align}
 	(x,y,z) = (R_e \cos \theta \cos \lambda, R_e \cos \theta \sin \lambda, R_e \sin \theta) \label{eqn:spherical-cartesian}
 \end{align}

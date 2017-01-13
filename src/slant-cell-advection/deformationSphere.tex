@@ -30,7 +30,7 @@ The deformational flow test in \citep{lauritzen2012} comprised six elements:
 \item a test of correlation preservation between two tracers
 \item a test using a divergent velocity field
 \end{enumerate}
-We assess the cubicFit scheme using the first two tests only.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  Stable results were obtained when testing cubicFit using a divergent velocity field, but no further analysis is made here.  \TODO{provide results as supplementary material?}
+We assess the cubicFit scheme using the first two tests only.  We do not consider filament preservation, correlation preservation, or the transport of a ``rough'' slotted cylinder because no shape-preserving filter has yet been developed for cubicFit.  Stable results were obtained when testing cubicFit using a divergent velocity field, but no further analysis is made here.
 
 The first deformational flow test uses an infinitely continuous initial tracer that is transported in a non-divergent, time-varying, rotational velocity field.
 The velocity field deforms two Gaussian `hills' of tracer into thin vortical filaments.  Half-way through the integration the rotation reverses so that the filaments become circular hills once again.  The analytic solution at the end of integration is identical to the initial condition.
@@ -88,7 +88,29 @@ A slightly more challenging variation of the same test is performed using a quas
 		b			      & \quad \text{otherwise}
 	\end{cases}
 \end{align}
-The velocity field is the same as before.  This test is used to determine the ``minimal'' resolution, which is specified by Lauritzen et al. \citep{lauritzen2012} as the coarsest mesh spacing for which $\ell_2 \approx 0.033$.
-\TODO{minimal resolution for cubicFit on hex mesh is about $\Delta \lambda = \ang{0.3}$}
-\TODO{and linearUpwind? and perhaps compare to similar schemes.  mention that \citep{lauritzen2014} has collated minimal resolutions for a number of other schemes.}
+The velocity field is the same as before.  This test is used to determine the ``minimal'' resolution, $\Delta \lambda_m$, which is specified by Lauritzen et al. \citep{lauritzen2012} as the coarsest mesh spacing for which $\ell_2 \approx 0.033$.
 
+\begin{table}
+	\robustify\it
+	\centering
+	\begin{tabular}{l l S[detect-weight, detect-shape, detect-mode]}
+\hline
+	Transport scheme & Mesh type & {Minimal resolution (\si{\degree})} \\
+\hline
+	linearUpwind & Cubed-sphere & \it 0.15 \\
+	FARSIGHT, grid-point semi-Lagrangian \citep{white-dongarra2011} & Cubed-sphere & 0.1875 \\
+	linearUpwind & Hexagonal-icosahedron & \it 0.2 \\
+	SLFV-SL, swept-area scheme \citep{miura2007} & Hexagonal-icosahedron & 0.25 \\
+	cubicFit & Cubed-sphere & \it 0.25 \\
+	cubicFit & Hexagonal-icosahedron & 0.3 \\
+	ICON-FFSL, swept-area scheme \citep{miura2007} & Triangular-icosahedron & 0.42 \\
+\hline
+\end{tabular}
+%
+	\caption{Minimal resolutions for the cubicFit and linearUpwind schemes in the test of deformational flow of using cosine bells.  Italicised values have been extrapolated using the second-order convergence obtained at coarser mesh spacings.  For comparison with existing models, some results are also included for unlimited versions of the transport schemes from the intercomparison by Lauritzen et al. \citep{lauritzen2014}.}
+	\label{tab:deformationSphere:minimal-resolution}
+\end{table}
+
+The minimal resolution for the cubicFit scheme on a hexagonal-icosahedral mesh is about $\Delta \lambda_m = \ang{0.3}$.  Tests were not performed at mesh spacings finer than $\Delta \lambda = \ang{0.271}$ but approximate minimal resolutions have been extrapolated from the second-order convergence that is found at finer mesh spacings.  These minimal resolutions are presented in table~\ref{tab:deformationSphere:minimal-resolution} along with a selection of transport schemes having similar minimal resolutions from the model intercomparison by Lauritzen et al. \citep{lauritzen2014}.
+
+The series of deformational flow tests presented here demonstrate that the cubicFit scheme is suitable for transport on spherical meshes based on quadrilaterals and hexagons.  The cubicFit scheme is largely insensitive to the mesh type, and results are more accurate compared to the linearUpwind scheme for a given mesh type and mesh spacing.  Neither scheme requires special treatment at the corners of cubed-sphere panels.

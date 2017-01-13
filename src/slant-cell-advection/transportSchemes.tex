@@ -12,6 +12,7 @@ The time derivative is discretised using a two-stage, second-order Heun method,
 \end{align}
 \end{subequations}
 where \(f(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).  The same time-stepping method is used for both cubicFit and linearUpwind schemes.
+Although the Heun method is unstable for a zero-dimensional linear oscillator and for solving the transport equation using centred, linear differencing, it is stable when it is used for transport schemes with some upwinding.  \TODO{Hilary: can you confirm this statement applies to the time-stepping scheme given here, and not the midpoint scheme I was previously using?  Also, does this need a citation?}
 
 Using the finite volume method, the velocity field is prescribed at face centroids and the dependent variable is stored at cell centroids.  The divergence term in equation~\eqref{eqn:advection} is discretised using Gauss's theorem:
 \begin{align}

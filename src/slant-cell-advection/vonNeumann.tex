@@ -33,53 +33,34 @@ $\Im = \beta_d \sin k \Delta x + \alpha_u \sin k\Delta x$, then}
 \ln A &= -c \left( \Re + \iu \Im \right) \\
 A &= e^{-c \Re} e^{-\iu c \Im} \\
 %
-\shortintertext{and the complex modulus and complex argument of $A$ are found to be}
+\shortintertext{and the complex modulus of $A$ is}
 %
-|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \quad \text{and} \\
-\arg(A) &= -c \Im = -c \left( \beta_d + \alpha_u \right) \sin k\Delta x
+|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right)
 \end{align}
-For stability, we need $|A| \leq 1$ and for advection in the correct direction we need $\arg(A) < 0$ for $c > 0$, so
+For stability we need $|A| \leq 1$ and, imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \beta_d$, then
 \begin{align}
-\beta_u - \alpha_d + \left( \beta_d - \alpha_u \right) \cos k\Delta x &\geq 0 \quad \forall k\Delta x \quad \text{and} \\
-\beta_d + \alpha_u &> 0 \label{eqn:arg-ineq}
+\left( \alpha_u - \alpha_d \right) \left( 1 - \cos k\Delta x \right) &\geq 0 \quad \forall k\Delta x
+%
+\shortintertext{and, given $0 \leq 1 - \cos k \Delta x \leq 2$, then}
+%
+\alpha_u - \alpha_d \geq 0 \text{ .} \label{eqn:twopoint-lower}
 \end{align}
-Imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \beta_d$:
+Additionally, we do not want more damping than a first-order upwind scheme (where $\alpha_u = \beta_u = 1$, $\alpha_d = \beta_d = 0$), having an amplification factor, $A_\mathrm{up}$, so we need $|A| \geq |A_\mathrm{up}|$, hence
 \begin{align}
-|A| &= \exp \left( -c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) \right)
+	\exp \left( -c \left(\alpha_u - \alpha_d\right) \left( 1 - \cos k\Delta x \right) \right) &\geq \exp \left( -c \left(1 - \cos k\Delta x \right) \right) \quad \forall k\Delta x
 %
-\intertext{and given $1 - \cos k\Delta x \geq 0$, then}
+\shortintertext{therefore}
 %
-\alpha_u - \alpha_d &\geq 0 \\
-%
-\shortintertext{which provides a lower bound on $\alpha_u$:}
-\alpha_u &\geq \alpha_d \label{eqn:lower-bound}
+	\alpha_u - \alpha_d &\leq 1 \text{ .} \label{eqn:twopoint-upper}
 \end{align}
-Additionally, we do not want more damping than an upwind scheme (where $\alpha_u = \beta_u = 1$, $\alpha_d = \beta_d = 0$), having an amplification factor, $A_\mathrm{up}$:
+Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$) then, using equations~\eqref{eqn:twopoint-lower} and \eqref{eqn:twopoint-upper},
 \begin{align}
-|A_\mathrm{up}| &= \exp \left( -c \left(1 - \cos k\Delta x \right) \right)
-%
-\intertext{So we need $|A| \geq |A_\mathrm{up}|$:}
-%
--c \left( \alpha_u - \alpha_d \right) \left(1 - \cos k\Delta x \right) &\geq -c \left( 1- \cos k\Delta x \right) \\
-\alpha_u - \alpha_d &\leq 1 \\
-\alpha_u &\leq 1 + \alpha_d
-%
-\intertext{which provides an upper bound on $\alpha_u$.  Combining with eqn~\eqref{eqn:lower-bound} we can bound $\alpha_u$ on both sides:}
-%
-\alpha_d \leq \alpha_u \leq 1 + \alpha_d
-\end{align}
-Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$), then
-\begin{align}
-	1 - \alpha_u < \alpha_u &\leq 1 + (1 - \alpha_u) \\
-	0.5 \leq \alpha_u &\leq 1
-%
-\shortintertext{and, since $\alpha_u + \alpha_d = 1$, then}
-%
-	0 \leq \alpha_d &\leq 0.5
+	0.5 \leq \alpha_u &\leq 1 \text{,} \label{eqn:vn:upwind} \\
+	0 \leq \alpha_d &\leq 0.5 \label{eqn:vn:downwind}
 \end{align}
 
 \subsection*{Three-point analysis}
-We start again from equation~\eqref{eqn:advectionLR} but this time approximate $\phi_L$ and $\phi_R$ using three points:
+We start again from equation~\eqref{eqn:advectionLR} but this time approximate $\phi_L$ and $\phi_R$ using three points,
 \begin{align}
 	\phi_L &= \alpha_{uu} \phi_{j-2} + \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
 	\phi_R &= \alpha_{uu} \phi_{j-1} + \alpha_u \phi_j + \alpha_d \phi_{j+1}
@@ -93,7 +74,7 @@ A = \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \
 %
 \alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x \geq 0
 \end{align}
-If $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ then $\alpha_u - \alpha_d \geq \alpha_{uu}$, and if $\cos k\Delta x = 0$ and $\cos 2k\Delta x = -1$ then $\alpha_u - \alpha_d \geq -\alpha_{uu}$.  Hence we find that
+If $k\Delta x = \pi$ then $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ and $\alpha_u - \alpha_d \geq \alpha_{uu}$.  If $k\Delta x = \pi / 2$ then $\cos k\Delta x = 0$ and $\cos 2k\Delta x = -1$ and $\alpha_u - \alpha_d \geq -\alpha_{uu}$.  Hence we find that
 \begin{align}
 	\alpha_u - \alpha_d &\geq |\alpha_{uu}| \label{eqn:uuConstraint}
 %
@@ -102,4 +83,4 @@ If $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ then $\alpha_u - \alpha_d \ge
 	\alpha_u - \alpha_d &\geq \max_{p\:\in\:P} |\alpha_p|
 \end{align}
 where the peripheral cells $P$ is the set of all stencil cells except for the upwind and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
-
+We hypothesise that the three stability constraints (equations~\ref{eqn:vn:upwind}, \ref{eqn:vn:downwind} and \ref{eqn:uuConstraint}) are necessary \TODO{but not sufficient?  they are sufficient in our tests} for a transport scheme on arbitrarily-structured meshes.

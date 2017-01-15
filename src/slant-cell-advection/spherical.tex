@@ -1,6 +1,6 @@
 \section*{Appendix B: Mesh geometry on a spherical Earth}
 
-The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these global Cartesian coordinates.
+The cubicFit transport scheme is implemented using the OpenFOAM CFD library.  Unlike many atmospheric models that use spherical coordinates, OpenFOAM uses global, three-dimensional Cartesian coordinates with the $z$-axis pointing up through the North pole.  In order to perform the experiments on a spherical Earth presented in section~\ref{sec:deformationSphere}, it is necessary for velocity fields and mesh geometries to be expressed in these global Cartesian coordinates.
 
 \subsection*{Velocity field specification}
 The non-divergent velocity field in section~\ref{sec:deformationSphere} is specified as a streamfunction $\Psi(\lambda, \theta)$.  Instead of calculating velocity vectors, the flux $\mathbf{u}_f \cdot \mathbf{S}_f$ through a face $f$ is calculated directly from the streamfunction,

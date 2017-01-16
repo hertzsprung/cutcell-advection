@@ -13,17 +13,19 @@ Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mo
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf}
-	\caption{Cell edges of (a) basic terrain-following, (b) cut cell, and (c) slanted cell two-dimensional $x$--$z$ meshes used for the tracer transport tests in section~\ref{sec:mountainAdvection}.  The peak mountain height $h_0 = \SI{5}{\kilo\meter}$.  Only the lowest \SI{10}{\kilo\meter} for the central region of the domain in shown.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
+	\caption{Two dimensional $x$-$z$ meshes created with the (a) basic terrain-following, (b) cut cell, and (c) slanted cell methods, and used for the tracer transport tests in section~\ref{sec:mountainAdvection}.  Cell edges are marked by thin black lines.  The peak mountain height $h_0 = \SI{5}{\kilo\meter}$.
+The velocity field is the same for all mesh types with streamlines marked on each panel by thick red lines.  The velocity field (equation~\ref{eqn:streamfunc-btf}) follows the lower boundary and becomes entirely horizontal above $H_1 = \SI{10}{\kilo\meter}$.
+Only the lowest \SI{10}{\kilo\meter} for the central region of the domain in shown.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
 	\label{fig:mountainAdvection-meshes}
 \end{figure}
 
-
-Similar to the approach by \citep{shaw-weller2016}, a velocity field is chosen that is everywhere tangential to the surfaces of a terrain-following coordinate, and the coordinate is chosen so that flow is misaligned with the BTF, cut cell and slanted cell meshes away from the ground.
+Similar to the approach by \citep{shaw-weller2016}, a velocity field is chosen that is everywhere tangential to the surfaces of a terrain-following coordinate, and the coordinate is chosen so that flow is misaligned with the BTF, cut cell and slanted cell meshes away from the ground (figure~\ref{fig:mountainAdvection-meshes}).
 This ensures that flow always crosses mesh surfaces in order to challenge the transport scheme.   This choice also ensures that there is no normal flow at the lower boundary.  A streamfunction $\Psi$ is used so that the discrete velocity field is non-divergent, such that
 \begin{equation}
 	\Psi(x,z) = -u_0 H_1 \frac{z - h}{H_1 - h} \label{eqn:streamfunc-btf}
 \end{equation}
 where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.  The velocity field becomes horizontal at $H_1 = \SI{10}{\kilo\meter}$.  Note that $H_1$ is chosen to be much smaller than the domain height $H$ in equation~\eqref{eqn:btf} so that flow crosses the surfaces of the BTF mesh.
+This is evident in figure~\ref{fig:mountainAdvection-meshes}a where the the velocity streamlines are tangential to the mesh only at the ground.
 The horizontal and vertical components of velocity, $u$ and $w$, are then given by
 \begin{align}
 	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H_1}{H_1 - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H_1 \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H_1 - z}{\left( H_1 - h \right)^2} \label{eqn:uw-btf} \\

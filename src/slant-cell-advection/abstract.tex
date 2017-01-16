@@ -1,13 +1,14 @@
 \begin{abstract}
-The inclusion of terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade accuracy and challenge the stability of transport schemes.
-Multidimensional transport schemes avoid splitting errors on distorted and arbitrarily structured meshes, and method-of-lines schemes have low computational cost because they perform reconstructions at fixed points.
+Including terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade accuracy and challenge the stability of transport schemes.
+Multidimensional transport schemes avoid splitting errors on distorted and arbitrarily-structured meshes, and method-of-lines schemes have low computational cost because they perform reconstructions at fixed points.
 
 This paper presents a multidimensional method-of-lines finite volume transport scheme, ``cubicFit'', which is designed to be numerically stable on arbitrary meshes.
-Constraints derived from a von Neumann stability analysis are imposed during model initialisation to obtain stability and improve accuracy in distorted regions of the mesh, and near steeply-sloping lower boundaries.
-The reconstruction method has a low computational cost because most calculations depend upon the mesh only, with just one vector multiply per face needed per time-step.
+Constraints derived from a von Neumann analysis are imposed during model initialisation to obtain stability and improve accuracy in distorted regions of the mesh, and near steeply-sloping lower boundaries.
+The reconstruction method has a low computational cost because most calculations depend upon the mesh only, needing just one vector multiply per face per time-step.
 
-The cubicFit scheme is evaluated using three, idealised numerical tests of atmospheric flow.  The first is a more challenging variant of a standard horizontal transport test on a severely distorted terrain-following mesh.  The second is a new test case that assesses accuracy near the ground by transporting a tracer at the lower boundary over steep terrain on terrain-following and cut-cell meshes.
-The third is a standard test case that deforms a tracer in a vortical flow on hexagonal icosahedra and cubed-sphere meshes.
-In all tests, cubicFit is stable and largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a multidimensional linear upwind transport scheme.  The cubicFit scheme is second-order accurate regardless of mesh distortions.
+The cubicFit scheme is evaluated using three, idealised numerical tests.  The first is a variant of a standard horizontal transport test on severely distorted terrain-following meshes.
+The second is a new test case that assesses accuracy near the ground by transporting a tracer at the lower boundary over steep terrain on terrain-following meshes, cut-cell meshes, and new, slanted-cell meshes that do not suffer from severe time-step constraints associated with cut cells.
+The third, standard test deforms a tracer in a vortical flow on hexagonal-icosahedra and cubed-sphere meshes.
+In all tests, cubicFit is stable and largely insensitive to mesh distortions, and cubicFit results are more accurate than those obtained using a multidimensional linear upwind transport scheme.  The cubicFit scheme is second-order convergent regardless of mesh distortions.
 \end{abstract}
 

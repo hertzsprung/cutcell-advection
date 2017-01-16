@@ -9,8 +9,8 @@ set key tmargin
 
 set xlabel "$\\Delta \\lambda$" offset 0,0.5
 
-set xrange [10:0.4]
-set yrange [1e-2:1]
+set xrange [10:0.2]
+set yrange [3e-3:1]
 
 set multiplot layout 1,2
 

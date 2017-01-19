@@ -92,7 +92,7 @@ A small phase lag is apparent when the numerical solution marked with solid cont
 Numerical errors are more clearly revealed by subtracting the analytic solution from the numerical solution.
 Error fields are compared between BTF, cut cell and slanted cell meshes using the linearUpwind scheme (figures~\ref{fig:mountainAdvection-errors}a, \ref{fig:mountainAdvection-errors}b and \ref{fig:mountainAdvection-errors}c respectively) and the cubicFit scheme (figures~\ref{fig:mountainAdvection-errors}d, \ref{fig:mountainAdvection-errors}e and \ref{fig:mountainAdvection-errors}f respectively).
 Results are least accurate using the linearUpwind scheme on the slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}c).  The final tracer is slightly distorted and does not extend far enough towards the ground.
-The $\ell_\infty$ error magnitude is reduced by using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b), but the error's shape remains the same.
+The $\ell_\infty$ error magnitude is reduced by using the linearUpwind scheme on the cut cell mesh (figure~\ref{fig:mountainAdvection-errors}b), but the shape of the error remains the same.
 The cubicFit scheme is less sensitive to the choice of mesh with similar error magnitudes on the BTF mesh (figure~\ref{fig:mountainAdvection-errors}d), cut cell mesh (figure~\ref{fig:mountainAdvection-errors}e) and slanted cell mesh (figure~\ref{fig:mountainAdvection-errors}f).  Errors using the cubicFit scheme on cut cell and slanted cell meshes are much smaller than the errors using the linearUpwind scheme on the same meshes.
 
 \begin{figure}

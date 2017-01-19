@@ -141,7 +141,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
-	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
+	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular $x$--$z$ mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  Each stencil belongs to the face marked by a thick line.  The local coordinate system is shown, having an $x$ direction normal to the face a $y$ direction tangent to the face.  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
 Here we have assumed that the lower boundary has a Neumann boundary condition and so boundary faces are excluded from the stencils.}
 	\label{fig:boundaryStencils}
 \end{figure}
@@ -198,7 +198,7 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 	\centering
 	\includegraphics{../fig-stabilisation/fig-stabilisation.pdf}
 %
-	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratic polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data are labelled with their respective weights.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red.  The upwind point is located at $(-1, 1.8)$ and the downwind point at $(0.62, 1.9)$, and the peripheral points are at $(-2.8, 2.4)$, $(-1.6, 2.7)$ and $(-1.2, 2.2)$.}
+	\caption{A one-dimensional least squares fits to a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratic polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data are labelled with their respective weights.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red with italicised labels.  The upwind point is located at $(-1, 1.8)$ and the downwind point at $(0.62, 1.9)$, and the peripheral points are at $(-2.8, 2.4)$, $(-1.6, 2.7)$ and $(-1.2, 2.2)$.}
 	\label{fig:oscillatory1D}
 \end{figure}
 

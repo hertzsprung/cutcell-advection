@@ -2,7 +2,7 @@
 \label{sec:deformationSphere}
 The tests so far have used flows that are mostly uniform on meshes that are based on rectangular cells.
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth, as specified by Lauritzen et al. \citep{lauritzen2012}.  
-Results are compared between linearUpwind and cubicFit schemes using hexagonal icosahedra and cubed-spheres.
+Results are compared between linearUpwind and cubicFit schemes using hexagonal-icosahedra and cubed-spheres.
 Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
 Figure~\ref{fig:sphere-meshes}a shows an example of such a mesh that has been refined three times.
 Cubed-sphere meshes are constructed using an equi-distant gnomic projection of a cube having a uniform Cartesian mesh on each panel \citep{staniforth-thuburn2012}.
@@ -77,7 +77,8 @@ The results in figure~\ref{fig:deformationSphere-evolution} are obtained using t
 \end{figure}
 
 To determine the order of convergence and relative accuracy of the linearUpwind and cubicFit schemes, the same test was performed at a variety of mesh spacings betweeen $\Delta \lambda = \ang{8.61}$ and $\Delta \lambda = \ang{0.271}$ on hexagonal icosahedra and cubed-sphere meshes.  The results are shown in figure~\ref{fig:deformationSphere-gaussian-convergence}.
-The solution is slow to converge at coarse resolutions, but both linearUpwind and cubicFit schemes achieve second-order accuracy at smaller mesh spacings.  This behaviour agrees with the results from Lauritzen et al. \citep{lauritzen2012}.  For any given mesh type and mesh spacing, cubicFit is more accurate than linearUpwind.  The linearUpwind scheme achieves more accurate results on hexagonal icosahedra compared to cubed-sphere meshes, but cubicFit is less sensitive to the mesh type.
+The solution is slow to converge at coarse resolutions, but both linearUpwind and cubicFit schemes achieve second-order accuracy at smaller mesh spacings.  This behaviour agrees with the results from Lauritzen et al. \citep{lauritzen2012}.
+Results are more accurate using hexagonal icosahedra compared to cubed-sphere meshes, and for any given mesh type and mesh spacing, the cubicFit scheme is more accurate than the linearUpwind scheme.
 
 A slightly more challenging variation of the same test is performed using a quasi-smooth tracer field is defined as the sum of two cosine bells,
 \begin{align}

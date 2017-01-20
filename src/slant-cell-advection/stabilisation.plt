@@ -25,7 +25,7 @@ set label "(a)" at -4,4
 set label "0.127" at -2.8,2.7 offset char -4,0 
 set label "-0.958" at -1.6,2.4 offset char -4.7,0 
 set label "-0.352" at -1.2,2.2 offset char 0.3,char 0.6 
-set label "\\textit{1.822}" at -1,1.8 offset char -4,char -0.5 textcolor lt 7
+set label "\\textit{1.822}" at -1.1,1.8 offset char -4,char -0.5 textcolor lt 7
 set label "0.361" at 0.4,1.9 offset char 1.5,0 
 
 plot cubic(x) lc -1 lw 1.7 notitle, \

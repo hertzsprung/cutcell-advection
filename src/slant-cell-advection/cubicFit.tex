@@ -118,7 +118,7 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $
 	\end{bmatrix} \label{eqn:cubicFit:weighted-sum}
 \end{align}
 where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
-Note that the majority of the least squares fit procedure depends on the mesh geometry only.  An implementation may precompute the pseudo-inverse for each stencil during model initialisation, and only the first row needs to be stored.
+Note that the majority of the least squares fit procedure depends on the mesh geometry only.  An implementation may precompute the pseudo-inverse for each stencil during model initialisation, and only the first row needs to be stored.  Since each face has two possible stencils depending on the orientation of the velocity relative to the face, the implementation stores two sets of weights for each face.
 Knowledge of the values of $\bm{\phi}$ is only required to calculate the weighted mean given by equation~\eqref{eqn:cubicFit:weighted-sum}, which is evaluated once per face per timestep.
 
 In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.

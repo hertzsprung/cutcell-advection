@@ -39,7 +39,7 @@ Multidimensional schemes are almost always horizontally-multidimensional because
 Very few three-dimensional schemes have been suggested for use in atmospheric models \citep[e.g.][]{miura2007,yeh2007,gassmann2013} although such schemes might be expected to be more accurate on distorted meshes with steep terrain.
 The multidimensional scheme developed in \citep{weller-shahrokhi2014} is unusual because it has no horizontal--vertical splitting and it has been used in two-dimensional flows on Cartesian $x$--$z$ planes with distorted meshes \citep{shaw-weller2016,weller2017}.
 
-In this paper, we present a new multidimensional method-of-lines scheme, `cubicFit', that improves upon the scheme in \citep{weller-shahrokhi2014} and avoids all splitting errors.  To reconstruct values at cell faces, the scheme fits a multidimensional polynomial over a cubic, upwind-biased stencil using a least-squares approach.  The implementation uses constraints derived from a von Neumann stability analysis to select appropriate polynomial fits for stencils in highly-distorted mesh regions.  The least-squares procedure depends upon the mesh geometry only, hence the scheme has a low computational cost that is comparable to dimensionally-split schemes, requiring only $n$ multiplies per cell face per time-step where $n$ is the size of the stencil.
+In this paper, we present a new multidimensional method-of-lines scheme, `cubicFit', that improves upon the scheme in \citep{weller-shahrokhi2014} and avoids all splitting errors.  To reconstruct values at cell faces, the scheme fits a multidimensional polynomial over a cubic, upwind-biased stencil using a least-squares approach.  The implementation uses constraints derived from a von Neumann stability analysis to select appropriate polynomial fits for stencils in highly-distorted mesh regions.  Almost all of the least-squares procedure depends upon the mesh geometry only and reconstruction weights can be pre-computed without knowledge of the velocity field or tracer field.  Hence, the cubicFit scheme has a low computational cost that is comparable to dimensionally-split schemes, requiring only $n$ multiplies per cell face per time-step where $n$ is the size of the stencil.
 
 The remainder of this paper is organised as follows.
 Section~\ref{sec:transport} starts by discretising the transport equation using a method-of-lines approach, before describing the cubicFit transport scheme and a standard multidimensional linear upwind transport scheme.
@@ -48,17 +48,4 @@ The first standard test follows Sch\"ar et al. \citep{schaer2002}, transporting 
 The second is a new test case designed to assess numerical accuracy next to a mountainous lower boundary.  In this test, a tracer placed at the ground is transported over steep slopes using terrain-following, cut cell and slanted cell meshes.
 The third is a standard test of deformational flow on a spherical Earth, specified by Lauritzen et al. \citep{lauritzen2012}, which we use to assess the cubicFit transport scheme on hexagonal icosahedra and cubed-sphere meshes.
 Concluding remarks are made in section~\ref{sec:conclusion}.
-
-
-%\TODO{talk about accuracy near the ground: what is there in the literature about this?  there's a bunch of stuff that's not met-specific}
-% walko-avissar Weak oscillations generated near the lower boundary in OLAM 
-% almgren1997 says that losing 2nd order accuracy at boundary should not be a problem for atmospheric flows over orography -- **do we think this is (still) true?**
-% ye1999 achieve 2nd order near the boundary but use dimensional splitting
-% zaengl2012: ICON, noisy small-scale circulations with weak/no ambient flow, see zaengl2002, zaengl2004, klemp2011
-
-
-% something about why we want accuracy near the ground for weather forecasts: clouds can form near the surface, fog, pollution etc
-% describe existing classes of transport schemes used in atmospheric models (use lauritzen2014)
-% existing uses of least squares fit
-
 

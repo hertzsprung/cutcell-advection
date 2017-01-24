@@ -5,7 +5,7 @@ The horizontal transport test in the previous section is useful for assessing nu
 Here we present another variant of the standard horizontal transport test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
 
-Cut cell meshes are constructed using the ASAM grid generator \citep{jaehn2015,asam2010}.  Slanted cell meshes are constructed following the approach by \citep{shaw-weller2016}: vertices that are underground are moved up to the surface and zero-area faces and zero-volume cells are removed.  Unlike \citep{shaw-weller2016}, vertices are never moved downwards.
+Cut cell meshes are constructed using the ASAM grid generator \citep{jaehn2015,asam2010}.  Slanted cell meshes are constructed following the approach by Shaw and Weller \citep{shaw-weller2016}: vertices that are underground are moved up to the surface and zero-area faces and zero-volume cells are removed.  Unlike \citep{shaw-weller2016}, vertices are never moved downwards.
 
 Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
 Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mountainAdvection-meshes}a) while the cut cell mesh (figure~\ref{fig:mountainAdvection-meshes}b) and slanted cell mesh (figure~\ref{fig:mountainAdvection-meshes}c) are orthogonal everywhere except for cells nearest the ground.
@@ -24,15 +24,15 @@ This ensures that flow always crosses mesh surfaces in order to challenge the tr
 \begin{equation}
 	\Psi(x,z) = -u_0 H_1 \frac{z - h}{H_1 - h} \label{eqn:streamfunc-btf}
 \end{equation}
-where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.  The velocity field becomes horizontal at $H_1 = \SI{10}{\kilo\meter}$.  Note that $H_1$ is chosen to be much smaller than the domain height $H$ in equation~\eqref{eqn:btf} so that flow crosses the surfaces of the BTF mesh.
+where $u_0 = \SI{10}{\meter\per\second}$, which is the horizontal velocity where $h(x) = 0$.  The velocity field becomes purely horizontal at $H_1 = \SI{10}{\kilo\meter}$.  Note that $H_1$ is chosen to be much smaller than the domain height $H$ in equation~\eqref{eqn:btf} so that flow crosses the surfaces of the BTF mesh.
 This is evident in figure~\ref{fig:mountainAdvection-meshes}a where the the velocity streamlines are tangential to the mesh only at the ground.
 The horizontal and vertical components of velocity, $u$ and $w$, are then given by
 \begin{align}
-	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H_1}{H_1 - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H_1 \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H_1 - z}{\left( H_1 - h \right)^2} \label{eqn:uw-btf} \\
+	u &= -\frac{\partial \Psi}{\partial z} = u_0 \frac{H_1}{H_1 - h}, \quad w = \frac{\partial \Psi}{\partial x} = u_0 H_1 \frac{\mathrm{d} h}{\mathrm{d} x} \frac{H_1 - z}{\left( H_1 - h \right)^2} \label{eqn:uw-btf} \text{ ,}\\
 	\frac{\mathrm{d} h}{\mathrm{d} x} &= - h_0 \left[ 
 		\beta \cos^2 \left( \alpha x \right) \sin \left( 2 \beta x \right) +
 		\alpha \cos^2 \left( \beta x \right) \sin \left( 2 \alpha x \right)
-	\right]
+	\right] \text{ .}
 \end{align}
 The flow is predominantly horizontal with non-zero vertical velocities only above sloping terrain.
 Unlike the horizontal transport test in \citep{schaer2002}, the velocity field presented here extends from the top of the domain all the way to the ground.
@@ -67,7 +67,7 @@ An analytic solution at \SI{10000}{\second} is obtained by calculating the new h
 By solving this equation we find that \(x(t=\SI{10000}{\second}) = \SI{54342.8}{\meter}\) when $h_0 = \SI{5}{\kilo\meter}$.
 
 The tracer density boundary conditions are the same as those in the previous test.
-Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, cubicFit uses only inlet boundary values in this test case.
+Since the cubicFit transport scheme uses values at boundaries with Dirichlet boundary conditions, the cubicFit scheme uses only inlet boundary values in this test case.
 
 \begin{figure}
 	\centering
@@ -77,7 +77,7 @@ Since the cubicFit transport scheme uses values at boundaries with Dirichlet bou
 	\label{fig:mountainAdvection-tracer}
 \end{figure}
 
-Three series of tests were performed using similar configurations.  The first series uses a peak mountain height of $h_0 = \SI{5}{\kilo\meter}$ to examine errors on different mesh types using the two transport schemes.  The second series varies the peak mountain height to examine the sensitivity of the transport schemes to mesh distortions.  The third series verifies accuracy at Courant numbers close to 1 and examines the longest stable timestep for different mesh types.
+Three series of tests were performed using similar configurations.  The first series uses a peak mountain height of $h_0 = \SI{5}{\kilo\meter}$ to examine errors on different mesh types using the two transport schemes.  The second series varies the peak mountain height to examine the sensitivity of the transport schemes to mesh distortions.  The third series verifies accuracy at Courant numbers close to 1 and examines the longest stable time-step for different mesh types.
 
 For the first series of tests with $h_0 = \SI{5}{\kilo\meter}$, tracer contours at the initial time $t=\SI{0}{\second}$, half-way time $t=\SI{5000}{\second}$, and end time $t=\SI{10000}{\second}$ are shown in figure~\ref{fig:mountainAdvection-tracer} using the cubicFit scheme on the BTF mesh.  As apparent at $t=\SI{5000}{\second}$, the tracer is distorted by the terrain-following velocity field as it passes over the mountain, but its original shape is restored once it has cleared the mountain by $t=\SI{10000}{\second}$.
 A small phase lag is apparent when the numerical solution marked with solid contour lines is compared with the analytic solution marked with dotted contour lines.
@@ -99,7 +99,7 @@ The cubicFit scheme is less sensitive to the choice of mesh with similar error m
 	\centering
 	\includegraphics{../fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf}
 %
-	\caption{Error measures for the two-dimensional tracer transport tests over a mountainous lower boundary.  Peak mountain heights $h_0$ are from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, cut cell and slanted cell meshes using the linearUpwind and cubicFit schemes.  At $h_0 = \SI{0}{\kilo\meter}$ the terrain is entirely flat and the BTF, cut cell and slanted cell meshes are identical.  At $h_0 = \SI{6}{\kilo\meter}$ the linearUpwind scheme is unstable on the slanted cell mesh.}
+	\caption{Error measures for the two-dimensional tracer transport tests over a mountainous lower boundary.  Peak mountain heights $h_0$ are from \SIrange{0}{6}{\kilo\meter}.  Results are compared on BTF, cut cell and slanted cell meshes using the linearUpwind and the cubicFit schemes.  At $h_0 = \SI{0}{\kilo\meter}$ the terrain is entirely flat and the BTF, cut cell and slanted cell meshes are identical.  At $h_0 = \SI{6}{\kilo\meter}$ the linearUpwind scheme is unstable on the slanted cell mesh.}
 	\label{fig:mountainAdvection-l2ByMountainHeight}
 \end{figure}
 
@@ -114,14 +114,14 @@ In contrast, the cubicFit scheme is less sensitive to the mesh type and errors g
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
-	\caption{Longest stable timesteps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test over a mountainous lower boundary.  Results were obtained on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  The tests were integrated with a maximum Courant number close to 1, while $\Delta t_\mathrm{max}$ is calculated as the timestep corresponding to a maximum Courant number of exactly 1.}
+	\caption{Longest stable time-steps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test over a mountainous lower boundary.  Results were obtained on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  The tests were integrated with a maximum Courant number close to 1, while $\Delta t_\mathrm{max}$ is calculated as the time-step corresponding to a maximum Courant number of exactly 1.}
 	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 
-A final series of tests were performed on BTF, slanted cell and cut cell meshes using the cubicFit scheme with a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, timesteps were chosen so that the maximum Courant number was close to, but smaller than, one.  Stable results were obtained in all tests and the cubic scheme was largely insensitive to the choice of timestep.
+A final series of tests were performed on BTF, slanted cell and cut cell meshes using the cubicFit scheme with a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, time-steps were chosen so that the maximum Courant number was close to, but smaller than, one.  Stable results were obtained in all tests and the cubic scheme was largely insensitive to the choice of time-step.
 
-This series of tests also enables a comparison of longest stable timesteps between mesh types.  The longest stable timestep for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max(\mathrm{Co})$ where $\Delta t$ is the timestep used in a particular test run and $\max(\mathrm{Co})$ is the maximum Courant number for that test run.
-The longest stable timesteps for BTF, cut cell and slanted cell meshes are presented in figure~\ref{fig:mountainAdvection-maxdt}.  BTF meshes permit the longest timesteps of all three meshes since cells are almost uniform in volume.  As expected, the longest stable timestep scales linearly with BTF mesh spacing.
-There is no such linear scaling on cut cell meshes because these meshes can have arbitrarily small cells.  The timestep constraints on cut cell meshes are the most severe of the three mesh types.  Slanted cell meshes have a slightly stronger timestep constraint than BTF meshes, but still exhibit the same, predictable linear scaling with mesh spacing.
+This series of tests also enables a comparison of longest stable time-steps between mesh types.  The longest stable time-step for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max(\mathrm{Co})$ where $\Delta t$ is the time-step used in a particular test run and $\max(\mathrm{Co})$ is the maximum Courant number for that test run.
+The longest stable time-steps for BTF, cut cell and slanted cell meshes are presented in figure~\ref{fig:mountainAdvection-maxdt}.  BTF meshes permit the longest time-steps of all three mesh types since cells are almost uniform in volume.  As expected, the longest stable time-step scales linearly with BTF mesh spacing.
+There is no such linear scaling on cut cell meshes because these meshes can have arbitrarily small cells.  The time-step constraints on cut cell meshes are the most severe of the three mesh types.  Slanted cell meshes have a slightly stronger time-step constraint than BTF meshes but still exhibit the same, predictable linear scaling with mesh spacing.
 
 The transport tests presented in this section demonstrate that the cubicFit scheme is suitable for flows over very steep terrain on two-dimensional terrain-following, cut cell and slanted cell meshes.  The cubicFit scheme is less sensitive to the mesh type and mountain steepness compared to the linearUpwind scheme.  The linearUpwind scheme becomes unstable over very steep slopes but the cubicFit scheme is stable for all tests.  In the next section, we evaluate the cubicFit scheme using more complex, deformational flows on icosahedral meshes and cubed-sphere meshes.

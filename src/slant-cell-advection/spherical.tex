@@ -7,7 +7,7 @@ The non-divergent velocity field in section~\ref{sec:deformationSphere} is speci
 \begin{align}
 	\mathbf{u}_f \cdot \mathbf{S}_f	= \sum_{e\:\in\:f} \mathbf{e} \cdot \mathbf{x}_e \Psi(e) \label{eqn:nondiv-spherical-flux}
 \end{align}
-where $e \in f$ denotes the edges $e$ of face $f$, $\mathbf{e}$ is the edge vector joining its two vertices, $\mathbf{x}_e$ is the position vector of the edge midpoint, and $\Psi(e)$ is the streamfunction evaluated at the same position.
+where $e \in f$ denotes the edges $e$ of face $f$, $\mathbf{e}$ is the edge vector joining the two vertices of the edge, $\mathbf{x}_e$ is the position vector of the edge midpoint, and $\Psi(e)$ is the streamfunction evaluated at the same position.
 Edge vectors are directed in a counter-clockwise orientation.
 
 \subsection*{Spherical mesh construction}
@@ -18,7 +18,7 @@ For tests on a spherical Earth, we override the default configuration and calcul
 
 A face is classified as either a surface face or radial face.
 A surface face has any number of vertices, all of equal radius.
-A radial faces have four vertices with two different radii, $r_1$ and $r_2$, and two different horizontal coordinates, $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
+A radial face has four vertices with two different radii, $r_1$ and $r_2$, and two different horizontal coordinates, $(\lambda_1, \theta_1)$ and $(\lambda_2, \theta_2)$.
 A radial face centre is modified so that it has a radius $R_e$.  The latitudinal and longitudinal components of a radial face centre need no modification.
 The face area $A_f$ for a radial face $f$ is the area of the annular sector,
 \begin{align}
@@ -28,7 +28,7 @@ where $d$ is the great-circle distance between $(\lambda_1, \theta_1)$ and $(\la
 
 To calculate the centre of a surface face $f$, a new vertex is created that is positioned at the mean of the face vertices.  Note that this centre position, $\mathbf{\tilde{c}}_f$, is used in intermediate calculations and it is not the face centre position.
 Next, the surface face is subdivided into spherical triangles that share this new vertex.
-The face centre direction and radius are calculated separately.  The face centre direction $\mathbf{\hat{r}}$ is the mean of the spherical triangle centres weighted by their solid angle
+The face centre direction and radius are calculated separately.  The face centre direction $\mathbf{\hat{r}}$ is the mean of the spherical triangle centres weighted by their solid angle,
 \begin{align}
 	\mathbf{\hat{r}} = \frac
 	{\sum_{t\:\in\:f}{\Omega_t \left(\mathbf{x}_{t,1} + \mathbf{x}_{t,2} + \mathbf{\tilde{c}}_f \right)}}
@@ -43,19 +43,19 @@ The face centre radius $r$ is the mean radius of the face vertices, again weight
 \end{align}
 where the solid angle $\Omega_f$ of face $f$ is the sum of the solid angles of the constituent spherical triangles,
 \begin{align}
-	\Omega_f = \sum_{t\in f}{\Omega_t}
+	\Omega_f = \sum_{t\in f}{\Omega_t} \text{ .}
 \end{align}
-We use equations~\eqref{eqn:face-centre-dir} and \eqref{eqn:face-centre-mag} to calculate the centre $\mathbf{c}_f$ of the face,
+We use equations~\eqref{eqn:face-centre-dir} and \eqref{eqn:face-centre-mag} to calculate the centre $\mathbf{c}_f$ of the face $f$,
 \begin{align}
 	\mathbf{c}_f = r\:\mathbf{\hat{r}} \label{eqn:face-centre}
 \end{align}
 The area vector $\mathbf{S}_f$ of the surface face $f$ is the sum of the spherical triangle areas \citep{vanbrummelen2013},
 \begin{align}
-	\mathbf{S}_f = r^2 \Omega_f \mathbf{\hat{r}}
+	\mathbf{S}_f = r^2 \Omega_f \mathbf{\hat{r}} \text{ .}
 \end{align}
 Cell centres and cell volumes are corrected by considering faces that are not normal to the sphere such that
 \begin{align}
-	\frac{\left(\mathbf{S}_f \cdot \mathbf{c}_f\right)^2}{\left\lvert \mathbf{S}_f \right\rvert^2 \left\lvert \mathbf{c}_f \right\rvert^2} > 0 \label{eqn:surface-faces}
+	\frac{\left(\mathbf{S}_f \cdot \mathbf{c}_f\right)^2}{\left\lvert \mathbf{S}_f \right\rvert^2 \left\lvert \mathbf{c}_f \right\rvert^2} > 0 \label{eqn:surface-faces} \text{ .}
 \end{align}
 Let $\mathcal{F}$ be the set of faces satisfying equation~\eqref{eqn:surface-faces}.  Then, the cell volume $\mathcal{V}_c$ is
 \begin{align}

@@ -6,7 +6,7 @@ We start with the conservation equation for a dependent variable $\phi$ that is 
 \begin{align}
 \frac{\partial \phi_j}{\partial t} &= - u \frac{\phi_R - \phi_L}{\Delta x} \label{eqn:advectionLR} \\
 %
-\shortintertext{where the left and right fluxes, $\phi_L$ and $\phi_R$, are weighted averages of the neighbouring points.  Assuming that $u$ is positive}
+\intertext{where the left and right fluxes, $\phi_L$ and $\phi_R$, are weighted averages of the neighbouring points.  Assuming that $u$ is positive}
 %
 \phi_L &= \alpha_u \phi_{j-1} + \alpha_d \phi_j \\
 \phi_R &= \beta_u \phi_j + \beta_d \phi_{j+1}
@@ -35,7 +35,7 @@ A &= e^{-c \Re} e^{-\iu c \Im} \\
 %
 \shortintertext{and the complex modulus of $A$ is}
 %
-|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right)
+|A| &= e^{-c \Re} = \exp \left( -c \left( \beta_u - \alpha_d + \left(\beta_d - \alpha_u \right) \cos k\Delta x \right) \right) \text{ .}
 \end{align}
 For stability we need $|A| \leq 1$ and, imposing the additional constraints that $\alpha_u = \beta_u$ and $\alpha_d = \beta_d$, then
 \begin{align}
@@ -56,7 +56,7 @@ Additionally, we do not want more damping than a first-order upwind scheme (wher
 Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$) then, using equations~\eqref{eqn:twopoint-lower} and \eqref{eqn:twopoint-upper},
 \begin{align}
 	0.5 \leq \alpha_u &\leq 1 \text{,} \label{eqn:vn:upwind} \\
-	0 \leq \alpha_d &\leq 0.5 \label{eqn:vn:downwind}
+	0 \leq \alpha_d &\leq 0.5 \label{eqn:vn:downwind} \text{ .}
 \end{align}
 
 \subsection*{Three-point analysis}
@@ -70,9 +70,9 @@ Substituting equation~\eqref{eqn:vn} into equation~\eqref{eqn:advectionLR} we fi
 \begin{align}
 A = \exp\left( -c \left[ \alpha_{uu} \left( e^{-ik\Delta x} - e^{-2ik\Delta x} \right) + \alpha_u \left( 1 - e^{-ik\Delta x} \right) + \alpha_d \left( e^{ik\Delta x} - 1 \right) \right] \right)
 %
-\intertext{So that, if the complex modulus $|A| \leq 1$ then}
+\intertext{so that, if the complex modulus $|A| \leq 1$ then}
 %
-\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x \geq 0
+\alpha_u - \alpha_d + \left( \alpha_{uu} - \alpha_u + \alpha_d \right) \cos k\Delta x - \alpha_{uu} \cos 2k\Delta x \geq 0 \text{ .}
 \end{align}
 If $k\Delta x = \pi$ then $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ and $\alpha_u - \alpha_d \geq \alpha_{uu}$.  If $k\Delta x = \pi / 2$ then $\cos k\Delta x = 0$ and $\cos 2k\Delta x = -1$ and $\alpha_u - \alpha_d \geq -\alpha_{uu}$.  Hence we find that
 \begin{align}
@@ -83,5 +83,5 @@ We also find that the same condition holds replacing $\alpha_{uu}$ with $\alpha_
 %
 	\alpha_u - \alpha_d &\geq \max_{p\:\in\:P} |\alpha_p|
 \end{align}
-where the peripheral cells $P$ is the set of all stencil cells except for the upwind and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
+where the peripheral cells $P$ is the set of all stencil cells except for the upwind cell and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
 We hypothesise that the three stability constraints (equations~\ref{eqn:vn:upwind}, \ref{eqn:vn:downwind} and \ref{eqn:uuConstraint}) are necessary but not sufficient for a transport scheme on arbitrarily-structured meshes.

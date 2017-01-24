@@ -13,7 +13,7 @@ The terrain is wave-shaped, specified by the surface elevation $h$ such that
 \begin{align}
    h(x) &= h^\star \cos^2 ( \alpha x )
 %
-\intertext{where}
+\shortintertext{where}
 %
    h^\star(x) &= \left\{ \begin{array}{l l}
        h_0 \cos^2 ( \beta x ) & \quad \text{if $| x | < a$} \\
@@ -26,9 +26,9 @@ where $a = \SI{25}{\kilo\meter}$ is the mountain envelope half-width, $h_0 = \SI
 A basic terrain-following (BTF) mesh is constructed by using the terrain profile to modify the uniform mesh.
 The BTF method uses a linear decay function so that mesh surfaces become horizontal at the top of the model domain \citep{galchen-somerville1975},
 \begin{equation}
-	z(x,y) = \left( H - h(x,y) \right) \left( z^\star / H \right) + h(x,y) \label{eqn:btf}
+	z(x) = \left( H - h(x) \right) \left( z^\star / H \right) + h(x) \label{eqn:btf}
 \end{equation}
-where $z$ is the geometric height at a horizontal point $(x, y)$, $H$ is the height of the domain, $h(x,y)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
+where $z$ is the geometric height, $H$ is the height of the domain, $h(x)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
 
 A velocity field is prescribed with uniform horizontal flow aloft and zero flow near the ground,
 \begin{align}
@@ -38,7 +38,7 @@ A velocity field is prescribed with uniform horizontal flow aloft and zero flow 
 		0 & \quad \text{otherwise}
 	\end{array} \right.	
 \end{align}
-where $u_0 = \SI{10}{\meter\per\second}$, $z_1 = \SI{7}{\kilo\meter}$ and $z_2 = \SI{8}{\kilo\meter}$, as specified by Weller et al. \citep{weller2017}.
+where $u_0 = \SI{10}{\meter\per\second}$, $z_1 = \SI{7}{\kilo\meter}$ and $z_2 = \SI{8}{\kilo\meter}$.
 
 A tracer with density $\phi$ has the shape
 \begin{subequations}

@@ -3,13 +3,13 @@
 \begin{figure}
 	\centering
 	\includegraphics{../fig-interior-stencils/fig-interior-stencils.pdf}
-	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) rectangular and (b) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The velocity vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each timestep.}
+	\caption{Upwind-biased stencils for faces far away from the boundaries of two-dimensional (a) rectangular and (b) hexagon meshes.  The stencil is used to fit a multidimensional polynomial to cell centre values, $\phi_c$, marked by grey circles, in order to approximate the value $\phi_F$ at the face centroid marked by an open circle.  $\phi_u$ and $\phi_d$ are the values at the centroids of the upwind and downwind cells neighbouring the target face, drawn with a heavy line.  The velocity vector $\mathbf{u}_f$ is prescribed at face $f$ and determines the choice of stencil at each time-step.}
 	\label{fig:interiorStencils}
 \end{figure}
 
 The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding known values.
 To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.
-For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased and asymmetric, two stencils must be constructed for every interior face, and the appropriate stencil is chosen depending on the velocity direction at each face for every timestep.
+For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased and asymmetric, two stencils must be constructed for every interior face, and the appropriate stencil is chosen depending on the velocity direction at each face for every time-step.
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}a.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
@@ -119,7 +119,7 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $
 \end{align}
 where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
 Note that the majority of the least squares fit procedure depends on the mesh geometry only.  An implementation may precompute the pseudo-inverse for each stencil during model initialisation, and only the first row needs to be stored.  Since each face has two possible stencils depending on the orientation of the velocity relative to the face, the implementation stores two sets of weights for each face.
-Knowledge of the values of $\bm{\phi}$ is only required to calculate the weighted mean given by equation~\eqref{eqn:cubicFit:weighted-sum}, which is evaluated once per face per timestep.
+Knowledge of the values of $\bm{\phi}$ is only required to calculate the weighted mean given by equation~\eqref{eqn:cubicFit:weighted-sum}, which is evaluated once per face per time-step.
 
 In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
 It is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil, as shown by \citep{lashley2002,skamarock-menchaca2010}.

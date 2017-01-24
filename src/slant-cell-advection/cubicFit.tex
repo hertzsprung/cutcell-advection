@@ -13,9 +13,9 @@ For any mesh, every interior face connects two adjacent cells.  The velocity dir
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}a.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
 To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
-The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$:
+The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$,
 \begin{align}
-	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly}
+	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly} \text{ .}
 \end{align}
 A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  The stencil geometry is expressed in a local coordinate system with the face centroid as the origin so that the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
 
@@ -39,7 +39,7 @@ where $\theta$ is the angle between faces $f$ and $g$.  In this form, it can be 
 
 The set of opposing faces, $\mathrm{OF}$, is a subset of $G$, comprising those faces with $\mathrm{Opp} \geq 0.5$, and the face with the maximum opposedness.  Expressed in set notation, this is
 \begin{align}
-	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max_{g\:\in\:G}(\mathrm{Opp}(f, g)) \} 
+	\mathrm{OF}(f,c_u) \equiv \{ g : \mathrm{Opp}(f, g) \geq 0.5 \} \cup \{ g : \max_{g\:\in\:G}(\mathrm{Opp}(f, g)) \} \text{ .}
 \end{align}
 On a rectangular mesh, there is always one opposing face $g$, and it is exactly parallel to the face $f$ such that $\mathrm{Opp}(f, g) = 1$.
 
@@ -55,12 +55,12 @@ Having found these three sets, the stencil is constructed to comprise all intern
 	\centering
 	\includegraphics{../fig-double-upwind-stencil/fig-double-upwind-stencil.pdf}
 	%
-	\caption{A thirteen-point, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  Four stencil boundary faces, marked by black triangles, are also included.
+	\caption{A fourteen-point, upwind-biased stencil for face $f$ connecting the pentagonal upwind cell, $c_u$, and the downwind cell $c_d$.  The dashed lines denote the two faces of cell $c_u$ that oppose $f$, and black circles mark the centroids of the internal cells that are connected to these two opposing faces.  The stencil is extended outwards by including cells that share vertices with the three internal cells, where black squares mark these vertices.  Four stencil boundary faces, marked by black triangles, are also included.
 The local coordinate system $(x, y)$ has its origin at the centroid of face $f$, marked by an open circle, with $x$ normal to $f$ and $y$ perpendicular to $x$.}
 	\label{fig:double-upwind-stencil}
 \end{figure}
 
-Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  A boundary at the far left has dirichlet boundary conditions, and so the four stencil boundary faces are also included in the stencil, where the boundary face centres are marked by black triangles.  The resultant stencil contains 13 points.
+Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  A boundary at the far left has dirichlet boundary conditions, and so the four stencil boundary faces are also included in the stencil, where the boundary face centres are marked by black triangles.  The resultant stencil contains fourteen points.
 
 
 \subsubsection{Least squares fit}
@@ -90,7 +90,7 @@ For faces that are far away from the boundaries of a rectangular mesh, we fit th
 \end{align}
 which can be written as
 \begin{align}
-	\mathbf{B} \mathbf{a} = \bm{\phi} \label{eqn:unweightedLeastSquares}
+	\mathbf{B} \mathbf{a} = \bm{\phi} \label{eqn:unweightedLeastSquares} \text{ .}
 \end{align}
 The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is called the \textit{stencil matrix}, and it is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
@@ -99,7 +99,7 @@ A two-dimensional stencil is also used for the tests on spherical meshes in sect
 
 The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition,
 \begin{align}
-	\mathbf{a} = \mathbf{B}^+ \bm{\phi} \text{.}
+	\mathbf{a} = \mathbf{B}^+ \bm{\phi} \text{ .}
 %
 \intertext{Recall that the approximate value $\phi_F$ is equal to the constant coefficient $a_1$, which is a weighted mean of $\bm{\phi}$,} 
 %
@@ -128,7 +128,7 @@ We assign an integer \textit{multiplier} to each cell in the stencil, $\mathbf{m
 \begin{align}
 	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{m} \cdot \bm{\phi}
 \end{align}
-where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{diag}(\mathbf{m})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$:
+where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{diag}(\mathbf{m})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$,
 \begin{align}
 	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
 \end{align}
@@ -150,7 +150,7 @@ The majority of faces on a uniform two-dimensional mesh have stencils with more 
 In both cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
 
 For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.
-In two dimensions, a candidate polynomial has some combination of between one and nine terms from equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial satisfy.
+In two dimensions, a candidate polynomial has some combination of between one and nine terms from equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial must satisfy.
 
 First, high-order terms may be included in a candidate polynomial only if the lower-order terms are also included.
 More precisely, let
@@ -192,7 +192,7 @@ In the second step, the most-preferred polynomial is taken from the list of cand
 
 In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list. 
 
-Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In fact, we have not encountered any stencil for which this last resort is required.
+Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In our experiments we have not encountered any stencil for which this last resort is required.
 
 \begin{figure}
 	\centering
@@ -205,10 +205,10 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 To illustrate the stabilisation procedure, figure~\ref{fig:oscillatory1D}a presents a one-dimensional example of a cubic polynomial fitted through five points, with the weight at each point printed beside it.
 In preference order, the candidate polynomials are
 \begin{align}
-	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \label{eqn:cubicCandidate} \\
-	\phi &= a_1 + a_2 x + a_3 x^2 \label{eqn:quadCandidate} \\
-	\phi &= a_1 + a_2 x \\
-	\phi &= a_1
+	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \label{eqn:cubicCandidate} \text{ ,} \\
+	\phi &= a_1 + a_2 x + a_3 x^2 \label{eqn:quadCandidate} \text{ ,} \\
+	\phi &= a_1 + a_2 x \text{ ,} \\
+	\phi &= a_1 \text{ .}
 \end{align}
 We begin with the cubic equation~\eqref{eqn:cubicCandidate}.  The multipliers are chosen so that the polynomial passes almost exactly through the upwind and downwind points that are immediately to the left and right of the $y$-axis respectively.
 The constraint on the upwind point is violated because $w_u = 1.822 > 1$ (equation~\ref{eqn:stabilityU}).  Reducing the downwind multiplier does not help to satisfy the constraint, so we start again with the quadratic equation~\eqref{eqn:quadCandidate}, and the new fit is presented in figure~\ref{fig:oscillatory1D}b.

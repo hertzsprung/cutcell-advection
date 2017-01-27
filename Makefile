@@ -25,7 +25,6 @@ include make/templates/Makefile-DeformationSphere-MeshPlots
 include make/templates/Makefile-DeformationSphere-TracerPlots
 include make/templates/Makefile-MountainAdvection-ContourPlot
 include make/Makefile-Stabilisation
-include make/Makefile-DeformationSphere-Meshes
 include make/Makefile-DeformationSphere-Convergence
 include make/Makefile-DeformationSphere-TracerPlots
 include make/Makefile-HorizontalAdvection

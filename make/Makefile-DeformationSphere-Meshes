@@ -1,9 +1,0 @@
-$(eval $(call LaTeX,src/slant-cell-advection,build/fig-deformationSphere-meshes,fig-deformationSphere-meshes))
-
-build/fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf: \
-  build/deformationSphere-mesh-hex-3/constant/mesh.pdf \
-  build/deformationSphere-mesh-quad-8/constant/mesh.pdf
-
-$(eval $(call DeformationSphereMeshPlot,build/deformationSphere-mesh-hex-3))
-$(eval $(call DeformationSphereMeshPlot,build/deformationSphere-mesh-quad-8))
-

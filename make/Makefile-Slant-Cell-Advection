@@ -23,7 +23,6 @@ build/slant-cell-advection/slant-cell-advection.pdf: \
   build/fig-mountainAdvection-error/fig-mountainAdvection-error.pdf \
   build/fig-mountainAdvection-l2ByMountainHeight/fig-mountainAdvection-l2ByMountainHeight.pdf \
   build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf \
-  build/fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf \
   build/fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf \
   build/fig-deformationSphere-cosBellsConvergence/fig-deformationSphere-cosBellsConvergence.pdf \
   build/fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf

@@ -3,7 +3,7 @@ set term epslatex color size 3.5,2.5
 set style data linespoints
 set logscale
 
-set xlabel "$\\Delta x$"
+set xlabel "$\\Delta x$ (\\si{\\meter})"
 set ylabel "$\\Delta t_\\mathrm{max}$" offset 2
 
 unset key

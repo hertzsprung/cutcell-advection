@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[paperwidth=6.5in,paperheight=1.6in,margin=0in]{geometry}
+\usepackage[paperwidth=6.5in,paperheight=1.8in,margin=0in]{geometry}
 \usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
@@ -10,11 +10,11 @@
 \setlength{\parindent}{0pt}
 \begin{document}
 \TPMargin{1pt}
-\begin{textblock}{0.75}(10.03,0.7)
+\begin{textblock}{0.75}(10.35,0.65)
 \begin{tikzpicture}[
   scale=0.5
 ]
-	\fill [orange!20] (0,0) rectangle (8.7,6.1);
+	\fill [orange!20] (0,0) rectangle (8.1,6.1);
 \end{tikzpicture}
 \end{textblock}
 \begin{textblock}{4}(4.3,1.4)
@@ -30,10 +30,11 @@ $t = \SI{5000}{\second}$
 $t = \SI{10000}{\second}$
 \end{textblock}
 \centering
-\includegraphics{../mountainAdvection-btf-5000-cubicUpwind-1000/10000/tracerContours.pdf}
-\begin{textblock}{5}(5.818,9.15)
-\begin{tikzpicture}[xscale=0.074,yscale=0.167]
+$z$ (\si{\meter}) \raisebox{-.5\height}{\includegraphics{../mountainAdvection-btf-5000-cubicUpwind-1000/10000/tracerContours.pdf}}
+\begin{textblock}{5}(6.205,8.21)
+\begin{tikzpicture}[xscale=0.0673,yscale=0.167]
 	\draw [fill=black,line width=1.7pt,domain=-25:25,samples=200] plot (\x,{5*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/50))*cos(deg(\x*3.14159/50))});
 \end{tikzpicture}
 \end{textblock}
+\vspace*{0.3em}\hspace*{3.75em}$x$ (\si{\meter})
 \end{document}

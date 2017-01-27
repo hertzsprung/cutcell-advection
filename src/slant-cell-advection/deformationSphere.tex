@@ -4,16 +4,7 @@ The tests so far have used flows that are mostly uniform on meshes that are base
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth, as specified by Lauritzen et al. \citep{lauritzen2012}.  
 Results are compared between linearUpwind and cubicFit schemes using hexagonal-icosahedra and cubed-spheres.
 Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
-Figure~\ref{fig:sphere-meshes}a shows an example of such a mesh that has been refined three times.
 Cubed-sphere meshes are constructed using an equi-distant gnomic projection of a cube having a uniform Cartesian mesh on each panel \citep{staniforth-thuburn2012}.
-Figure~\ref{fig:sphere-meshes}b shows an example of a cubed-sphere mesh having panels with $8 \times 8$ cells.
-
-\begin{figure}
-	\centering
-	\includegraphics{../fig-deformationSphere-meshes/fig-deformationSphere-meshes.pdf}
-	\caption{Illustrations of coarse meshes of a spherical Earth using (a) a hexagonal icosahedron that has been refined three times, and (b) a cubed-sphere with each panel having $8 \times 8$ cells.}
-	\label{fig:sphere-meshes}
-\end{figure}
 
 Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
 \begin{align}
@@ -39,7 +30,7 @@ The non-divergent velocity field is defined by the streamfunction $\Psi$,
 \begin{align}
 	\Psi(\lambda, \theta, t) = \frac{10 R_e}{T} \sin^2 \left(\lambda'\right) \cos^2 \left(\theta\right) \cos \left( \frac{\pi t}{T} \right) - \frac{2 \pi R_e}{T} \sin\left(\theta\right)
 \end{align}
-where $\lambda$ is a longitude, $\theta$ is a latitude, $\lambda' = \lambda - 2 \pi t / T$, and $T = \SI{1.0368e6}{\second}$ is the duration of integration.  The time-step is chosen such that the maximum Courant number is about 0.4.
+where $\lambda$ is a longitude, $\theta$ is a latitude, $\lambda' = \lambda - 2 \pi t / T$, and $T = \num{12}$ days is the duration of integration.  The time-step is chosen such that the maximum Courant number is about 0.4.
 
 The initial tracer density $\phi$ is defined as the sum of two Gaussian hills,
 \begin{align}
@@ -78,7 +69,8 @@ The results in figure~\ref{fig:deformationSphere-evolution} are obtained using t
 
 To determine the order of convergence and relative accuracy of the linearUpwind and cubicFit schemes, the same test was performed at a variety of mesh spacings betweeen $\Delta \lambda = \ang{8.61}$ and $\Delta \lambda = \ang{0.271}$ on hexagonal icosahedra and cubed-sphere meshes.  The results are shown in figure~\ref{fig:deformationSphere-gaussian-convergence}.
 The solution is slow to converge at coarse resolutions, and this behaviour agrees with the results from Lauritzen et al. \citep{lauritzen2012}.  Both linearUpwind and cubicFit schemes achieve second-order accuracy at smaller mesh spacings. 
-Results are more accurate using hexagonal icosahedra compared to cubed-sphere meshes and, for any given mesh type and mesh spacing, the cubicFit scheme is more accurate than the linearUpwind scheme.
+For any given mesh type and mesh spacing, the cubicFit scheme is more accurate than the linearUpwind scheme.
+Results are more accurate using hexagonal icosahedra compared to cubed-sphere meshes.  It is not known whether the larger errors on cubed-sphere meshes are due to mesh non-uniformities at panel corners but there is no evidence of grid imprintingin the error fields (not shown).
 
 A slightly more challenging variant of the same test is performed using a quasi-smooth tracer field defined as the sum of two cosine bells,
 \begin{align}

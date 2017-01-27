@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage[paperwidth=6.1in,paperheight=3.1in,margin=0in]{geometry}
+\usepackage[paperwidth=6.1in,paperheight=3.3in,margin=0in]{geometry}
 \usepackage{mathptmx}%{times}
 \usepackage{graphicx}
 \usepackage{siunitx}
@@ -14,12 +14,13 @@
 \begin{document}
 \TPMargin{2pt}
 \centering
-\includegraphics{../mountainAdvection-btf-5000-linearUpwind-1000/constant/meshW.pdf} \\
-\includegraphics{../mountainAdvection-cutCell-5000-linearUpwind-1000/constant/meshW.pdf} \\
-\hspace*{0.8em}\includegraphics{../mountainAdvection-slantedCell-5000-linearUpwind-1000/constant/mesh.pdf}
+$z$ (\si{\meter}) \raisebox{-.5\height}{\includegraphics{../mountainAdvection-btf-5000-linearUpwind-1000/constant/meshW.pdf}} \\
+$z$ (\si{\meter}) \raisebox{-.5\height}{\includegraphics{../mountainAdvection-cutCell-5000-linearUpwind-1000/constant/meshW.pdf}} \\
+\hspace*{0.73em}$z$ (\si{\meter}) \raisebox{-.5\height}{\includegraphics{../mountainAdvection-slantedCell-5000-linearUpwind-1000/constant/mesh.pdf}} \\
+\vspace*{0.2em}\hspace*{4.6em}$x$ (\si{\meter})
 
 % (a) streamlines
-\begin{textblock}{5}(1.84,0.78)
+\begin{textblock}{5}(2.25,0.72)
 \textblockcolour{}
 \begin{tikzpicture}[xscale=0.254,yscale=0.2]
 	\draw [line width=1.2pt,color=gnuplotred,domain=-25:25,samples=200] plot (\x,{2.5 + (1 - 2.5/10)*5*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/50))*cos(deg(\x*3.14159/50))});
@@ -31,7 +32,7 @@
 \end{textblock}
 
 % (b) streamlines
-\begin{textblock}{5}(1.84,5.78)
+\begin{textblock}{5}(2.25,5.4)
 \textblockcolour{}
 \begin{tikzpicture}[xscale=0.254,yscale=0.2]
 	\draw [line width=1.2pt,color=gnuplotred,domain=-25:25,samples=200] plot (\x,{2.5 + (1 - 2.5/10)*5*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/50))*cos(deg(\x*3.14159/50))});
@@ -43,7 +44,7 @@
 \end{textblock}
 
 % (c) streamlines
-\begin{textblock}{5}(1.84,10.81)
+\begin{textblock}{5}(2.25,10.13)
 \textblockcolour{}
 \begin{tikzpicture}[xscale=0.254,yscale=0.2]
 	\draw [line width=1.2pt,color=gnuplotred,domain=-25:25,samples=200] plot (\x,{2.5 + (1 - 2.5/10)*5*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/50))*cos(deg(\x*3.14159/50))});
@@ -53,17 +54,17 @@
 	\draw [line width=1.2pt,color=gnuplotred,domain=-25:25,samples=200] plot (\x,{7.5 + (1 - 7.5/10)*5*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/8))*cos(deg(\x*3.14159/50))*cos(deg(\x*3.14159/50))});
 \end{tikzpicture}
 \end{textblock}
-\begin{textblock}{4}(2,0.5)
+\begin{textblock}{4}(2.4,0.5)
 \normalsize
 \textblockcolour{white}
 (a) Basic terrain-following
 \end{textblock}
-\begin{textblock}{2}(2,5.5)
+\begin{textblock}{2}(2.4,5.3)
 \normalsize
 \textblockcolour{white}
 (b) Cut cells
 \end{textblock}
-\begin{textblock}{2.5}(2,10.5)
+\begin{textblock}{2.5}(2.4,10)
 \normalsize
 \textblockcolour{white}
 (c) Slanted cells

@@ -7,7 +7,7 @@ set format y "$10^{%L}$"
 
 set key tmargin
 
-set xlabel "$\\Delta x$" offset 0,0.5
+set xlabel "$\\Delta x$ (\\si{\\meter})" offset 0,0.5
 
 set xrange [10000:100]
 set yrange [1e-2:1]

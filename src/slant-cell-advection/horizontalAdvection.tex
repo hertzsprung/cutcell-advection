@@ -28,7 +28,7 @@ The BTF method uses a linear decay function so that mesh surfaces become horizon
 \begin{equation}
 	z(x) = \left( H - h(x) \right) \left( z^\star / H \right) + h(x) \label{eqn:btf}
 \end{equation}
-where $z$ is the geometric height, $H$ is the height of the domain, $h(x)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there was no terrain then $h = 0$ and $z = z^\star$.
+where $z$ is the geometric height, $H$ is the height of the domain, $h(x)$ is the surface elevation and $z^\star$ is the computational height of a mesh surface.  If there were no terrain then $h = 0$ and $z = z^\star$.
 
 A velocity field is prescribed with uniform horizontal flow aloft and zero flow near the ground,
 \begin{align}
@@ -58,7 +58,7 @@ A tracer with density $\phi$ has the shape
 %
 \label{eqn:tracer}
 \end{subequations}
-where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{3}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{12}{\kilo\meter})$ so that the tracer is upwind of the mountain.
+where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{3}{\kilo\meter}$ are the horizontal and vertical half-widths respectively, and $\phi_0 = \SI{1}{\kilogram\per\meter\cubed}$ is the maximum density of the tracer.  At $t = \SI{0}{\second}$, the tracer is centred at $(x_0, z_0) = (\SI{-50}{\kilo\meter}, \SI{12}{\kilo\meter})$ so that the tracer is upwind of the mountain, in the region of uniform flow above $z_2$.
 
 \begin{figure}
 	\centering
@@ -68,7 +68,7 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{3}{\kilo\meter}$ are the horizont
 	\label{fig:horizontalAdvection-convergence}
 \end{figure}
 
-Tests are integrated for \SI{10000}{\second} using time-steps that are proportional to the mesh spacing so that the maximum Courant number is about \num{0.4}.  By the end of integration the tracer is positioned downwind of the mountain.
+Tests are integrated for \SI{10000}{\second} using time-steps chosen for each mesh so that the maximum Courant number is about \num{0.4}.  By the end of integration the tracer is positioned downwind of the mountain.
 The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (\SI{50}{\kilo\meter}, \SI{12}{\kilo\meter})$.  Error norms are calculated by subtracting the analytic solution from the numerical solution,
 \begin{align}
 	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\
@@ -78,7 +78,7 @@ where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ de
 
 Tests were performed using the linearUpwind and cubicFit schemes at mesh spacings between $\Delta x = \SI{250}{\meter}$ and $\Delta x = \SI{5000}{\meter}$.
 Numerical convergence in the $\ell_2$ and $\ell_\infty$ norms is plotted in figure~\ref{fig:horizontalAdvection-convergence}.
-The linearUpwind scheme becomes second-order convergent only at finer mesh spacings, but the cubicFit scheme is second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
+The linearUpwind and cubicFit schemes are second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.  The cubicFit scheme is more accurate than the linearUpwind scheme at all mesh spacings.
 
-This test demonstrates that, unlike linearUpwind, cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
+This test demonstrates that cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
 

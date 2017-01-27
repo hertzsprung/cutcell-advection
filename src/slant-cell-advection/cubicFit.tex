@@ -64,7 +64,7 @@ Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for fa
 
 
 \subsubsection{Least squares fit}
-To approximate the value at a face $f$, a least squares fit is calculated from a stencil of surrounding known values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  
+To approximate the value of $\phi$ at a face $f$, a least squares fit is calculated from a stencil of surrounding known values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  
 
 For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
 \begin{align}
@@ -130,7 +130,7 @@ We assign an integer \textit{multiplier} to each cell in the stencil, $\mathbf{m
 \end{align}
 where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{diag}(\mathbf{m})$.  The constant coefficient $a_1$ is calculated from the pseudo-inverse, $\mathbf{\tilde{B}}^+$,
 \begin{align}
-	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \mathbf{\phi} \label{eqn:weightedPinv}
+	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \bm{\phi} \label{eqn:weightedPinv}
 \end{align}
 where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
 Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.  Values for $\mathbf{m}$ are chosen so that the cells connected to face $f$ make a greater contribution to the least squares fit, as discussed later in section~\ref{sec:stabilisation}.
@@ -185,12 +185,12 @@ A one-dimensional von Neumann analysis was performed to obtain stability constra
 where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respectively.  The \textit{peripheral points} $P$ are the cells in the stencil that are not the upwind or downwind cells, and $w_p$ is the weight for a given peripheral point $p$.
  The upwind, downwind and peripheral weights sum to one such that $w_u + w_d + \sum_{p \in P} w_p = 1$.
 
-The stabilisation procedure comprises three steps.  In the first step, the candidate polynomials are sorted in preference order so that candidates with the most terms are preferred over those with fewer terms.
-If there are multiple candidates with the same number of terms, the candidate with the larger minimum singular value of $\mathbf{B}$ is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
+The stabilisation procedure comprises three steps.  In the first step, the set of candidate polynomials is sorted in preference order so that candidates with more terms are preferred over those with fewer terms.
+If there are multiple candidates with the same number of terms, the minimum singular value of $\mathbf{B}$ is calculated for each candidate, and an ordering is imposed such that the candidate with the larger minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
 
 In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral points have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
 
-In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next-preferred polynomial in the candidate list. 
+In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next polynomial in the candidate list. 
 
 Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In our experiments we have not encountered any stencil for which this last resort is required.
 
@@ -203,7 +203,10 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 \end{figure}
 
 To illustrate the stabilisation procedure, figure~\ref{fig:oscillatory1D}a presents a one-dimensional example of a cubic polynomial fitted through five points, with the weight at each point printed beside it.
-In preference order, the candidate polynomials are
+The stabilisation procedure only uses the $x$ positions of these points and does not use the values of $\phi$ themselves.  The $\phi$ values are included here for illustration only.
+Hence, for a given set of $x$ positions, the same set of weights are chosen irrespective of the $\phi$ values.
+
+For a one-dimensional cubic polynomial fit, the list of candidate polynomials in preference order is
 \begin{align}
 	\phi &= a_1 + a_2 x + a_3 x^2 + a_4 x^3 \label{eqn:cubicCandidate} \text{ ,} \\
 	\phi &= a_1 + a_2 x + a_3 x^2 \label{eqn:quadCandidate} \text{ ,} \\

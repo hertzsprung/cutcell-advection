@@ -1,0 +1,4 @@
+This paper describes a multidimensional finite volume scheme for transport over steep slopes represented by arbitrarily-structured meshes.  The scheme enforces constraints derived from a von Neumann stability analysis to ensure numerical stability on highly-distorted meshes.  These constraints are enforced during model initialisation, leaving only n multiplies to be calculated per face per time-step, where n is the size of the stencil.  Hence, this multidimensional scheme has a computational cost comparable to dimensionally-split schemes.
+
+The scheme is evaluated in a series of tests using several mesh types, including a new test that challenges transport schemes near steeply-sloping lower boundaries.  These tests demonstrate that the scheme is insensitive to the mesh type, and second-order convergent is obtained irrespective of mesh distortions.
+

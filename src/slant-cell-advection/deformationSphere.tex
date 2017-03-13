@@ -2,8 +2,8 @@
 \label{sec:deformationSphere}
 The tests so far have used flows that are mostly uniform on meshes that are based on rectangular cells.
 To ensure that the cubicFit transport scheme is suitable for complex flows on a variety of meshes, we use a standard test of deformational flow on a spherical Earth, as specified by Lauritzen et al. \citep{lauritzen2012}.  
-Results are compared between linearUpwind and cubicFit schemes using hexagonal-icosahedra and cubed-spheres.
-Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \citep{thuburn2014}.
+Results are compared between linearUpwind and cubicFit schemes using \revone{hexagonal-icosahedral meshes} and cubed-sphere \revother{meshes}.
+Hexagonal-icosahedral meshes are constructed by successive refinement of a regular icosahedron following the approach by \revtwo{\citep{thuburn2014,heikes-randall1995a,heikes-randall1995b} without any mesh twisting}.
 Cubed-sphere meshes are constructed using an equi-distant gnomic projection of a cube having a uniform Cartesian mesh on each panel \citep{staniforth-thuburn2012}.
 
 Following appendix A9 in \citep{lauritzen2014}, the average equatorial spacing $\Delta \lambda$ is used as a measure of mesh spacing.  It is defined as
@@ -53,7 +53,7 @@ The centre of hill $i$ is positioned at $\mathbf{x}_i$.  In spherical coordinate
 \begin{figure}
 	\centering
 	\includegraphics{../fig-deformationSphere-initialTracer/fig-deformationSphere-initialTracer.pdf}
-	\caption{Tracer fields for the deformational flow test using initial Gaussian hills.  The tracer is deformed by the velocity field before the rotation reverses to return the tracer to its original distribution: (a) the initial tracer distribution at $t = \SI{0}{\second}$; (b) by $t=T/2$ the Gaussian hills are stretched into a thin S-shaped filament; (c) at $t=T$ the tracer resembles the initial Gaussian hills except for some distortion and diffusion due to numerical errors.  Results were obtained with the cubicFit scheme on a hexagonal-icosahedron with an average equatorial mesh spacing of $\Delta \lambda = \ang{0.542}$.}
+	\caption{Tracer fields for the deformational flow test using initial Gaussian hills.  The tracer is deformed by the velocity field before the rotation reverses to return the tracer to its original distribution: (a) the initial tracer distribution at $t = \SI{0}{\second}$; (b) by $t=T/2$ the Gaussian hills are stretched into a thin S-shaped filament; (c) at $t=T$ the tracer resembles the initial Gaussian hills except for some distortion and diffusion due to numerical errors.  Results were obtained with the cubicFit scheme on a \revone{hexagonal-icosahedral mesh} with an average equatorial mesh spacing of $\Delta \lambda = \ang{0.542}$.}
 	\label{fig:deformationSphere-evolution}
 \end{figure}
 
@@ -63,14 +63,14 @@ The results in figure~\ref{fig:deformationSphere-evolution} are obtained using t
 	\centering
 	\includegraphics{../fig-deformationSphere-gaussiansConvergence/fig-deformationSphere-gaussiansConvergence.pdf}
 %
-	\caption{Numerical convergence of the deformational flow test on the sphere using initial Gaussian hills.  $\ell_2$ errors (equation~\ref{eqn:l2-error}) and $\ell_\infty$ errors (equation~\ref{eqn:linf-error}) are marked at mesh spacings between \ang{8.61} and \ang{0.271} using the linearUpwind scheme (dotted lines) and the cubicFit scheme (solid lines) on hexagonal icosahedra and cubed-sphere meshes.}
+	\caption{Numerical convergence of the deformational flow test on the sphere using initial Gaussian hills.  $\ell_2$ errors (equation~\ref{eqn:l2-error}) and $\ell_\infty$ errors (equation~\ref{eqn:linf-error}) are marked at mesh spacings between \ang{8.61} and \ang{0.271} using the linearUpwind scheme (dotted lines) and the cubicFit scheme (solid lines) on \revone{hexagonal-icosahedral meshes} and cubed-sphere meshes.}
 	\label{fig:deformationSphere-gaussian-convergence}
 \end{figure}
 
-To determine the order of convergence and relative accuracy of the linearUpwind and cubicFit schemes, the same test was performed at a variety of mesh spacings betweeen $\Delta \lambda = \ang{8.61}$ and $\Delta \lambda = \ang{0.271}$ on hexagonal icosahedra and cubed-sphere meshes.  The results are shown in figure~\ref{fig:deformationSphere-gaussian-convergence}.
+To determine the order of convergence and relative accuracy of the linearUpwind and cubicFit schemes, the same test was performed at a variety of mesh spacings betweeen $\Delta \lambda = \ang{8.61}$ and $\Delta \lambda = \ang{0.271}$ on \revone{hexagonal-icosahedral meshes} and cubed-sphere meshes.  The results are shown in figure~\ref{fig:deformationSphere-gaussian-convergence}.
 The solution is slow to converge at coarse resolutions, and this behaviour agrees with the results from Lauritzen et al. \citep{lauritzen2012}.  Both linearUpwind and cubicFit schemes achieve second-order accuracy at smaller mesh spacings. 
 For any given mesh type and mesh spacing, the cubicFit scheme is more accurate than the linearUpwind scheme.
-Results are more accurate using hexagonal icosahedra compared to cubed-sphere meshes.  It is not known whether the larger errors on cubed-sphere meshes are due to mesh non-uniformities at panel corners but there is no evidence of grid imprintingin the error fields (not shown).
+Results are more accurate using \revone{hexagonal-icosahedral meshes} compared to cubed-sphere meshes.  It is not known whether the larger errors on cubed-sphere meshes are due to mesh non-uniformities at panel corners but there is no evidence of grid \revone{imprinting in} the error fields (not shown).
 
 A slightly more challenging variant of the same test is performed using a quasi-smooth tracer field defined as the sum of two cosine bells,
 \begin{align}
@@ -92,11 +92,11 @@ The velocity field is the same as before.  This test is used to determine the ``
 \hline
 	linearUpwind & Cubed-sphere & \it 0.15 \\
 	FARSIGHT, grid-point semi-Lagrangian \citep{white-dongarra2011} & Cubed-sphere & 0.1875 \\
-	linearUpwind & Hexagonal-icosahedron & \it 0.2 \\
-	SLFV-SL, swept-area scheme \citep{miura2007} & Hexagonal-icosahedron & 0.25 \\
+	linearUpwind & \revone{Hexagonal-icosahedral} & \it 0.2 \\
+	SLFV-SL, swept-area scheme \citep{miura2007} & \revone{Hexagonal-icosahedral} & 0.25 \\
 	cubicFit & Cubed-sphere & \it 0.25 \\
-	cubicFit & Hexagonal-icosahedron & 0.3 \\
-	ICON-FFSL, swept-area scheme \citep{miura2007} & Triangular-icosahedron & 0.42 \\
+	cubicFit & \revone{Hexagonal-icosahedral} & 0.3 \\
+	ICON-FFSL, swept-area scheme \citep{miura2007} & \revone{Triangular-icosahedral} & 0.42 \\
 \hline
 \end{tabular}
 %

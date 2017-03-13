@@ -1,0 +1,333 @@
+\documentclass[times]{elsarticle}
+\usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[final,babel]{microtype}
+\usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{csquotes}
+\usepackage[T1]{fontenc}
+\usepackage{enumitem}
+
+\newcommand{\TODO}[1]{TODO: \textit{#1}}
+\newcommand{\revone}[1]{\textcolor{purple}{\textbf{#1}}}
+\newcommand{\revtwo}[1]{\textcolor{teal}{\textbf{#1}}}
+\newcommand{\revthree}[1]{\textcolor{olive}{\textbf{#1}}}
+\newcommand{\revother}[1]{\textcolor{orange}{\textbf{#1}}}
+
+\newlist{comment}{enumerate}{1}                                                 
+\setlist[comment,1]{label={\arabic{commenti}.},leftmargin=*,resume=comment}
+
+\begin{document}
+\begin{frontmatter}
+\title{Responses to reviewers \\
+\vspace*{0.5em}
+\large{A multidimensional method-of-lines transport scheme for atmospheric flows over steep terrain using arbitrary meshes} \\
+\vspace*{0.5em}
+\normalsize{JCOMP-D-17-00161}}
+\author{James Shaw}
+\author{Hilary Weller}
+\author{John Methven}
+\author{Terry Davies}
+\end{frontmatter}
+
+We greatly appreciate the reviewers' detailed comments and questions.  The revised manuscript highlights changes with a bold typeface and the text colour corresponds to the section headings below.  The revised manuscript also highlights a small number of additional changes \revother{in orange}.
+
+\section*{\revone{Reviewer \#1}}
+This paper presents a multidimensional method-of-lines finite-volume transport scheme,
+which is second-order accurate and offers high solution quality and robustness under
+strongly deformed meshes. Among others, the latter is of increasing importance for 
+atmospheric models with complex orography. The proposed scheme is named "cubic-fit", 
+as it fits multidimensional polynomials of up to third-order over an upwind stencil
+using a least-squares approach. The construction of the polynomials takes into account 
+constraints derived from a linear stability analysis for stencils in regions of  
+highly-deformed computational meshes.
+
+The accuracy and stability of the cubic-fit scheme is studied with a number of well 
+chosen test cases that are relevant to atmospheric models. 
+
+In my view, the presented developments definitely warrant publication in JCP. 
+The content of the paper appears of high quality and adheres to the JCP standards. 
+The text is well structured and clearly written. It only needs little improvement 
+as given by the subsequent comments. 
+
+I recommend acceptance of the paper subject to minor revisions by the authors.
+
+\subsection*{Comments}
+
+\begin{quotation}
+\begin{comment}
+\item  It is explained in various places that the cubic-fit scheme
+    offers favourable computational efficiency due to the fact
+    that most of the reconstruction depends on the mesh geometry
+    only, and this part can be precomputed. It would be very interesting
+    to see numbers in the paper. It doesn't have to be a comprehensive
+    study, but just to get an impression of the cost, e.g. how does
+    the runtime of the cubic-fit compare to the second-order upwind
+    scheme? Or, if one runs cubic-fit and the upwind scheme such that
+    both produce about the same $\ell_2$ error (by using a higher resolution
+    with the upwind scheme), what is then the difference in runtime?
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  As only 2D simulations have been considered in the paper, I
+    wondered how difficult it will be to extend the cubic-fit
+    scheme to 3D? It could useful to provide a short comment
+    about this, just whether complications are anticipated or
+    not. (See also the subsequent comment.)
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  Appendix A, p.22: How restrictive is the 1D stability analysis
+    for the multidimensional domains? May this become a more
+    serious issue in 3D configurations?
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  In various places throughout the paper "icosahedra" is used
+    instead of "icosadedral". I suggest the latter should be used
+    consistently throughout the paper.
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  p.3, end of first paragraph: I suggest to mention here a
+    recent advancement of the finite-volume MPDATA (Kühnlein and
+    Smolarkiewicz, J. Comput. Phys. 2017,
+    \url{http://dx.doi.org/10.1016/j.jcp.2016.12.054}). Among others, this
+    paper demonstrates applicability of MPDATA for 3D compressible
+    atmospheric dynamics on arbitrary hybrid unstructured meshes.
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  p.3, paragraph after Eq. (2b): if there is no specific need, I
+    sugggest to remove "zero-dimensional".
+\end{comment}
+\end{quotation}
+\TODO{Hilary?}
+
+\begin{quotation}
+\begin{comment}
+\item  p.4, last paragraph in Section 2.0: "methods are described next"
+    instead of "methods described next".
+\end{comment}
+\end{quotation}
+Fixed.
+
+\begin{quotation}
+\begin{comment}
+\item  p.5, first paragraph: Is it "arbitrary meshes" or "arbitrary
+    structured meshes"?
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
+\item  p.5, last paragraph of Section 2.1.1.: "dirichlet" should be
+    upper case "Dirichlet".
+\end{comment}
+\end{quotation}
+Fixed.
+
+10.) p.7, caption of Fig. 3, last sentence: It is stated that a
+    von Neumann boundary condition is assumed. However, the
+    footnote on p.5 says that Neumann BCs are excluded from the
+    set of stencil boundary faces?
+
+11.) p.9, caption of Fig. 4, first sentence: "A one-dimensional
+    least squares fits" should probably read "One-dimensional
+    least squares fits".
+
+12.) p.12, caption of Fig. 6, last but one sentence: "domain is
+    shown" instead of "domain in shown".
+
+13.) Section 3: Why are most of the experiments run with maximum CFL
+    numbers < 0.5 or even < 0.4, although the cubic-fit scheme
+    permits a maximum CFL < 1 (Fig. 10)? Is this because the upwind
+    scheme, to which cubic-fit is compared to, is more limited with
+    respect to the time step for the considered test cases?
+
+14.) p. 18, last but one paragraph, last sentence: correct "imprintingin".
+
+
+
+\section*{\revtwo{Reviewer \#2}}
+
+
+\subsection*{General remarks}
+
+The manuscript presents a new method-of-lines based transport scheme
+in which fluxes are computed by fitting a multidimensional
+polynomial over an upwind-biased set of grid cells. The scheme
+has low computation and memory costs. It is suitable for
+structured and unstructured grids, and maintains accuracy
+on strongly distorted grids such as those used in atmospheric models
+over steep terrain. An idealized analysis suggests how the
+construction of the polynomial should be constrained to obtain
+conditional stability of the scheme, and such stability appears
+to be achieved in practice.
+I believe the manuscript will be of interest to those developing
+atmospheric models and to the wider CFD community. I would be happy to
+recommend publication after the points below are addressed.
+
+
+\subsection*{Main points}
+
+1. It is claimed (in several places) that the scheme requires `just one
+vector multiply per face per time step'. Since the two-stage Heun scheme
+(2) is used, surely the cost must be two vector multiplies per face per time
+step (or, more generally, one vector multiply per face per {\it stage})?
+
+2. It is claimed in several places that the scheme is stable, but some qualification
+is appropriate. First, the scheme is {\it conditionally} stable; the Courant number
+should not be too large. Then Appendix~A gives an analysis deriving constraints
+on the polynomial reconstruction that should be satisfied for stability. However,
+the analysis is idealized in various ways: one-dimensional, regular grid, constant $v$,
+two- and three-cell stencils, and ignoring the time discretization (also see below).
+That is fair enough---it might not be possible to generalize the analysis to the full
+scheme---and it is clearly stated at the end of the Appendix that the constraints are
+{\it hypothesized} to apply more generally. However, in section 2.1.4 the language is
+stronger and suggests that these constraints are definitive: ``...stability constraints...'',
+``...must satisfy...'', etc.
+
+3. P14. The calculation of the longest stable timestep {\it assumes} that the stability
+limit is given by $\mathrm{Co}=1$. Given the idealized nature of the analysis in
+Appendix~A, and that most experiments are done with $\mathrm{Co} \approx 0.4$,
+at least some empirical investigation of the stability limit should be discussed
+to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
+
+4. The presentation of the analysis in Appendix~A is somewhat confusing. It appears
+to use a time discretization by introducing a time step $\Delta t$ and an amplification
+factor $A$, (and hence a Courant number $v \Delta t / \Delta x$) whereas the
+analysis is, in fact, continuous in time. It might be clearer to set
+$\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
+$\hat{\phi}$, etc. I think the conclusion would be the same.
+
+Might it be possible to include the time discretization (2) in the stability analysis?
+It would be interesting to know if the weak instability of (2) (noted on p3) affects
+the constraints (57), (58), (63).
+
+5. The Courant number as defined by (4) would appear to vanish for a non-divergent
+flow. A more natural definition might be to sum only over outflow faces (and
+remove the factor $1/2$). For non-divergent flow that would be equivalent to
+replacing $\mathbf{u} \cdot \mathbf{S}_f$ by $| \mathbf{u} \cdot \mathbf{S}_f |$
+in~(4).
+
+6. Section 3.2 and Table~1: what resolution is used?
+
+\subsection*{Minor points}
+
+It would be interesting to know if there was some rationale for the choice of
+the polynomial (5) and the stencil discussed in  section 2.1.1. Given that the scheme
+is second order convergent, might it be possible to use a lower degree polynomial
+and smaller stencil?
+
+\vspace{2mm}
+
+The first two paragraphs on p2 refer to quadrilateral meshes. It seems the discussion
+has slipped into the 2D vertical slice case without explicitly saying so.
+
+\vspace{2mm}
+
+P2, 5th paragraph. Perhaps mention that dimensionally-split schemes are only possible
+when the grid permits it (e.g.\ not a hexagonal grid).
+
+\vspace{2mm}
+
+P9, last sentence of section 2.1. Should $w_d$ be $m_d$?
+
+\vspace{2mm}
+
+The discussion of previous work is generally very good. On p2 is it worth mentioning
+the SLICE scheme of Zerroukat and co-authors? In the first paragraph of section 3.3, credit
+for the hexagonal-icosahedral mesh should probably be given to Heikes and Randall.
+
+\vspace{2mm}
+
+Some brief comments on how the approach extends to three dimensions would be
+appropriate.
+
+\vspace{4mm}
+
+\subsection*{Typos, etc}
+
+Introduction, second sentence: `modification of the lower boundary' is an odd way to
+think of it.
+
+P2, 5 lines from the bottom: `...non-simply connected domains...'. I found this
+phrase confusing.
+
+P3 line 17: `cubic, upwind-biased stencil'. Surely it is the polynomial that is
+cubic, rather than the stencil?
+
+P3 below (2): `stable ... with some upwinding'. Presumably some qualification is required
+(with sufficient upwinding)?
+
+P5 footnote: could be made
+
+P14 5 lines from the bottom: cubic should be cubicFit?
+
+P18 2 lines from the bottom: imprinting in
+
+
+\section*{\revthree{Reviewer \#3}}
+The author describes  a standard finite volume algorithm for solving the advection equation on unstructured
+grids. Using a method of lines the spatial discretization consists in computing face values of a cell
+centered given function by high order polynomial point wise approximation in contrast to a more common
+area wise procedure. The proposed algorithm has three phases, choose of two upwind dominated stencils
+for each face, determination of a subset of candidate polynomials with at most order three, weighting
+of the individual contributions in a least squares approximation to increase stability with respect 
+to the advection equation.
+
+The stencil choice starts with the determination of opposing faces in the upwind cell with respect to 
+to the destination face, and adding further cells in a two step procedure. The candidate polynomials
+with at most order three are all polynomials where the corresponding least squares problem has full rank.
+For the third step the candidate polynomials are ordered with respect to the number of unknowns and 
+and larger minimal singular value in case of polynomials with the same number. In the second step
+following the first ordering a weighting sequence is tested until a stability criterion is fulfilled
+which can finally end in a simple upwind scheme. 
+
+The paper is well written and illustrates all steps by intuitive examples. The new test example
+for the two-dimensional example with the boundary following velocity field enriches the number of
+problems for testing numerical advection schemes.
+
+\subsection*{Comments and questions}
+
+Can you comment on the stencil for triangular grids. In case of a slightly perturbed triangular grid
+with  equilateral triangles the stencil changes in comparison the unperturbed case.
+
+Why do you prefer the point wise approximation?
+
+The singular value test should be relative to the largest singular value.
+
+The weighting can degrade the condition number of the least squares problem.
+
+Is there a smoothing of  hexagonal-icosahedral mesh after refinement.
+
+Can you comment on the projection to the tangent plane for the spherical test example. 
+Note that projection to another grid can change the interpolation/approximation essentially, 
+like the transformation of a boundary following grid in physical space to a Cartesian grid in 
+computational space. Why is the interpolation/approximation not done in 3 dimensional 
+physical space.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{references}
+\end{document}

@@ -15,7 +15,7 @@ Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mo
 	\includegraphics{../fig-mountainAdvection-meshes/fig-mountainAdvection-meshes.pdf}
 	\caption{Two dimensional $x$-$z$ meshes created with the (a) basic terrain-following, (b) cut cell, and (c) slanted cell methods, and used for the tracer transport tests in section~\ref{sec:mountainAdvection}.  Cell edges are marked by thin black lines.  The peak mountain height $h_0 = \SI{5}{\kilo\meter}$.
 The velocity field is the same for all mesh types with streamlines marked on each panel by thick red lines.  The velocity field (equation~\ref{eqn:streamfunc-btf}) follows the lower boundary and becomes entirely horizontal above $H_1 = \SI{10}{\kilo\meter}$.
-Only the lowest \SI{10}{\kilo\meter} for the central region of the domain in shown.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
+Only the lowest \SI{10}{\kilo\meter} for the central region of the \revone{domain is shown}.  The entire domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high.}
 	\label{fig:mountainAdvection-meshes}
 \end{figure}
 
@@ -121,7 +121,7 @@ In contrast, the cubicFit scheme is less sensitive to the mesh type and errors g
 	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 
-A final series of tests were performed on BTF, slanted cell and cut cell meshes using the cubicFit scheme with a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, time-steps were chosen so that the maximum Courant number was close to, but smaller than, one.  Stable results were obtained in all tests and the cubic scheme was largely insensitive to the choice of time-step.
+A final series of tests were performed on BTF, slanted cell and cut cell meshes using the cubicFit scheme with a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.  In order to verify that cubicFit is accurate near the stability limit, time-steps were chosen so that the maximum Courant number was close to, but smaller than, one.  Stable results were obtained in all tests and the \revtwo{cubicFit scheme} was largely insensitive to the choice of time-step.
 
 This series of tests also enables a comparison of longest stable time-steps between mesh types.  The longest stable time-step for a maximum Courant number of one can be calculated as $\Delta t_\mathrm{max} = \Delta t / \max(\mathrm{Co})$ where $\Delta t$ is the time-step used in a particular test run and $\max(\mathrm{Co})$ is the maximum Courant number for that test run.
 The longest stable time-steps for BTF, cut cell and slanted cell meshes are presented in figure~\ref{fig:mountainAdvection-maxdt}.  BTF meshes permit the longest time-steps of all three mesh types since cells are almost uniform in volume.  As expected, the longest stable time-step scales linearly with BTF mesh spacing except at the coarsest resolutions where the mountains are poorly represented.

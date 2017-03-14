@@ -25,7 +25,7 @@
 \begin{frontmatter}
 \title{Responses to reviewers \\
 \vspace*{0.5em}
-\large{A multidimensional method-of-lines transport scheme for atmospheric flows over steep terrain using arbitrary meshes} \\
+\large{Multidimensional method-of-lines transport for atmospheric flows over steep terrain using arbitrary meshes} \\
 \vspace*{0.5em}
 \normalsize{JCOMP-D-17-00161}}
 \author{James Shaw}
@@ -101,7 +101,7 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     consistently throughout the paper.
 \end{comment}
 \end{quotation}
-\TODO{}
+Now using the term `hexagonal-icosahedral mesh' throughout.
 
 \begin{quotation}
 \begin{comment}
@@ -113,7 +113,7 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     atmospheric dynamics on arbitrary hybrid unstructured meshes.
 \end{comment}
 \end{quotation}
-\TODO{}
+Thank you, included.
 
 \begin{quotation}
 \begin{comment}
@@ -137,7 +137,7 @@ Fixed.
     structured meshes"?
 \end{comment}
 \end{quotation}
-\TODO{}
+Now using the term `arbitrary meshes' throughout.
 
 \begin{quotation}
 \begin{comment}
@@ -147,25 +147,50 @@ Fixed.
 \end{quotation}
 Fixed.
 
-10.) p.7, caption of Fig. 3, last sentence: It is stated that a
+\begin{quotation}
+\begin{comment}
+\item p.7, caption of Fig. 3, last sentence: It is stated that a
     von Neumann boundary condition is assumed. However, the
     footnote on p.5 says that Neumann BCs are excluded from the
     set of stencil boundary faces?
+\end{comment}
+\end{quotation}
+\TODO{}
 
-11.) p.9, caption of Fig. 4, first sentence: "A one-dimensional
+\begin{quotation}
+\begin{comment}
+\item p.9, caption of Fig. 4, first sentence: "A one-dimensional
     least squares fits" should probably read "One-dimensional
     least squares fits".
+\end{comment}
+\end{quotation}
+Fixed.
 
-12.) p.12, caption of Fig. 6, last but one sentence: "domain is
+\begin{quotation}
+\begin{comment}
+\item p.12, caption of Fig. 6, last but one sentence: "domain is
     shown" instead of "domain in shown".
+\end{comment}
+\end{quotation}
+Fixed.
 
-13.) Section 3: Why are most of the experiments run with maximum CFL
+\begin{quotation}
+\begin{comment}
+\item Section 3: Why are most of the experiments run with maximum CFL
     numbers < 0.5 or even < 0.4, although the cubic-fit scheme
     permits a maximum CFL < 1 (Fig. 10)? Is this because the upwind
     scheme, to which cubic-fit is compared to, is more limited with
     respect to the time step for the considered test cases?
+\end{comment}
+\end{quotation}
+\TODO{}
 
-14.) p. 18, last but one paragraph, last sentence: correct "imprintingin".
+\begin{quotation}
+\begin{comment}
+\item p. 18, last but one paragraph, last sentence: correct "imprintingin".
+\end{comment}
+\end{quotation}
+Fixed.
 
 
 
@@ -191,12 +216,21 @@ recommend publication after the points below are addressed.
 
 \subsection*{Main points}
 
-1. It is claimed (in several places) that the scheme requires `just one
+
+\begin{quotation}
+\begin{comment}
+\setcounter{commenti}{0}
+\item It is claimed (in several places) that the scheme requires `just one
 vector multiply per face per time step'. Since the two-stage Heun scheme
 (2) is used, surely the cost must be two vector multiplies per face per time
 step (or, more generally, one vector multiply per face per {\it stage})?
+\end{comment}
+\end{quotation}
+\TODO{}
 
-2. It is claimed in several places that the scheme is stable, but some qualification
+\begin{quotation}
+\begin{comment}
+\item It is claimed in several places that the scheme is stable, but some qualification
 is appropriate. First, the scheme is {\it conditionally} stable; the Courant number
 should not be too large. Then Appendix~A gives an analysis deriving constraints
 on the polynomial reconstruction that should be satisfied for stability. However,
@@ -207,85 +241,173 @@ scheme---and it is clearly stated at the end of the Appendix that the constraint
 {\it hypothesized} to apply more generally. However, in section 2.1.4 the language is
 stronger and suggests that these constraints are definitive: ``...stability constraints...'',
 ``...must satisfy...'', etc.
+\end{comment}
+\end{quotation}
+\TODO{}
 
-3. P14. The calculation of the longest stable timestep {\it assumes} that the stability
+\begin{quotation}
+\begin{comment}
+\item P14. The calculation of the longest stable timestep {\it assumes} that the stability
 limit is given by $\mathrm{Co}=1$. Given the idealized nature of the analysis in
 Appendix~A, and that most experiments are done with $\mathrm{Co} \approx 0.4$,
 at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
+\end{comment}
+\end{quotation}
+\TODO{}
 
-4. The presentation of the analysis in Appendix~A is somewhat confusing. It appears
+\begin{quotation}
+\begin{comment}
+\item The presentation of the analysis in Appendix~A is somewhat confusing. It appears
 to use a time discretization by introducing a time step $\Delta t$ and an amplification
 factor $A$, (and hence a Courant number $v \Delta t / \Delta x$) whereas the
 analysis is, in fact, continuous in time. It might be clearer to set
 $\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
 $\hat{\phi}$, etc. I think the conclusion would be the same.
+\end{comment}
+\end{quotation}
+\TODO{}
 
-Might it be possible to include the time discretization (2) in the stability analysis?
+\begin{quotation}
+\begin{comment}
+\item Might it be possible to include the time discretization (2) in the stability analysis?
 It would be interesting to know if the weak instability of (2) (noted on p3) affects
 the constraints (57), (58), (63).
+\end{comment}
+\end{quotation}
+\TODO{}
 
-5. The Courant number as defined by (4) would appear to vanish for a non-divergent
+\begin{quotation}
+\begin{comment}
+\item The Courant number as defined by (4) would appear to vanish for a non-divergent
 flow. A more natural definition might be to sum only over outflow faces (and
 remove the factor $1/2$). For non-divergent flow that would be equivalent to
 replacing $\mathbf{u} \cdot \mathbf{S}_f$ by $| \mathbf{u} \cdot \mathbf{S}_f |$
 in~(4).
+\end{comment}
+\end{quotation}
+\TODO{}
 
-6. Section 3.2 and Table~1: what resolution is used?
+\begin{quotation}
+\begin{comment}
+\item Section 3.2 and Table~1: what resolution is used?
+\end{comment}
+\end{quotation}
+\TODO{}
 
 \subsection*{Minor points}
 
-It would be interesting to know if there was some rationale for the choice of
+\begin{quotation}
+\begin{comment}
+\item It would be interesting to know if there was some rationale for the choice of
 the polynomial (5) and the stencil discussed in  section 2.1.1. Given that the scheme
 is second order convergent, might it be possible to use a lower degree polynomial
 and smaller stencil?
+\end{comment}
+\end{quotation}
+\TODO{Hilary?  We can't get the same accuracy with a lower degree polynomial and a smaller stencil.  Although we haven't demonstrated this here.}
 
-\vspace{2mm}
-
-The first two paragraphs on p2 refer to quadrilateral meshes. It seems the discussion
+\begin{quotation}
+\begin{comment}
+\item The first two paragraphs on p2 refer to quadrilateral meshes. It seems the discussion
 has slipped into the 2D vertical slice case without explicitly saying so.
+\end{comment}
+\end{quotation}
+\TODO{}
 
-\vspace{2mm}
-
-P2, 5th paragraph. Perhaps mention that dimensionally-split schemes are only possible
+\begin{quotation}
+\begin{comment}
+\item P2, 5th paragraph. Perhaps mention that dimensionally-split schemes are only possible
 when the grid permits it (e.g.\ not a hexagonal grid).
+\end{comment}
+\end{quotation}
+\TODO{}
 
-\vspace{2mm}
+\begin{quotation}
+\begin{comment}
+\item P9, last sentence of section 2.1. Should $w_d$ be $m_d$?
+\end{comment}
+\end{quotation}
+\TODO{}
+Yes, fixed.
 
-P9, last sentence of section 2.1. Should $w_d$ be $m_d$?
-
-\vspace{2mm}
-
-The discussion of previous work is generally very good. On p2 is it worth mentioning
+\begin{quotation}
+\begin{comment}
+\item The discussion of previous work is generally very good. On p2 is it worth mentioning
 the SLICE scheme of Zerroukat and co-authors? In the first paragraph of section 3.3, credit
 for the hexagonal-icosahedral mesh should probably be given to Heikes and Randall.
+\end{comment}
+\end{quotation}
+The revised manuscript now mentions the three-dimensional semi-Lagrangian finite volume scheme, SLICE-3D \citep{zerroukat-allen2012}.
+\TODO{SLICE-3D is a three-dimensional semi-Lagrangian finite volume scheme (conservative remapping/`cascade') that applies separate conservative remappings in each dimension.  This sounds like some form of dimension splitting, so it is not multidimensional?}
 
-\vspace{2mm}
+In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cites the original Heikes and Randall articles \citep{heikes-randall1995a,heikes-randall1995b} on which the hexagonal-icosahedral mesh generator is based.
 
-Some brief comments on how the approach extends to three dimensions would be
+\begin{quotation}
+\begin{comment}
+\item Some brief comments on how the approach extends to three dimensions would be
 appropriate.
+\end{comment}
+\end{quotation}
+\TODO{}
 
-\vspace{4mm}
 
 \subsection*{Typos, etc}
 
-Introduction, second sentence: `modification of the lower boundary' is an odd way to
+\begin{quotation}
+\begin{comment}
+\item Introduction, second sentence: `modification of the lower boundary' is an odd way to
 think of it.
+\end{comment}
+\end{quotation}
+Reworded to say, ``the mesh is necessarily distorted \revtwo{next to} the lower boundary''.
 
-P2, 5 lines from the bottom: `...non-simply connected domains...'. I found this
+\begin{quotation}
+\begin{comment}
+\item P2, 5 lines from the bottom: `...non-simply connected domains...'. I found this
 phrase confusing.
+\end{comment}
+\end{quotation}
+Reworded to say, ``
+Unlike semi-Lagrangian finite volume schemes, swept-area and method-of-lines schemes \revtwo{achieve conservation for small-scale rotational flows that twist departure domains so that they are not simply-connected and self-intersect} \citep{lauritzen2011}.
+''
 
-P3 line 17: `cubic, upwind-biased stencil'. Surely it is the polynomial that is
+\begin{quotation}
+\begin{comment}
+\item P3 line 17: `cubic, upwind-biased stencil'. Surely it is the polynomial that is
 cubic, rather than the stencil?
+\end{comment}
+\end{quotation}
+\TODO{}
 
-P3 below (2): `stable ... with some upwinding'. Presumably some qualification is required
+\begin{quotation}
+\begin{comment}
+\item P3 below (2): `stable ... with some upwinding'. Presumably some qualification is required
 (with sufficient upwinding)?
+\end{comment}
+\end{quotation}
+\TODO{}
 
-P5 footnote: could be made
+\begin{quotation}
+\begin{comment}
+\item P5 footnote: could be made
+\end{comment}
+\end{quotation}
+Fixed.
 
-P14 5 lines from the bottom: cubic should be cubicFit?
+\begin{quotation}
+\begin{comment}
+\item P14 5 lines from the bottom: cubic should be cubicFit?
+\end{comment}
+\end{quotation}
+Fixed.
 
-P18 2 lines from the bottom: imprinting in
+\begin{quotation}
+\begin{comment}
+\item P18 2 lines from the bottom: imprinting in
+\end{comment}
+\end{quotation}
+Fixed.
 
 
 \section*{\revthree{Reviewer \#3}}
@@ -311,23 +433,56 @@ problems for testing numerical advection schemes.
 
 \subsection*{Comments and questions}
 
-Can you comment on the stencil for triangular grids. In case of a slightly perturbed triangular grid
+\begin{quotation}
+\begin{comment}
+\setcounter{commenti}{0}
+\item Can you comment on the stencil for triangular grids. In case of a slightly perturbed triangular grid
 with  equilateral triangles the stencil changes in comparison the unperturbed case.
+\end{comment}
+\end{quotation}
+\TODO{I hadn't commented on triangles because we haven't included any results on triangular meshes.  Does this comment relate to the opposedness calculations?}
 
-Why do you prefer the point wise approximation?
 
-The singular value test should be relative to the largest singular value.
+\begin{quotation}
+\begin{comment}
+\item Why do you prefer the point wise approximation?
+\end{comment}
+\end{quotation}
+\TODO{I could cite other papers that use a point wise least squares approximation.  What is their motivation for choosing it?  Would we expect weighting by cell volume to have any advantages?  It would not ensure numerical stability.  I could just mention that we haven't considered weighting by cell volume.}
 
-The weighting can degrade the condition number of the least squares problem.
+\begin{quotation}
+\begin{comment}
+\item The singular value test should be relative to the largest singular value.
+\end{comment}
+\end{quotation}
+\TODO{Why, out of interest?  I looked into this briefly when I was implementing the scheme but couldn't find suitable literature.  This will require a code change and I'll have to rerun tests to check that the code change does not result in any changes to stencil coefficients.  I haven't tested the sensitivity to the minimum singular value threshold.}
 
-Is there a smoothing of  hexagonal-icosahedral mesh after refinement.
+\begin{quotation}
+\begin{comment}
+\item The weighting can degrade the condition number of the least squares problem.
+\end{comment}
+\end{quotation}
+\TODO{Yes.  A previous version of cubicFit used much larger multipliers.  We restrict multipliers to be 1024 at most so that the matrix equation does not become ill-conditioned.}
 
+\begin{quotation}
+\begin{comment}
+\item Is there a smoothing of  hexagonal-icosahedral mesh after refinement.
+\end{comment}
+\end{quotation}
+\TODO{}
+
+\begin{quotation}
+\begin{comment}
 Can you comment on the projection to the tangent plane for the spherical test example. 
 Note that projection to another grid can change the interpolation/approximation essentially, 
 like the transformation of a boundary following grid in physical space to a Cartesian grid in 
 computational space. Why is the interpolation/approximation not done in 3 dimensional 
 physical space.
+\end{comment}
+\end{quotation}
+\TODO{Good question.  It means we can a two-dimensional polynomial.  \citep{skamarock-menchaca2010} mention that \citep{lashley2002} found little sensitivity to various approaches for tangent plane projections.  \citep{skamarock-gassmann2011} also found that results are insensitive to the tangent-plane approximation.}
 
+\section*{References}
 \bibliographystyle{elsarticle-num}
 \bibliography{references}
 \end{document}

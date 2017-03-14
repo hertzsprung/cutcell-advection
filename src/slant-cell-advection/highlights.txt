@@ -1,4 +1,4 @@
 - The scheme is second-order convergent regardless of mesh distortions
-- A von Neumann analysis ensures stability on arbitrarily-structured meshes
+- A von Neumann analysis ensures numerical stability on arbitrary meshes
 - Sub-grid reconstructions are mostly precomputed depending on the mesh geometry alone
 - Slanted cell meshes avoid severe time-step constraints associated with cut cells

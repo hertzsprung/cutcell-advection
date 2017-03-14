@@ -27,7 +27,7 @@ What are the potential advantages of our slanted cell mesh technique?
 Limitations of scope
 ====================
 - it is difficult to maintain high vertical resolution about the ground at any surface elevation [y&s2010] which can be computationally expensive [walko-avissar2008b]; we are not going to address this issue here
-- some papers [find refs] say that it is too computationally expensive to use/difficult to parallelise arbitrarily structured meshes -- OpenFOAM seems to do a pretty good job, but we're not concerned with computational efficiency here
+- some papers [find refs] say that it is too computationally expensive to use/difficult to parallelise arbitrary meshes -- OpenFOAM seems to do a pretty good job, but we're not concerned with computational efficiency here
 
 Aim
 ===

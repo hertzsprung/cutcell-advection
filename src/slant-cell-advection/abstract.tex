@@ -1,6 +1,6 @@
 \begin{abstract}
 Including terrain in atmospheric models gives rise to mesh distortions near the lower boundary that can degrade accuracy and challenge the stability of transport schemes.
-Multidimensional transport schemes avoid splitting errors on distorted and arbitrarily-structured meshes, and method-of-lines schemes have low computational cost because they perform reconstructions at fixed points.
+Multidimensional transport schemes avoid splitting errors on distorted, \revone{arbitrary meshes}, and method-of-lines schemes have low computational cost because they perform reconstructions at fixed points.
 
 This paper presents a multidimensional method-of-lines finite volume transport scheme, ``cubicFit'', which is designed to be numerically stable on arbitrary meshes.
 Constraints derived from a von Neumann stability analysis are imposed during model initialisation to obtain stability and improve accuracy in distorted regions of the mesh, and near steeply-sloping lower boundaries.

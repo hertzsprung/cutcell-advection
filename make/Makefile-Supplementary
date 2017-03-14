@@ -21,4 +21,4 @@ build/slant-cell-advection/high-order-correction.pdf: \
 
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,motivation))
 
-$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,jcp-review))
+$(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection-responses))

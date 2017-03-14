@@ -4,9 +4,9 @@
 The horizontal transport test in the previous section is useful for assessing numerical accuracy on terrain-following meshes, but it presents no particular challenge on cut cell meshes because there is no flow through the distorted cut cells near the ground \citep{good2014}.
 Here we present another variant of the standard horizontal transport test that challenges transport schemes on all mesh types.  By positioning the tracer next to the ground and modifying the velocity field, we can assess the accuracy of the cubicFit scheme near the lower boundary.  Results using the cubicFit scheme are compared with the linearUpwind scheme on basic terrain-following, cut cell and slanted cell meshes.
 
-
 Cut cell meshes are constructed using the ASAM grid generator \citep{jaehn2015,asam2010}.  Slanted cell meshes are constructed following the approach by Shaw and Weller \citep{shaw-weller2016}: vertices that are underground are moved up to the surface and zero-area faces and zero-volume cells are removed.  Unlike \citep{shaw-weller2016}, vertices are never moved downwards.
 
+\revtwo{Following Sch\"ar et al. \citep{schaer2002}, the domain is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges, with a mesh spacing of $\Delta x = \SI{1000}{\meter}$ and $\Delta z = \SI{500}{\meter}$.}
 Cell edges in the central region of the domain are shown in figure~\ref{fig:mountainAdvection-meshes} for each of the three mesh types.
 Cells in the BTF mesh are highly distorted over steep slopes (figure~\ref{fig:mountainAdvection-meshes}a) while the cut cell mesh (figure~\ref{fig:mountainAdvection-meshes}b) and slanted cell mesh (figure~\ref{fig:mountainAdvection-meshes}c) are orthogonal everywhere except for cells nearest the ground.
 

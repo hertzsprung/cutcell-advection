@@ -4,7 +4,7 @@ Multidimensional transport schemes avoid splitting errors on distorted, \revone{
 
 This paper presents a multidimensional method-of-lines finite volume transport scheme, ``cubicFit'', which is designed to be numerically stable on arbitrary meshes.
 Constraints derived from a von Neumann stability analysis are imposed during model initialisation to obtain stability and improve accuracy in distorted regions of the mesh, and near steeply-sloping lower boundaries.
-Reconstruction calculations depend upon the mesh only, needing just one vector multiply per face per time-step irrespective of the velocity field.
+Reconstruction calculations depend upon the mesh only, needing just one vector multiply per face per \revtwo{time-stage} irrespective of the velocity field.
 
 The cubicFit scheme is evaluated using three, idealised numerical tests.  The first is a variant of a standard horizontal transport test on severely distorted terrain-following meshes.
 The second is a new test case that assesses accuracy near the ground by transporting a tracer at the lower boundary over steep terrain on terrain-following meshes, cut-cell meshes, and new, slanted-cell meshes that do not suffer from severe time-step constraints associated with cut cells.

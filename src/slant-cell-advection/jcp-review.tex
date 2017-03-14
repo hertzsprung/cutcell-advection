@@ -10,9 +10,10 @@
 \usepackage[british]{babel}
 \usepackage{csquotes}
 \usepackage[T1]{fontenc}
+\usepackage{siunitx}
 \usepackage{enumitem}
 
-\newcommand{\TODO}[1]{TODO: \textit{#1}}
+\newcommand{\TODO}[1]{\textcolor{darkgray}{TODO \textit{#1}}}
 \newcommand{\revone}[1]{\textcolor{purple}{\textbf{#1}}}
 \newcommand{\revtwo}[1]{\textcolor{teal}{\textbf{#1}}}
 \newcommand{\revthree}[1]{\textcolor{olive}{\textbf{#1}}}
@@ -20,6 +21,11 @@
 
 \newlist{comment}{enumerate}{1}                                                 
 \setlist[comment,1]{label={\arabic{commenti}.},leftmargin=*,resume=comment}
+
+\renewenvironment{abstract}{\global\setbox\absbox=\vbox\bgroup
+\hsize=\textwidth\def\baselinestretch{1}%
+\noindent\unskip\ignorespaces}
+{\egroup}
 
 \begin{document}
 \begin{frontmatter}
@@ -32,9 +38,11 @@
 \author{Hilary Weller}
 \author{John Methven}
 \author{Terry Davies}
-\end{frontmatter}
 
+\begin{abstract}
 We greatly appreciate the reviewers' detailed comments and questions.  The revised manuscript highlights changes with a bold typeface and the text colour corresponds to the section headings below.  The revised manuscript also highlights a small number of additional changes \revother{in orange}.
+\end{abstract}
+\end{frontmatter}
 
 \section*{\revone{Reviewer \#1}}
 This paper presents a multidimensional method-of-lines finite-volume transport scheme,
@@ -72,7 +80,9 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     with the upwind scheme), what is then the difference in runtime?
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{I think OpenFOAM's linearUpwind implementation would be more efficient if it was expressed as a weighted sum rather than a gradient reconstruction at every time-stage.  If I can express linearUpwind as a weighted sum then I can compare the number of multiplies for a given stencil.}
+
+\TODO{I also like the idea of comparing computational cost (measured in number of multiplies) for a fixed $\ell_2$ error.  It would be natural to do this for the `minimal' resolution measurement that we've already documented for linearUpwind and cubicFit.}
 
 \begin{quotation}
 \begin{comment}
@@ -83,7 +93,13 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     not. (See also the subsequent comment.)
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{
+\begin{itemize}
+	\item The stencil construction procedure already applies to two or three dimensions
+	\item The definition of candidate polynomials also generalises naturally to three dimensions
+	\item Assuming that a 3D mesh comprises prismatic cells arranged in columns then the computational cost in 3D will be three times the computational cost in 2D
+\end{itemize}
+}
 
 \begin{quotation}
 \begin{comment}
@@ -183,7 +199,9 @@ Fixed.
     respect to the time step for the considered test cases?
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{I need to mention why I chose CFL ~= 0.4 in the manuscript.  First, this provides a `typical' time-step as recommended by Lauritzen et al. \citep{lauritzen2012}.  Second, I wanted to examine spatial errors and not time-stepping errors.
+We have mentioned that stability was achieved at Courant numbers close to, but smaller than, one.  I didn't mention that Courant numbers slightly above one were unstable although I have indeed found this is the case.
+  Also, I found that cubicFit was largely insensitivity to the time-step size or time-stepping method (two-stage Heun, three-stage Heun or classic RK4).}
 
 \begin{quotation}
 \begin{comment}
@@ -193,9 +211,7 @@ Fixed.
 Fixed.
 
 
-
 \section*{\revtwo{Reviewer \#2}}
-
 
 \subsection*{General remarks}
 
@@ -216,7 +232,6 @@ recommend publication after the points below are addressed.
 
 \subsection*{Main points}
 
-
 \begin{quotation}
 \begin{comment}
 \setcounter{commenti}{0}
@@ -226,7 +241,7 @@ vector multiply per face per time step'. Since the two-stage Heun scheme
 step (or, more generally, one vector multiply per face per {\it stage})?
 \end{comment}
 \end{quotation}
-\TODO{}
+Correct.  The term `time-step' has been replaced with `time-stage' everywhere this calculation is discussed.  \TODO{Hilary, is this reasonable terminology?  Google suggests it is already used in published literature.}
 
 \begin{quotation}
 \begin{comment}
@@ -254,7 +269,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{Reviewer one raised similar concerns about the CFL criterion so I've put my response next to their comment for now.}
 
 \begin{quotation}
 \begin{comment}
@@ -266,7 +281,7 @@ $\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
 $\hat{\phi}$, etc. I think the conclusion would be the same.
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{I'll try this}
 
 \begin{quotation}
 \begin{comment}
@@ -275,7 +290,7 @@ It would be interesting to know if the weak instability of (2) (noted on p3) aff
 the constraints (57), (58), (63).
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{I'll try this}
 
 \begin{quotation}
 \begin{comment}
@@ -286,14 +301,14 @@ replacing $\mathbf{u} \cdot \mathbf{S}_f$ by $| \mathbf{u} \cdot \mathbf{S}_f |$
 in~(4).
 \end{comment}
 \end{quotation}
-\TODO{}
+Equation (4) should use the absolute value $\lvert \mathbf{u} \cdot \mathbf{S}_f \rvert$.  This is how the Courant number is calculated in OpenFOAM\footnote{\url{https://github.com/OpenFOAM/OpenFOAM-dev/blob/master/src/finiteVolume/cfdTools/incompressible/CourantNo.H\#L39}}.  Equation (4) has been corrected in the revised manuscript.
 
 \begin{quotation}
 \begin{comment}
 \item Section 3.2 and Table~1: what resolution is used?
 \end{comment}
 \end{quotation}
-\TODO{}
+Added a sentence near the beginning of section 3.2.  The mesh spacing is the same as Sch\"ar et al. \citep{schaer2002} with $\Delta x = \SI{1000}{\meter}$ and $\Delta z = \SI{500}{\meter}$.
 
 \subsection*{Minor points}
 
@@ -313,7 +328,7 @@ and smaller stencil?
 has slipped into the 2D vertical slice case without explicitly saying so.
 \end{comment}
 \end{quotation}
-\TODO{}
+The term `quadrilateral' has been removed from these paragraphs since it is sufficient to say that the methods modify regular meshes.  These meshes may be rectilinear for a limited area domain or curvilinear for a global domain.
 
 \begin{quotation}
 \begin{comment}
@@ -321,7 +336,7 @@ has slipped into the 2D vertical slice case without explicitly saying so.
 when the grid permits it (e.g.\ not a hexagonal grid).
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{Is this entirely true?  Hilary mentioned to me that Almut Gassmann has designed (split?) advection schemes for hexagons, for example.}
 
 \begin{quotation}
 \begin{comment}
@@ -349,7 +364,7 @@ In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cit
 appropriate.
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{Reviewer one also asked us to comment on an extension to 3D.  I've responded to their request for now.}
 
 
 \subsection*{Typos, etc}
@@ -378,7 +393,7 @@ Unlike semi-Lagrangian finite volume schemes, swept-area and method-of-lines sch
 cubic, rather than the stencil?
 \end{comment}
 \end{quotation}
-\TODO{}
+Yes, reworded to say, ``the scheme fits \revtwo{a multidimensional cubic polynomial over an upwind-biased stencil}''.
 
 \begin{quotation}
 \begin{comment}
@@ -386,7 +401,7 @@ cubic, rather than the stencil?
 (with sufficient upwinding)?
 \end{comment}
 \end{quotation}
-\TODO{}
+Reworded to say ``with \revtwo{sufficient upwinding}'' as suggested.
 
 \begin{quotation}
 \begin{comment}
@@ -440,7 +455,7 @@ problems for testing numerical advection schemes.
 with  equilateral triangles the stencil changes in comparison the unperturbed case.
 \end{comment}
 \end{quotation}
-\TODO{I hadn't commented on triangles because we haven't included any results on triangular meshes.  Does this comment relate to the opposedness calculations?}
+\TODO{I hadn't commented on triangles because we haven't included any results on triangular meshes.  I \emph{did} try the deformational flow test case on a sphere tessellated by triangles.  I found that linearUpwind was more accurate than cubicFit at finer mesh spacings.  We speculated that this was because the cubicFit stencil was unnecessarily large on triangular meshes.  Does this particular comment about equilateral triangles relate to the `opposedness' calculations performed during stencil construction?}
 
 
 \begin{quotation}
@@ -448,28 +463,36 @@ with  equilateral triangles the stencil changes in comparison the unperturbed ca
 \item Why do you prefer the point wise approximation?
 \end{comment}
 \end{quotation}
-\TODO{I could cite other papers that use a point wise least squares approximation.  What is their motivation for choosing it?  Would we expect weighting by cell volume to have any advantages?  It would not ensure numerical stability.  I could just mention that we haven't considered weighting by cell volume.}
+\TODO{First of all, as opposed to what?  It's cheaper to reconstruct point values (face values) than it is to reconstruct cell integrals like swept-area schemes.}
+
+\TODO{There is existing CFD literature that uses point-wise polynomial least squares reconstructions \citep{cuetofelgueroso2006,cuetofelgueroso2007}.  They call this a `top-down' approach: ``we work with \emph{pointwise} values of the conserved variables, associated to the cell-centroids''.  This is unlike the traditional `bottom-up' finite volume approach.  This approach uses a cell-average, discontinous conserved field and a polynomial reconstruction of a piecewise continuous flow field from the a piecewise constant flow field representation.}
+
+\TODO{What is Cueto-Felgueroso's motivation for choosing it?  Would we expect weighting by cell volume to have any advantages?  My monitoring committee asked this a long time ago.  Certainly it would not ensure numerical stability.}
 
 \begin{quotation}
 \begin{comment}
 \item The singular value test should be relative to the largest singular value.
 \end{comment}
 \end{quotation}
-\TODO{Why, out of interest?  I looked into this briefly when I was implementing the scheme but couldn't find suitable literature.  This will require a code change and I'll have to rerun tests to check that the code change does not result in any changes to stencil coefficients.  I haven't tested the sensitivity to the minimum singular value threshold.}
+\TODO{Why, out of interest?  Because this is related to the condition number $cond(A) = \|A\| \: \|A^+\|$?  See \url{http://math.stackexchange.com/q/375421/89878}.}
+
+\TODO{I looked into this briefly when I was implementing the scheme but couldn't find suitable literature.  This will require a code change and I'll have to rerun tests to check that the code change does not result in any changes to stencil coefficients.  I haven't thorougly tested the sensitivity to the minimum singular value threshold before.  But perhaps I should.}
 
 \begin{quotation}
 \begin{comment}
 \item The weighting can degrade the condition number of the least squares problem.
 \end{comment}
 \end{quotation}
-\TODO{Yes.  A previous version of cubicFit used much larger multipliers.  We restrict multipliers to be 1024 at most so that the matrix equation does not become ill-conditioned.}
+\TODO{Yes.  We restrict multipliers to be 1024 at most so that the matrix equation does not become ill-conditioned.
+A previous version of cubicFit used much larger multipliers.
+Maybe I can examine what happens to the condition number with various multipliers.}
 
 \begin{quotation}
 \begin{comment}
-\item Is there a smoothing of  hexagonal-icosahedral mesh after refinement.
+\item Is there a smoothing of hexagonal-icosahedral mesh after refinement.
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{I don't know off-hand, I'll have to check Thuburn et al. 2014 \citep{thuburn2014} and perhaps the original Heikes and Randall articles \citep{heikes-randall1995a,heikes-randall1995b}.}
 
 \begin{quotation}
 \begin{comment}
@@ -480,7 +503,9 @@ computational space. Why is the interpolation/approximation not done in 3 dimens
 physical space.
 \end{comment}
 \end{quotation}
-\TODO{Good question.  It means we can a two-dimensional polynomial.  \citep{skamarock-menchaca2010} mention that \citep{lashley2002} found little sensitivity to various approaches for tangent plane projections.  \citep{skamarock-gassmann2011} also found that results are insensitive to the tangent-plane approximation.}
+\TODO{Good question.  Using a projection means we can a two-dimensional polynomial.  Skamarock and friends have used the same projection before \citep{skamarock-menchaca2010,skamarock-gassmann2011}.  They mention that results are insensitive to the various details of the tangent-plane approximation.  I'm not sure what the details are?  They also mention that \citep{lashley2002} found little sensitivity to various approaches, too.}
+
+\TODO{Hilary mentioned at least one other possible projection other than tangent-plane which preserves great-circle distances.  We also discussed the implications for avoiding a projection altogether and including a third dimension in the polynomial reconstruction.  What was the outcome of this discussion?}
 
 \section*{References}
 \bibliographystyle{elsarticle-num}

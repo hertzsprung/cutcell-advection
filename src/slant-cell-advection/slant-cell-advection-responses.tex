@@ -108,7 +108,9 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-\TODO{}
+\TODO{We did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  Should we try to analyse this?}
+
+\TODO{I'm not sure what to expect regarding stability/accuracy in 3D.  Perhaps I should try it.  Henry (OpenFOAM) would really like me to get it working in 3D so the code can be pushed upstream.}
 
 \begin{quotation}
 \begin{comment}
@@ -137,7 +139,7 @@ Thank you, included.
     sugggest to remove "zero-dimensional".
 \end{comment}
 \end{quotation}
-\TODO{Hilary?}
+Removed.
 
 \begin{quotation}
 \begin{comment}
@@ -199,9 +201,9 @@ Fixed.
     respect to the time step for the considered test cases?
 \end{comment}
 \end{quotation}
-\TODO{I need to mention why I chose CFL ~= 0.4 in the manuscript.  First, this provides a `typical' time-step as recommended by Lauritzen et al. \citep{lauritzen2012}.  Second, I wanted to examine spatial errors and not time-stepping errors.
-We have mentioned that stability was achieved at Courant numbers close to, but smaller than, one.  I didn't mention that Courant numbers slightly above one were unstable although I have indeed found this is the case.
-  Also, I found that cubicFit was largely insensitivity to the time-step size or time-stepping method (two-stage Heun, three-stage Heun or classic RK4).}
+Lauritzen et al. \citep{lauritzen2012} recommend using a `typical' Courant number for transport tests on the sphere, and so we follow their recommendation throughout.  This is now stated \TODO{on page nnn} in the revised manuscript.
+A maximum Courant number of about 0.4 avoids any accuracy and stability issues caused by time-stepping.
+A separate series of tests confirm that the stability limit is 1.0, as presented \TODO{on page nnn} in the revised manuscript.
 
 \begin{quotation}
 \begin{comment}
@@ -320,7 +322,8 @@ is second order convergent, might it be possible to use a lower degree polynomia
 and smaller stencil?
 \end{comment}
 \end{quotation}
-\TODO{Hilary?  We can't get the same accuracy with a lower degree polynomial and a smaller stencil.  Although we haven't demonstrated this here.}
+\TODO{want higher order in the direction of flow, hence cubic in $x$.  upwind-biasing is for stability (citation? leonard?)}
+A previous version of cubicFit was in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
 
 \begin{quotation}
 \begin{comment}
@@ -354,7 +357,6 @@ for the hexagonal-icosahedral mesh should probably be given to Heikes and Randal
 \end{comment}
 \end{quotation}
 The revised manuscript now mentions the three-dimensional semi-Lagrangian finite volume scheme, SLICE-3D \citep{zerroukat-allen2012}.
-\TODO{SLICE-3D is a three-dimensional semi-Lagrangian finite volume scheme (conservative remapping/`cascade') that applies separate conservative remappings in each dimension.  This sounds like some form of dimension splitting, so it is not multidimensional?}
 
 In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cites the original Heikes and Randall articles \citep{heikes-randall1995a,heikes-randall1995b} on which the hexagonal-icosahedral mesh generator is based.
 
@@ -383,9 +385,7 @@ Reworded to say, ``the mesh is necessarily distorted \revtwo{next to} the lower 
 phrase confusing.
 \end{comment}
 \end{quotation}
-Reworded to say, ``
-Unlike semi-Lagrangian finite volume schemes, swept-area and method-of-lines schemes \revtwo{achieve conservation for small-scale rotational flows that twist departure domains so that they are not simply-connected and self-intersect} \citep{lauritzen2011}.
-''
+The revised manuscript includes an explanation that is more intuitive and describes the example illustrated by Lauritzen et al. \citep{lauritzen2011}.
 
 \begin{quotation}
 \begin{comment}
@@ -455,15 +455,14 @@ problems for testing numerical advection schemes.
 with  equilateral triangles the stencil changes in comparison the unperturbed case.
 \end{comment}
 \end{quotation}
-\TODO{I hadn't commented on triangles because we haven't included any results on triangular meshes.  I \emph{did} try the deformational flow test case on a sphere tessellated by triangles.  I found that linearUpwind was more accurate than cubicFit at finer mesh spacings.  We speculated that this was because the cubicFit stencil was unnecessarily large on triangular meshes.  Does this particular comment about equilateral triangles relate to the `opposedness' calculations performed during stencil construction?}
-
+We haven't explored triangular meshes in this paper, and more work would be needed to evaluate the suitability of stencils and stability criteria on these meshes.  We would not expect the stencil topology to change for triangles that are slightly perturbed from equilateral because such triangles will always have two opposing faces as given by equations (6) and (8).
 
 \begin{quotation}
 \begin{comment}
 \item Why do you prefer the point wise approximation?
 \end{comment}
 \end{quotation}
-\TODO{First of all, as opposed to what?  It's cheaper to reconstruct point values (face values) than it is to reconstruct cell integrals like swept-area schemes.}
+A point-wise approximation is computationally cheaper than a swept-area approach which must enforce integral constraints on the polynomial reconstruction.
 
 \TODO{There is existing CFD literature that uses point-wise polynomial least squares reconstructions \citep{cuetofelgueroso2006,cuetofelgueroso2007}.  They call this a `top-down' approach: ``we work with \emph{pointwise} values of the conserved variables, associated to the cell-centroids''.  This is unlike the traditional `bottom-up' finite volume approach.  This approach uses a cell-average, discontinous conserved field and a polynomial reconstruction of a piecewise continuous flow field from the a piecewise constant flow field representation.}
 
@@ -474,25 +473,21 @@ with  equilateral triangles the stencil changes in comparison the unperturbed ca
 \item The singular value test should be relative to the largest singular value.
 \end{comment}
 \end{quotation}
-\TODO{Why, out of interest?  Because this is related to the condition number $cond(A) = \|A\| \: \|A^+\|$?  See \url{http://math.stackexchange.com/q/375421/89878}.}
-
-\TODO{I looked into this briefly when I was implementing the scheme but couldn't find suitable literature.  This will require a code change and I'll have to rerun tests to check that the code change does not result in any changes to stencil coefficients.  I haven't thorougly tested the sensitivity to the minimum singular value threshold before.  But perhaps I should.}
+\TODO{We should try this.  Does it change the coefficients for any tests?  The ratio of largest and smallest condition numbers gives the condition number of the matrix (citation?)}
 
 \begin{quotation}
 \begin{comment}
 \item The weighting can degrade the condition number of the least squares problem.
 \end{comment}
 \end{quotation}
-\TODO{Yes.  We restrict multipliers to be 1024 at most so that the matrix equation does not become ill-conditioned.
-A previous version of cubicFit used much larger multipliers.
-Maybe I can examine what happens to the condition number with various multipliers.}
+We restrict multipliers to be at most 1024 so that the matrix equation does not become ill-conditioned.  \TODO{I could measure this, see above comment, too}
 
 \begin{quotation}
 \begin{comment}
 \item Is there a smoothing of hexagonal-icosahedral mesh after refinement.
 \end{comment}
 \end{quotation}
-\TODO{I don't know off-hand, I'll have to check Thuburn et al. 2014 \citep{thuburn2014} and perhaps the original Heikes and Randall articles \citep{heikes-randall1995a,heikes-randall1995b}.}
+The hexagonal-icosahedral mesh is not smoothed but iteratively refined.  The revised manuscript includes citations for this procedure \citep{heikes-randall1995a,heikes-randall1995b}.
 
 \begin{quotation}
 \begin{comment}

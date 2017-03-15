@@ -33,7 +33,8 @@ Two-dimensional semi-Lagrangian finite volume schemes such as \citep{iske-kaeser
 Swept area schemes such as \citep{lashley2002,skamarock-menchaca2010,lauritzen2011,thuburn2014} calculate the flux through a cell face by integrating over the upstream area that is swept out over one time-step.  Such schemes differ in their choice of area approximation, sub-grid reconstruction, and spatial integration method.
 Because swept area schemes integrate over the reconstructed field, they typically require a matrix-vector multiply per face \citep{thuburn2014,skamarock-menchaca2010}.
 Method-of-lines schemes such as \citep{weller2009,skamarock-gassmann2011} use a spatial discretisation to reduce the transport PDE to an ODE that is typically solved using a multi-stage time-stepping method.
-Unlike semi-Lagrangian finite volume schemes, swept-area and method-of-lines schemes \revtwo{achieve conservation for small-scale rotational flows that twist departure domains so that they are not simply-connected and self-intersect} \citep{lauritzen2011}.
+Unlike semi-Lagrangian finite volume schemes, swept-area and method-of-lines schemes \revtwo{achieve conservation for small-scale rotational flows.
+Such flows can twist the departure domain to such an extent that the domain intersects itself \citep{lauritzen2011}.  In two dimensions, a self-intersecting departure domain has a bowtie or hourglass shape}.
 There are many more types of atmospheric transport schemes, but all can be classified according to their treatment of the three spatial dimensions.  A more comprehensive overview is presented by Lauritzen et al. \cite{lauritzen2014}.
 
 For transport schemes that are ordinarily classified as `multidimensional', a further distinction ought to made between horizontally-multidimensional and three-dimensional schemes.

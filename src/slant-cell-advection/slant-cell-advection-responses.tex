@@ -339,7 +339,8 @@ The term `quadrilateral' has been removed from these paragraphs since it is suff
 when the grid permits it (e.g.\ not a hexagonal grid).
 \end{comment}
 \end{quotation}
-\TODO{Is this entirely true?  Hilary mentioned to me that Almut Gassmann has designed (split?) advection schemes for hexagons, for example.}
+The revised manuscript explains these limitations, ``\revtwo{Dimensionally-split schemes have only been used with quadrilateral meshes where dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,katta2015}.
+For similar reasons, dimensionally-split schemes have only be used with terrain-following coordinate transforms and not cut cells.}''
 
 \begin{quotation}
 \begin{comment}
@@ -498,7 +499,8 @@ computational space. Why is the interpolation/approximation not done in 3 dimens
 physical space.
 \end{comment}
 \end{quotation}
-\TODO{Good question.  Using a projection means we can a two-dimensional polynomial.  Skamarock and friends have used the same projection before \citep{skamarock-menchaca2010,skamarock-gassmann2011}.  They mention that results are insensitive to the various details of the tangent-plane approximation.  I'm not sure what the details are?  They also mention that \citep{lashley2002} found little sensitivity to various approaches, too.}
+The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{skamarock-menchaca2010,skamarock-gassmann2011}.
+\TODO{Using a projection means we can a two-dimensional polynomial.  Skamarock and friends mention that results are insensitive to the various details of the tangent-plane approximation.  I'm not sure what the details are?  They mention that \citep{lashley2002} found little sensitivity to various approaches, too.}
 
 \TODO{Hilary mentioned at least one other possible projection other than tangent-plane which preserves great-circle distances.  We also discussed the implications for avoiding a projection altogether and including a third dimension in the polynomial reconstruction.  What was the outcome of this discussion?}
 

@@ -20,7 +20,11 @@ A huge variety of transport schemes have been developed for atmospheric models, 
 Such errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are still apparent in flows over steep terrain where meshes are highly distorted and metric terms in a terrain-following coordinate transform are large \citep{weller2017}.
 
 Transport schemes are often classified as dimensionally-split or multidimensional.
-Dimensionally-split schemes such as \citep{lin-rood1996,katta2015} calculate transport in each dimension separately before the flux contributions are combined.  Such schemes are computationally efficient and allow existing one-dimensional high-order methods to be used.  To use a dimensionally-split scheme over terrain, a terrain-following coordinate transform is required.
+Dimensionally-split schemes such as \citep{lin-rood1996,katta2015} calculate transport in each dimension separately before the flux contributions are combined.  Such schemes are computationally efficient and allow existing one-dimensional high-order methods to be used.
+\revtwo{
+Dimensionally-split schemes have only been used with quadrilateral meshes where dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,katta2015}.
+For similar reasons, dimensionally-split schemes have only be used with terrain-following coordinate transforms and not cut cells.
+}
 Perhaps confusingly, dimensionally-split schemes are sometimes called multidimensional, too, because they use one-dimensional techniques for multidimensional transport.
 
 Unlike dimensionally-split schemes, multidimensional schemes consider transport in two or three dimensions together.

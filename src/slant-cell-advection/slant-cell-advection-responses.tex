@@ -173,7 +173,8 @@ Fixed.
     set of stencil boundary faces?
 \end{comment}
 \end{quotation}
-\TODO{}
+Yes, a Neumann boundary condition is assumed for the stencils in figure 3 and so the boundary face values are excluded as explained in the footnote.  If the stencils in figure 3 included boundary values then each stencil would have three more stencil points along the lower boundary.
+\TODO{I don't see any contradiction here.  Is there anything I can do to make the manuscript clearer?}
 
 \begin{quotation}
 \begin{comment}
@@ -243,7 +244,7 @@ vector multiply per face per time step'. Since the two-stage Heun scheme
 step (or, more generally, one vector multiply per face per {\it stage})?
 \end{comment}
 \end{quotation}
-Correct.  The term `time-step' has been replaced with `time-stage' everywhere this calculation is discussed.  \TODO{Hilary, is this reasonable terminology?  Google suggests it is already used in published literature.}
+Correct.  The term `time-step' has been replaced with `time-stage' everywhere this calculation is discussed.
 
 \begin{quotation}
 \begin{comment}
@@ -260,7 +261,8 @@ stronger and suggests that these constraints are definitive: ``...stability cons
 ``...must satisfy...'', etc.
 \end{comment}
 \end{quotation}
-\TODO{}
+A note has been included in the revised introduction to say that the scheme is conditionally stable (\TODO{line nnn, page nnn}).
+Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, an idealised, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$}''.
 
 \begin{quotation}
 \begin{comment}
@@ -322,8 +324,9 @@ is second order convergent, might it be possible to use a lower degree polynomia
 and smaller stencil?
 \end{comment}
 \end{quotation}
-\TODO{want higher order in the direction of flow, hence cubic in $x$.  upwind-biasing is for stability (citation? leonard?)}
-A previous version of cubicFit was in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
+Section 2.1 now includes a comment on the choice, saying, ``\revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}'' (\TODO{line nnn, page nnn}).
+
+A previous version of cubicFit was used in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
 
 \begin{quotation}
 \begin{comment}
@@ -465,11 +468,8 @@ We would not expect the stencil topology to change for triangles that are slight
 \item Why do you prefer the point wise approximation?
 \end{comment}
 \end{quotation}
-A point-wise approximation is computationally cheaper than a swept-area approach which must enforce integral constraints on the polynomial reconstruction.
-
-\TODO{There is existing CFD literature that uses point-wise polynomial least squares reconstructions \citep{cuetofelgueroso2006,cuetofelgueroso2007}.  They call this a `top-down' approach: ``we work with \emph{pointwise} values of the conserved variables, associated to the cell-centroids''.  This is unlike the traditional `bottom-up' finite volume approach.  This approach uses a cell-average, discontinous conserved field and a polynomial reconstruction of a piecewise continuous flow field from the a piecewise constant flow field representation.}
-
-\TODO{What is Cueto-Felgueroso's motivation for choosing it?  Would we expect weighting by cell volume to have any advantages?  My monitoring committee asked this a long time ago.  Certainly it would not ensure numerical stability.}
+Most swept-area approaches must enforce integral constraints on the polynomial reconstruction.  Unlike swept-area approaches that require one matrix-vector multiply per face per time-stage, a point-wise approximation requires only one vector-vector multiply.
+The introduction has been modified to reinforce this point, saying, ``the cubicFit scheme has \revthree{a computational cost that is lower than most swept-area schemes and more comparable to dimensionally-split schemes}'' (\TODO{line nnn, page nnn}).
 
 \begin{quotation}
 \begin{comment}
@@ -501,10 +501,9 @@ computational space. Why is the interpolation/approximation not done in 3 dimens
 physical space.
 \end{comment}
 \end{quotation}
-The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{skamarock-menchaca2010,skamarock-gassmann2011}.
-\TODO{Using a projection means we can a two-dimensional polynomial.  Skamarock and friends mention that results are insensitive to the various details of the tangent-plane approximation.  I'm not sure what the details are?  They mention that \citep{lashley2002} found little sensitivity to various approaches, too.}
+The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{lashley2002,skamarock-menchaca2010,skamarock-gassmann2011}, and these studies found that accuracy was largely insensitive to the details of the projection method.  The revised manuscript clarifies our implementation, saying, ``\revthree{cell centres are projected perpendicular to a tangent plane is defined at the face centre}'' (\TODO{line nnn, page nnn}).
 
-\TODO{Hilary mentioned at least one other possible projection other than tangent-plane which preserves great-circle distances.  We also discussed the implications for avoiding a projection altogether and including a third dimension in the polynomial reconstruction.  What was the outcome of this discussion?}
+If the approximation was performed in 3D then polynomial terms involving $x$, $y$ and $z$ would be required.  It would no longer be possible to fit higher-order terms with the same, compact stencil because the polynomial would have to include more terms in all three dimensions.
 
 \section*{References}
 \bibliographystyle{elsarticle-num}

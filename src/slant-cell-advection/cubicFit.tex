@@ -18,6 +18,7 @@ The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a na
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly} \text{ .}
 \end{align}
 A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  The stencil geometry is expressed in a local coordinate system with the face centroid as the origin so that the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
+\revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}
 
 The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
@@ -95,7 +96,7 @@ which can be written as
 The rectangular matrix $\mathbf{B}$ has one row for each cell in the stencil and one column for each term in the polynomial.  $\mathbf{B}$ is called the \textit{stencil matrix}, and it is constructed using only the mesh geometry.
 A local coordinate system is established in which $x$ is normal to the face $f$ and $y$ is perpendicular to $x$.
 The coordinates $(x_i, y_i)$ give the position of the centroid of the $i$th cell in the stencil.
-A two-dimensional stencil is also used for the tests on spherical meshes in section~\ref{sec:deformationSphere}.  In these tests, cell centres are projected onto a plane that is tangent to the sphere at the face centre.
+A two-dimensional stencil is also used for the tests on spherical meshes in section~\ref{sec:deformationSphere}.  In these tests, \revthree{cell centres are projected perpendicular to a tangent plane is defined at the face centre.  Previous studies found that results were largely insensitive to the projection method \citep{skamarock-gassmann2011,lashley2002}.}
 
 The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $\mathbf{B}^+$, found by singular value decomposition,
 \begin{align}
@@ -142,7 +143,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
 	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular $x$--$z$ mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  Each stencil belongs to the face marked by a thick line.  The local coordinate system is shown, having an $x$ direction normal to the face a $y$ direction tangent to the face.  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
-Here we have assumed that the lower boundary has a Neumann boundary condition and so boundary faces are excluded from the stencils.}
+Here we have assumed that the lower boundary has a Neumann boundary condition and so \revone{lower} boundary faces are excluded from the stencils.}
 	\label{fig:boundaryStencils}
 \end{figure}
 
@@ -171,9 +172,9 @@ The candidate polynomials are all the dense subsets of $M(x,y)$ that have a sten
 So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers $\mathbf{m}$ so that the fit is numerically stable.
 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
-If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large departures from the smooth field $\bm{\phi}$.
+If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large, \revtwo{numerically unstable} departures from the smooth field $\bm{\phi}$.
 
-A one-dimensional von Neumann analysis was performed to obtain stability constraints on the weights $\mathbf{w}$.  The analysis is presented in appendix A, and it shows that the weights must satisfy three constraints,
+\revtwo{To avoid numerical instabilities, an idealised, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$},
 \begin{subequations}
 \label{eqn:stability}
 \begin{align}

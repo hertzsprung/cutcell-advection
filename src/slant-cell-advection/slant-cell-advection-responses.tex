@@ -477,7 +477,8 @@ The introduction has been modified to reinforce this point, saying, ``the cubicF
 \item The singular value test should be relative to the largest singular value.
 \end{comment}
 \end{quotation}
-\TODO{We should try this.  Does it change the coefficients for any tests?  The ratio of largest and smallest condition numbers gives the condition number of the matrix (citation?)}
+Agreed, this is a more meaningful test.  The code has been changed and the manuscript now reads, ``\revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}''
+\TODO{this has broken some of the unit tests, I need to find out why}
 
 \begin{quotation}
 \begin{comment}

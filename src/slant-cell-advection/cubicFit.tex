@@ -188,7 +188,7 @@ where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respecti
  The upwind, downwind and peripheral weights sum to one such that $w_u + w_d + \sum_{p \in P} w_p = 1$.
 
 The stabilisation procedure comprises three steps.  In the first step, the set of candidate polynomials is sorted in preference order so that candidates with more terms are preferred over those with fewer terms.
-If there are multiple candidates with the same number of terms, the minimum singular value of $\mathbf{B}$ is calculated for each candidate, and an ordering is imposed such that the candidate with the larger minimum singular value is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
+If there are multiple candidates with the same number of terms, the \revthree{ratio of minimum to maximum singular values} of $\mathbf{B}$ is calculated for each candidate, and an ordering is imposed such that the candidate with the larger \revthree{ratio} is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
 
 In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral points have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
 

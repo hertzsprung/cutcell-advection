@@ -166,7 +166,7 @@ For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6
 Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if the \revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}.
 Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial is not a candidate polynomial.
 
-The candidate polynomials are all the dense subsets of $M(x,y)$ that have a stencil matrix that is full rank.  The final stage of the cubicFit transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
+The candidate polynomials are all the dense subsets of $M(x,y)$ \revother{that have a cardinality greater than one and} that have a stencil matrix that is full rank.  The final stage of the cubicFit transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
 
 \subsubsection{Stabilisation procedure}
 \label{sec:stabilisation}

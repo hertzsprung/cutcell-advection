@@ -488,12 +488,8 @@ The introduction has been modified to reinforce this point, saying, ``the cubicF
 \item The singular value test should be relative to the largest singular value.
 \end{comment}
 \end{quotation}
-Agreed, this is a more meaningful test.  The code has been changed and the manuscript now reads, ``\revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}'' (\TODO{line nnn, page nnn}).  The preference ordering has also been changed to use the singular value ratio (\TODO{line nnn, page nnn}).
-
-\TODO{this changes some stencil weights, possibly for the worse.  For example, having candidates ordered by their minimum singular value resulted in weights $w_u = 0.8697$, $w_d = 0.1475$, $max(\lvert w_p \rvert) = 0.0659$.
-But now that the candidates are ordered by the singular value ratio, 
-$w_u = 0.9965459942$, $w_d = 0.1344156036$, $max(\lvert w_p \rvert) = 0.1449563476$.  Running a handful of slug advection tests shows that some tests have smaller errors using the singular value ratio ordering, some do not.}
-
+We tried some experiments using the ratio of smallest to largest singular values and found some sensitivities to this calculation, but it was not clear which choice resulted in more accurate simulations.
+For consistency, we have retained the original calculations in both parts of the implementation.  The revised manuscript includes a footnote on \TODO{line nnn, page nnn} that describes our findings.
 
 \begin{quotation}
 \begin{comment}

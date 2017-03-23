@@ -47,7 +47,6 @@ On a rectangular mesh, there is always one opposing face $g$, and it is exactly 
 Once the opposing faces have been determined, the set of internal and external cells must be found.  The \textit{internal cells} are those cells that are connected to the opposing faces.  Note that $c_u$ is always an internal cell.  The \textit{external cells} are those cells that share vertices with the internal cells.  Note that $c_d$ is always an external cell.  Finally, the \textit{stencil boundary faces} are boundary faces having Dirichlet boundary conditions\footnote{Boundary faces with Neumann boundary conditions would require extrapolated boundary values to be calculated.
 This would create a feedback loop in which boundary values are extrapolated from interior values, then interior values are transported using stencils that include boundary values.  
 We have not considered how such an extrapolation \revtwo{could be made} consistent with the multidimensional polynomial reconstruction.
-Using an inconsistent extrapolation, we found that the feedback loop is able to generate slow-growing numerical instabilities near some highly-distorted cells.
 Hence, boundary faces with Neumann boundary conditions are excluded from the set of stencil boundary faces.} that share a vertex with the internal cells.
 Having found these three sets, the stencil is constructed to comprise all internal cells, external cells and stencil boundary faces.
 
@@ -143,7 +142,7 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
 	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular $x$--$z$ mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  Each stencil belongs to the face marked by a thick line.  The local coordinate system is shown, having an $x$ direction normal to the face a $y$ direction tangent to the face.  For both stencils, attempting a least-squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
-Here we have assumed that the lower boundary has a Neumann boundary condition and so \revone{lower} boundary faces are excluded from the stencils.}
+	\revone{There is no normal flow at the lower boundary.}}
 	\label{fig:boundaryStencils}
 \end{figure}
 

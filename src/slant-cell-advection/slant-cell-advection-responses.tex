@@ -87,7 +87,7 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     with the upwind scheme), what is then the difference in runtime?
 \end{comment}
 \end{quotation}
-\TODO{I think OpenFOAM's linearUpwind implementation would be more efficient if it was expressed as a weighted sum rather than a gradient reconstruction at every time-stage.  If I can express linearUpwind as a weighted sum then I can compare the number of multiplies for a given stencil.}
+\TODO{linearUpwind has $n+1$ multiplies where $n$ is the number of cells neighbouring the upwind cell}
 
 \TODO{I also like the idea of comparing computational cost (measured in number of multiplies) for a fixed $\ell_2$ error.  It would be natural to do this for the `minimal' resolution measurement that we've already documented for linearUpwind and cubicFit.}
 
@@ -116,7 +116,9 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-\TODO{We did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  How should I respond?  Should we try to analyse this?}
+\TODO{This restriction could be referring to the amount of damping, or the number of polynomial terms that are removed.  To address the latter, I could plot \texttt{polynomialTerms} for faces of a particular mesh (and owner/neighbour choice).}
+
+\TODO{Regarding damping, we did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  Should we try to analyse this?}
 
 \TODO{I'm not sure what to expect regarding stability/accuracy in 3D, especially on distorted meshes.}
 
@@ -181,8 +183,9 @@ Fixed.
     set of stencil boundary faces?
 \end{comment}
 \end{quotation}
-Yes, a Neumann boundary condition is assumed for the stencils in figure 3 and so the boundary face values are excluded as explained in the footnote.  If the stencils in figure 3 included boundary values then each stencil would have three more stencil points along the lower boundary.
-\TODO{I don't see any contradiction here.  Is there anything I can do to make the manuscript clearer?}
+The original manuscript incorrectly conflated two issues.  In figure 3 and in all test cases, there is no normal flow at the lower boundary and so no boundary condition is required.  A zero gradient boundary condition is applied at the outlet boundary of all two-dimensional tests.
+
+The revised manuscript clarifies that the lower boundary in figure 3 has no normal flux.  The footnote on \TODO{page nnn} longer mentions the numerical instabilities associated with an inconsistent extrapolation because a Neumann boundary condition should never have been applied to the lower boundary.  The manuscript also clarifies boundary conditions in section 3.1 and section 3.2.
 
 \begin{quotation}
 \begin{comment}
@@ -469,7 +472,7 @@ with  equilateral triangles the stencil changes in comparison the unperturbed ca
 \end{comment}
 \end{quotation}
 We haven't explored triangular meshes in this paper, and more work would be needed to evaluate the suitability of stencils and stability criteria on these meshes.
-We believe that studies on triangular meshes are less worthwhile because they suffer from computational modes \citep{weller2012} and discrete geostrophic balance is not possible \citep{weller2009} on such meshes.
+We believe that studies on triangular meshes are less worthwhile because they suffer from computational modes \citep{weller2012}.
 We would not expect the stencil topology to change for triangles that are slightly perturbed from equilateral because such triangles will always have two opposing faces as given by equations (6) and (8).
 
 \begin{quotation}

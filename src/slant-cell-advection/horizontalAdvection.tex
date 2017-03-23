@@ -1,11 +1,13 @@
 \subsection{Horizontal transport over mountains}
+\label{sec:horizontal}
+
 A two-dimensional transport test was developed by Sch\"{a}r et al. \citep{schaer2002} to study the effect of terrain-following coordinate transformations on numerical accuracy.  In this standard test, a tracer is positioned aloft and transported horizontally over wave-shaped mountains.  The test challenges transport schemes because the tracer must cross mesh layers, which acts to reduce numerical accuracy \citep{schaer2002,shaw-weller2016}.
 Here we use a more challenging variant of this test that has steeper mountains and highly-distorted terrain-following meshes.
 Convergence results are compared using the linearUpwind and cubicFit transport schemes.
 
 The domain is defined on a rectangular $x$--$z$ plane that is \SI{301}{\kilo\meter} wide and \SI{25}{\kilo\meter} high as measured between parallel boundary edges.
 Boundary conditions are imposed on the tracer density $\phi$ such that $\phi = \SI{0}{\kilo\gram\per\meter\cubed}$ at the inlet boundary, and a zero normal gradient
-$\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet, ground and top boundaries.
+$\partial \phi / \partial n = \SI{0}{\kilo\gram\per\meter\tothe{4}}$ is imposed at the outlet boundary.  \revone{There is no normal flow at the lower and upper boundaries.}
 A range of mesh spacings are chosen so that $\Delta x \mathbin{:} \Delta z = 2\mathbin{:}1$ to match the original test specification from Sch\"{a}r et al. \citep{schaer2002}.
 
 The terrain is wave-shaped, specified by the surface elevation $h$ such that

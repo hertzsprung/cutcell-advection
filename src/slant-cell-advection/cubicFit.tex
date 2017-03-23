@@ -175,7 +175,7 @@ So far, we have constructed a stencil and found a set of candidate polynomials. 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
 If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large, \revtwo{numerically unstable} departures from the smooth field $\bm{\phi}$.
 
-\revtwo{To avoid numerical instabilities, an idealised, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$},
+\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$},
 \begin{subequations}
 \label{eqn:stability}
 \begin{align}

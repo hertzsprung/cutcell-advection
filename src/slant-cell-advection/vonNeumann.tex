@@ -85,3 +85,5 @@ If $k\Delta x = \pi$ then $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ and $\
 \end{align}
 where the peripheral cells $P$ is the set of all stencil cells except for the upwind cell and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
 We hypothesise that the three stability constraints (equations~\ref{eqn:vn:upwind}, \ref{eqn:vn:downwind} and \ref{eqn:uuConstraint}) are necessary but not sufficient for a transport scheme on arbitrary meshes.
+
+\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section~\ref{sec:mountainAdvection} demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below the stability limit.}

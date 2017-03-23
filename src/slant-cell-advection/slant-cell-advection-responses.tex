@@ -296,7 +296,7 @@ $\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
 $\hat{\phi}$, etc. I think the conclusion would be the same.
 \end{comment}
 \end{quotation}
-\TODO{I've tried this and, yes, the conclusion is the same.  It's perhaps clearer to me using an amplification factor $A$ from the outset, but maybe only because that's the way I was taught to do stability analyses.  Nevertheless, I'm happy to revise as the reviewer suggests.}
+\TODO{I've tried this and, yes, the conclusion is the same.  It's perhaps clearer to me using an amplification factor $A$ from the outset, maybe because that's the way I was taught to do stability analyses.}
 
 \begin{quotation}
 \begin{comment}
@@ -305,8 +305,7 @@ It would be interesting to know if the weak instability of (2) (noted on p3) aff
 the constraints (57), (58), (63).
 \end{comment}
 \end{quotation}
-\TODO{I'd like to do this but I'm not sure how to proceed analytically.  There is a paper on Runge--Kutta stability for advection \citep{baldauf2008} that could help me.}
-\TODO{If I choose to do no further analysis then the experimental results of maximum stable timesteps should suffice.}
+Such an analysis should be possible using the techniques in \citep{baldauf2008}.  We have chosen to focus on the spatial discretisation and have not explored in detail the stability or accuracy of cubicFit using different time-stepping methods.  The revised manuscript explains our choices in Appendix A, saying, ``\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section 3.2 demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below the stability limit.}''
 
 \begin{quotation}
 \begin{comment}

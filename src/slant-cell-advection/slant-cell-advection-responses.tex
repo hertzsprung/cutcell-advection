@@ -99,6 +99,7 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
 	\item The definition of candidate polynomials also generalises naturally to three dimensions
 	\item Assuming that a 3D mesh comprises prismatic cells arranged in columns then the computational cost in 3D will be three times the computational cost in 2D
 \end{itemize}
+	I would like to get a 3D advection test working on a Cartesian mesh.  Maybe just transport the Sch\"ar blob in a 3D, diagonal velocity field.  I needn't include this in the manuscript
 }
 
 \begin{quotation}
@@ -108,9 +109,9 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-\TODO{We did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  Should we try to analyse this?}
+\TODO{We did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  How should I respond?  Should we try to analyse this?}
 
-\TODO{I'm not sure what to expect regarding stability/accuracy in 3D.  Perhaps I should try it.  Henry (OpenFOAM) would really like me to get it working in 3D so the code can be pushed upstream.}
+\TODO{I'm not sure what to expect regarding stability/accuracy in 3D, especially on distorted meshes.}
 
 \begin{quotation}
 \begin{comment}
@@ -204,8 +205,7 @@ Fixed.
 \end{quotation}
 Lauritzen et al. \citep{lauritzen2012} recommend using a `typical' Courant number for transport tests on the sphere, and so we follow their recommendation throughout.  This is now stated \TODO{on page nnn} in the revised manuscript.
 A maximum Courant number of about 0.4 avoids any accuracy and stability issues caused by time-stepping.
-A separate series of tests confirm that the stability limit is 1.0, as presented \TODO{on page nnn} in the revised manuscript.
-\TODO{wrong! stability limit is greater than 2 it would seem!}
+\TODO{A separate series of tests confirm that the stability limit has a Courant number of\TODO{nnn}, as presented \TODO{on page nnn} in the revised manuscript.  Say something about how I'd wrongly assumed that the limit was $\mathrm{Co} = 1.0$.}
 
 \begin{quotation}
 \begin{comment}
@@ -477,15 +477,19 @@ The introduction has been modified to reinforce this point, saying, ``the cubicF
 \item The singular value test should be relative to the largest singular value.
 \end{comment}
 \end{quotation}
-Agreed, this is a more meaningful test.  The code has been changed and the manuscript now reads, ``\revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}''
-\TODO{this has broken some of the unit tests, I need to find out why}
+Agreed, this is a more meaningful test.  The code has been changed and the manuscript now reads, ``\revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}'' (\TODO{line nnn, page nnn}).  The preference ordering has also been changed to use the singular value ratio (\TODO{line nnn, page nnn}).
+
+\TODO{this changes some stencil weights, possibly for the worse.  For example, having candidates ordered by their minimum singular value resulted in weights $w_u = 0.8697$, $w_d = 0.1475$, $max(\lvert w_p \rvert) = 0.0659$.
+But now that the candidates are ordered by the singular value ratio, 
+$w_u = 0.9965459942$, $w_d = 0.1344156036$, $max(\lvert w_p \rvert) = 0.1449563476$.  Running a handful of slug advection tests shows that some tests have smaller errors using the singular value ratio ordering, some do not.}
+
 
 \begin{quotation}
 \begin{comment}
 \item The weighting can degrade the condition number of the least squares problem.
 \end{comment}
 \end{quotation}
-We restrict multipliers to be at most 1024 so that the matrix equation does not become ill-conditioned.  \TODO{I could measure this, see above comment, too}
+We restrict multipliers to be at most 1024 so that the matrix equation does not become ill-conditioned.  Ill-conditioning was a reason for including the singular value test, and we have not experienced problems solving ill-conditioned matrix equations in our experiments.
 
 \begin{quotation}
 \begin{comment}

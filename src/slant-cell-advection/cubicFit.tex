@@ -7,20 +7,20 @@
 	\label{fig:interiorStencils}
 \end{figure}
 
-The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least squares fit over a stencil of surrounding known values.
+The cubicFit scheme approximates the value of the dependent variable at the face, $\phi_F$, using a least-squares fit over a stencil of surrounding known values.
 To introduce the approximation method, we will consider how an approximate value is calculated for a face that is far away from the boundaries of a two-dimensional uniform rectangular mesh.
 For any mesh, every interior face connects two adjacent cells.  The velocity direction at the face determines which of the two adjacent cells is the upwind cell.  Since the stencil is upwind-biased and asymmetric, two stencils must be constructed for every interior face, and the appropriate stencil is chosen depending on the velocity direction at each face for every time-step.
 
 The upwind-biased stencil for a face $f$ is shown in figure~\ref{fig:interiorStencils}a.  The wind at the face, $\mathbf{u}_f$, is blowing from the upwind cell $c_u$ to the downwind cell $c_d$.
-To obtain an approximate value at $f$, a polynomial least squares fit is calculated using the stencil values.
+To obtain an approximate value at $f$, a polynomial least-squares fit is calculated using the stencil values.
 The stencil has \num{4} points in $x$ and \num{3} points in $y$, leading to a natural choice of polynomial that is cubic in $x$ and quadratic in $y$,
 \begin{align}
 	\phi = a_1 + a_2 x + a_3 y + a_4 x^2 + a_5 xy + a_6 y^2 + a_7 x^3 + a_8 x^2 y + a_9 x y^2 \label{eqn:fullPoly} \text{ .}
 \end{align}
-A least squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  The stencil geometry is expressed in a local coordinate system with the face centroid as the origin so that the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
+A least-squares approach is needed because the system of equations is overconstrained, with \num{12} stencil values but only \num{9} polynomial terms.  The stencil geometry is expressed in a local coordinate system with the face centroid as the origin so that the approximated value $\phi_F$ is equal to the constant coefficient $a_1$.
 \revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}
 
-The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
+The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least-squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
 \subsubsection{Stencil construction}
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.
@@ -64,8 +64,8 @@ The local coordinate system $(x, y)$ has its origin at the centroid of face $f$,
 Figure~\ref{fig:double-upwind-stencil} illustrates a stencil construction for face $f$ connecting upwind cell $c_u$ and downwind cell $c_d$.  The two opposing faces are denoted by thick dashed lines and the centres of the three adjoining internal cells are marked by black circles.  The stencil is extended outwards by including the external cells that share vertices with the internal cells, where the vertices are marked by black squares.  A boundary at the far left has \revone{Dirichlet} boundary conditions, and so the four stencil boundary faces are also included in the stencil, where the boundary face centres are marked by black triangles.  The resultant stencil contains fourteen points.
 
 
-\subsubsection{Least squares fit}
-To approximate the value of $\phi$ at a face $f$, a least squares fit is calculated from a stencil of surrounding known values.  First, we will show how a polynomial least squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least squares fit that are necessary for numerical stability.  
+\subsubsection{Least-squares fit}
+To approximate the value of $\phi$ at a face $f$, a least-squares fit is calculated from a stencil of surrounding known values.  First, we will show how a polynomial least-squares fit is calculated for a face on a rectangular mesh.  Second, we will make modifications to the least-squares fit that are necessary for numerical stability.  
 
 For faces that are far away from the boundaries of a rectangular mesh, we fit the multidimensional polynomial given by equation~\eqref{eqn:fullPoly} that has nine unknown coefficients, $\mathbf{a} = a_1 \ldots a_9$, using the twelve cell centre values from the upwind-biased stencil, $\bm{\phi} = \phi_1 \ldots \phi_{12}$.  This yields a matrix equation
 \begin{align}
@@ -119,12 +119,12 @@ The unknown coefficients $\mathbf{a}$ are calculated using the pseudo-inverse, $
 	\end{bmatrix} \label{eqn:cubicFit:weighted-sum}
 \end{align}
 where the weights $b_{1,1}^+ \ldots b_{1,12}^+$ are the elements of the first row of $\mathbf{B}^+$.
-Note that the majority of the least squares fit procedure depends on the mesh geometry only.  An implementation may precompute the pseudo-inverse for each stencil during model initialisation, and only the first row needs to be stored.  Since each face has two possible stencils depending on the orientation of the velocity relative to the face, the implementation stores two sets of weights for each face.
+Note that the majority of the least-squares fit procedure depends on the mesh geometry only.  An implementation may precompute the pseudo-inverse for each stencil during model initialisation, and only the first row needs to be stored.  Since each face has two possible stencils depending on the orientation of the velocity relative to the face, the implementation stores two sets of weights for each face.
 Knowledge of the values of $\bm{\phi}$ is only required to calculate the weighted mean given by equation~\eqref{eqn:cubicFit:weighted-sum}, which is evaluated once per face per \revtwo{time-stage}.
 
-In the least squares fit presented above, all stencil values contributed equally to the polynomial fit.
+In the least-squares fit presented above, all stencil values contributed equally to the polynomial fit.
 It is necessary for numerical stability that the polynomial fits the cells connected to face $f$ more closely than other cells in the stencil, as shown by \citep{lashley2002,skamarock-menchaca2010}.
-To achieve this, we allow each cell to make an unequal contribution to the least squares fit.
+To achieve this, we allow each cell to make an unequal contribution to the least-squares fit.
 We assign an integer \textit{multiplier} to each cell in the stencil, $\mathbf{m} = m_1 \ldots m_{12}$, and multiply equation~\eqref{eqn:unweightedLeastSquares} to obtain
 \begin{align}
 	\mathbf{\tilde{B}} \mathbf{a} = \mathbf{m} \cdot \bm{\phi}
@@ -134,7 +134,7 @@ where $\mathbf{\tilde{B}} = \mathbf{M} \mathbf{B}$ and $\mathbf{M} = \mathrm{dia
 	a_1 = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m} \cdot \bm{\phi} \label{eqn:weightedPinv}
 \end{align}
 where $\mathbf{\tilde{b}_1^+} = \tilde{b}_{1,1}^+ \ldots \tilde{b}_{1,12}^+$ are the elements of the first row of $\mathbf{\tilde{B}}^+$.
-Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.  Values for $\mathbf{m}$ are chosen so that the cells connected to face $f$ make a greater contribution to the least squares fit, as discussed later in section~\ref{sec:stabilisation}.
+Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$.  Values for $\mathbf{m}$ are chosen so that the cells connected to face $f$ make a greater contribution to the least-squares fit, as discussed later in section~\ref{sec:stabilisation}.
 
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil points and number of polynomial terms may differ: a stencil will have one or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
@@ -142,13 +142,13 @@ For faces of a non-rectangular mesh, or faces that are near a boundary, the numb
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
-	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular $x$--$z$ mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  Each stencil belongs to the face marked by a thick line.  The local coordinate system is shown, having an $x$ direction normal to the face a $y$ direction tangent to the face.  For both stencils, attempting a least squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
+	\caption{Upwind-biased stencils for faces near the lower boundary of a rectangular $x$--$z$ mesh, with (a) a $3 \times 2$ stencil for the face immediately adjacent to the lower boundary, and (b) a $3 \times 3$ stencil for the face immediately adjacent to the face in (a).  Each stencil belongs to the face marked by a thick line.  The local coordinate system is shown, having an $x$ direction normal to the face a $y$ direction tangent to the face.  For both stencils, attempting a least-squares fit using the nine-term polynomial in equation~\eqref{eqn:fullPoly} would result in an underconstrained problem.
 Here we have assumed that the lower boundary has a Neumann boundary condition and so \revone{lower} boundary faces are excluded from the stencils.}
 	\label{fig:boundaryStencils}
 \end{figure}
 
 The majority of faces on a uniform two-dimensional mesh have stencils with more than nine cells.  For example, a rectangular mesh has 12 points (figure~\ref{fig:interiorStencils}a), and a hexagonal mesh has 10 points (figure~\ref{fig:interiorStencils}b).
-In both cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least squares fit using a polynomial with fewer terms.
+In both cases, constructing a system of equations using the nine-term polynomial in equation~\eqref{eqn:fullPoly} leads to an overconstrained problem that can be solved using least-squares.  However, this is not true for faces near boundaries: stencils that have fewer than nine cells (figure~\ref{fig:boundaryStencils}a) would result in an underconstrained problem, and stencils that have exactly nine cells may lack sufficient information to constrain high-order terms.  For example, the stencil in figure~\ref{fig:boundaryStencils}b lacks sufficient information to fit the $x^3$ term.  In such cases, it becomes necessary to perform a least-squares fit using a polynomial with fewer terms.
 
 For every stencil, we find a set of \textit{candidate polynomials} that do not result in an underconstrained problem.
 In two dimensions, a candidate polynomial has some combination of between one and nine terms from equation~\eqref{eqn:fullPoly}.  There are two additional constraints that a candidate polynomial must satisfy.
@@ -166,11 +166,11 @@ For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6
 Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if the \revthree{ratio of smallest to largest singular value is greater than \num{1e-12}}.
 Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial is not a candidate polynomial.
 
-The candidate polynomials are all the dense subsets of $M(x,y)$ \revother{that have a cardinality greater than one and} that have a stencil matrix that is full rank.  The final stage of the cubicFit transport scheme selects a candidate polynomial and ensures that the least squares fit is numerically stable.
+The candidate polynomials are all the dense subsets of $M(x,y)$ \revother{that have a cardinality greater than one and} that have a stencil matrix that is full rank.  The final stage of the cubicFit transport scheme selects a candidate polynomial and ensures that the least-squares fit is numerically stable.
 
 \subsubsection{Stabilisation procedure}
 \label{sec:stabilisation}
-So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers $\mathbf{m}$ so that the fit is numerically stable.
+So far, we have constructed a stencil and found a set of candidate polynomials.  Applying a least-squares fit to any of these candidate polynomials avoids creating an underconstrained problem.  The final stage of the transport scheme chooses a suitable candidate polynomial and appropriate multipliers $\mathbf{m}$ so that the fit is numerically stable.
 
 The approximated value $\phi_F$ is equal to $a_1$ which is calculated from equation~\eqref{eqn:weightedPinv}.  The value of $a_1$ is a weighted mean of $\bm{\phi}$ where $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ are the weights.
 If the cell centre values $\bm{\phi}$ are assumed to approximate a smooth field then we expect $\phi_F$ to be close to the values of $\phi_u$ and $\phi_d$, and expect $\phi_F$ to be insensitive to small changes in $\bm{\phi}$.  When the weights $\mathbf{w}$ have large magnitude then this is no longer true: $\phi_F$ becomes sensitive to small changes in $\bm{\phi}$ which can result in large, \revtwo{numerically unstable} departures from the smooth field $\bm{\phi}$.
@@ -190,7 +190,7 @@ where $w_u$ and $w_d$ are the weights for the upwind and downwind cells respecti
 The stabilisation procedure comprises three steps.  In the first step, the set of candidate polynomials is sorted in preference order so that candidates with more terms are preferred over those with fewer terms.
 If there are multiple candidates with the same number of terms, the \revthree{ratio of minimum to maximum singular values} of $\mathbf{B}$ is calculated for each candidate, and an ordering is imposed such that the candidate with the larger \revthree{ratio} is preferred.  This ordering ensures that the preferred candidate is the highest-order polynomial with the most information content.
 
-In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral points have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
+In the second step, the most-preferred polynomial is taken from the list of candidates and the multipliers are assigned so that the upwind cell and downwind cell have multipliers $m_u = 2^{10}$ and $m_d = 2^{10}$ respectively, and all peripheral points have multipliers $m_p = 1$.  These multipliers are very similar to those used by \citep{lashley2002}, leading to a well-conditioned matrix $\mathbf{\tilde{B}}$ and a least-squares fit in which the polynomial passes almost exactly through the upwind and downwind cell centre values.
 
 In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next polynomial in the candidate list. 
 
@@ -200,7 +200,7 @@ Finally, if no stable weights are found for any candidate polynomial, we revert 
 	\centering
 	\includegraphics{../fig-stabilisation/fig-stabilisation.pdf}
 %
-	\caption{\revone{One-dimensional least squares fits with} a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratic polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data are labelled with their respective weights.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red with italicised labels.  The upwind point is located at $(-1, 1.8)$ and the downwind point at $(0.62, 1.9)$, and the peripheral points are at $(-2.8, 2.4)$, $(-1.6, 2.7)$ and $(-1.2, 2.2)$.  The stabilisation procedure (section~\ref{sec:stabilisation}) calculates weights using only $x$ positions, and values of $\phi$ are included here for illustration only.}
+	\caption{\revone{One-dimensional least-squares fits with} a stencil of five points using (a) a cubic polynomial with multipliers $m_u = 1024$, $m_d = 1024$ and $m_p = 1$, (b) a quadratic polynomial with the same multipliers, and (c) a quadratic polynomial with multipliers $m_u = 1024$, $m_d = 1$ and $m_p = 1$.  Notice that the curves in (a) and (b) fit almost exactly through the upwind and downwind points immediately adjacent to the $y$-axis, but in (c) the curve fits almost exactly only through the upwind point immediately to the left of the $y$-axis.  The point data are labelled with their respective weights.  Points that have failed one of the stability constraints in equation~\eqref{eqn:stability} are marked in red with italicised labels.  The upwind point is located at $(-1, 1.8)$ and the downwind point at $(0.62, 1.9)$, and the peripheral points are at $(-2.8, 2.4)$, $(-1.6, 2.7)$ and $(-1.2, 2.2)$.  The stabilisation procedure (section~\ref{sec:stabilisation}) calculates weights using only $x$ positions, and values of $\phi$ are included here for illustration only.}
 	\label{fig:oscillatory1D}
 \end{figure}
 

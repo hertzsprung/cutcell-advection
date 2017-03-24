@@ -214,8 +214,8 @@ Fixed.
 \end{comment}
 \end{quotation}
 Lauritzen et al. \citep{lauritzen2012} recommend using a `typical' Courant number for transport tests on the sphere, and so we follow their recommendation throughout.  This is now stated \TODO{on page nnn} in the revised manuscript.
-A maximum Courant number of about 0.4 avoids any accuracy and stability issues caused by time-stepping.
-\TODO{A separate series of tests confirm that the stability limit has a Courant number of\TODO{nnn}, as presented \TODO{on page nnn} in the revised manuscript.  Say something about how I'd wrongly assumed that the limit was $\mathrm{Co} = 1.0$.}
+A maximum Courant number of about 0.4 avoids any accuracy and stability issues caused by time-stepping, and ensures that tracer information is always transported between adjacent cells in a single time-step.
+As requested by reviewer \#2, we have performed additional experiments and found that the stability limit is larger than the original manuscript assumed.  Section 3.2 has been revised accordingly.
 
 \begin{quotation}
 \begin{comment}
@@ -284,7 +284,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-\TODO{Reviewer one raised similar concerns about the CFL criterion so I've put my response next to their comment for now.}
+We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability is about $\mathrm{Co} = $ \TODO{2.n}.  \TODO{Section 3.2 has been revised to reflect this new finding}.
 
 \begin{quotation}
 \begin{comment}
@@ -296,7 +296,7 @@ $\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
 $\hat{\phi}$, etc. I think the conclusion would be the same.
 \end{comment}
 \end{quotation}
-\TODO{I've tried this and, yes, the conclusion is the same.  It's perhaps clearer to me using an amplification factor $A$ from the outset, maybe because that's the way I was taught to do stability analyses.}
+Yes, the alternative approach using an ODE reaches the same conclusion.  The resulting oscillator equation is $\mathrm{d} \hat{\phi}(t) / \mathrm{d} t = \exp(K\hat{\phi}(t)) + \hat{\phi}(t=0)$ where $K$ is an expression associated with the spatial discretisation.  \TODO{check that's what I got?} If this equation is non-amplifying then $\lvert K \rvert \leq 1$.  However, we feel that the standard approach used in the original manuscript is clearer because it defines an explicit amplification factor that appears throughout the derivation.
 
 \begin{quotation}
 \begin{comment}

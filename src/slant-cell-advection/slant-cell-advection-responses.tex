@@ -88,6 +88,8 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
 \end{comment}
 \end{quotation}
 \TODO{linearUpwind has $n+1$ multiplies where $n$ is the number of cells neighbouring the upwind cell}
+\TODO{In the interior of a two-dimensional quadrilateral mesh, linearUpwind uses 5 multiplies per face per time-step, compared to 12 multiplies for cubicFit.
+In three dimensions, linearUpwind uses 7 multiplies and cubicFit would use 36 multiplies, although it is expected that cells near stencil corners could be excluded without losing too much accuracy.}
 
 \TODO{I also like the idea of comparing computational cost (measured in number of multiplies) for a fixed $\ell_2$ error.  It would be natural to do this for the `minimal' resolution measurement that we've already documented for linearUpwind and cubicFit.}
 
@@ -284,7 +286,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability is about $\mathrm{Co} = $ \TODO{2.n}.  \TODO{Section 3.2 has been revised to reflect this new finding}.
+We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability \TODO{between about 1.3 and 3.3}.  \TODO{Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.}.
 
 \begin{quotation}
 \begin{comment}

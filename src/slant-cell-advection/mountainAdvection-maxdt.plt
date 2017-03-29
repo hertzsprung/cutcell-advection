@@ -4,7 +4,7 @@ set style data linespoints
 set logscale
 
 set xlabel "$\\Delta x$ (\\si{\\meter})"
-set ylabel "$\\Delta t_\\mathrm{max}$" offset 2
+set ylabel "$\\Delta t_\\mathrm{max}$ (\\si{\\second})" offset 2
 
 unset key
 

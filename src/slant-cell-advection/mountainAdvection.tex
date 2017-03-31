@@ -119,18 +119,23 @@ In contrast, the cubicFit scheme is less sensitive to the mesh type and errors g
 \begin{figure}
 	\centering
 	\includegraphics{../fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf}
-	\caption{Longest stable time-steps, $\Delta t_\mathrm{max}$, for the two-dimensional tracer transport test over a mountainous lower boundary.  Results were obtained on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.}
+	\caption{\revtwo{Longest stable time-steps, $\Delta t_\mathrm{max}$, and largest stable maximum Courant numbers, $\max(\mathrm{Co})$, for the two-dimensional tracer transport test over a mountainous lower boundary.  Results were obtained on basic terrain-following, cut cell and slanted cell meshes at mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{250}{\meter}$.  The largest stable maximum Courant numbers were calculated from the corresponding longest stable time-steps using equation~\eqref{eqn:co}.}}
 	\label{fig:mountainAdvection-maxdt}
 \end{figure}
 
 A final series of tests were performed \revtwo{to determine the stability limit of cubicFit with the two-stage Heun time-stepping scheme (equation~\ref{eqn:heun}).}
 The tracer was transported on BTF, slanted cell and cut cell meshes with a variety of mesh spacings between $\Delta x = \SI{5000}{\meter}$ and $\Delta x = \SI{125}{\meter}$.  $\Delta z$ was chosen so that a constant aspect ratio is preserved such that $\Delta x / \Delta z = 2$.
-\revtwo{For each test, the time-step was increased until the result became unstable.  The largest stable time-steps, $\Delta t_\mathrm{max}$, are presented in figure~\ref{fig:mountainAdvection-maxdt}.}
+\revtwo{For each test, the time-step was increased until the result became unstable.  The largest stable time-steps, $\Delta t_\mathrm{max}$, are presented in figure~\ref{fig:mountainAdvection-maxdt}a.}
 BTF meshes permit the longest time-steps of all three mesh types since cells are almost uniform in volume.  As expected, the longest stable time-step scales linearly with BTF mesh spacing.
 There is no such linear scaling on cut cell meshes because these meshes can have arbitrarily small cells.  The time-step constraints on cut cell meshes are the most severe of the three mesh types.  Slanted cell meshes have a slightly stronger time-step constraint than BTF meshes but still exhibit similar linear scaling with mesh spacing.  Furthermore, a dynamical model that uses slanted cell meshes instead of BTF meshes is expected to calculate pressure gradients more accurately \citep{shaw-weller2016}.
 
+\revtwo{Figure~\ref{fig:mountainAdvection-maxdt}b presents the largest stable maximum Courant numbers, $\max(\mathrm{Co})$, which were calculated by substituting $\Delta t = \Delta t_\mathrm{max}$ into equation~\eqref{eqn:co}.
+On basic terrain following meshes, the maximum Courant number tends towards about \num{1.3} with finer mesh spacings.
+No such trend is found on cut cell or slanted cell meshes.
+Cut cell meshes permit the largest maximum Courant numbers of around \num{3}, but the largest stable time-steps on cut cell meshes are still smaller than corresponding time-steps on basic terrain following and slanted cell meshes.}
+
+\revtwo{This paper focuses on the spatial discretisation of the cubicFit scheme, but the stability limit depends also upon the choice of time-stepping.  As such, we have not calculated a theoretical Courant number limit, although such an analysis might use the techniques in \citep{baldauf2008}.}
+
+The transport tests presented in this section demonstrate that the cubicFit scheme is suitable for flows over very steep terrain on two-dimensional terrain-following, cut cell and slanted cell meshes.  The cubicFit scheme is less sensitive to the mesh type and mountain steepness compared to the linearUpwind scheme.  The linearUpwind scheme becomes unstable over very steep slopes but the cubicFit scheme is stable for all tests.
 The \revother{accuracy of the} \revtwo{cubicFit scheme} was largely insensitive to the choice of time-step.
-
-\TODO{somewhere in here discuss maximum Courant numbers (and include a figure?)}
-
-The transport tests presented in this section demonstrate that the cubicFit scheme is suitable for flows over very steep terrain on two-dimensional terrain-following, cut cell and slanted cell meshes.  The cubicFit scheme is less sensitive to the mesh type and mountain steepness compared to the linearUpwind scheme.  The linearUpwind scheme becomes unstable over very steep slopes but the cubicFit scheme is stable for all tests.  In the next section, we evaluate the cubicFit scheme using more complex, deformational flows on icosahedral meshes and cubed-sphere meshes.
+In the next section, we evaluate the cubicFit scheme using more complex, deformational flows on icosahedral meshes and cubed-sphere meshes.

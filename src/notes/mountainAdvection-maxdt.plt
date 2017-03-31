@@ -1,18 +1,21 @@
 set style data linespoints
+set terminal svg size 1200,800 font "Times,28"
+set output "maxdt.svg"
 
 set logscale x
 set logscale y
 
-set xlabel "$\\Delta x$ (\\si{\\meter})"
-set ylabel "$\\Delta t_\\mathrm{max}$" offset 2
+set xlabel "dx (m)"
+set ylabel "dt (s)" offset 3
 
-set key bottom right
+unset key
 
 set xrange [100:10000]
 
+set label at 250,7 rotate by 20 "Basic terrain following"
+set label at 250,2 rotate by 20 "Slanted cells"
+set label at 250,0.2 "Cut cells"
+
 plot "maxdt-btf.dat" using 1:2 lw 1.5 ps 1.5 pt 4, \
      "maxdt-cutCell.dat" using 1:2 lw 1.5 ps 1.5 pt 6, \
-     "maxdt-slantedCell.dat" using 1:2 lw 1.5 ps 1.5 pt 8, \
-     "`echo $ATMOSTESTS_DIR`/build/mountainAdvection-btf-6000-linearUpwind-collated/0/maxdt.txt" using 1:2 lw 1.5 ps 1.5 pt 4 lc 1 dt 2 title "btf-old", \
-     "`echo $ATMOSTESTS_DIR`/build/mountainAdvection-cutCell-6000-linearUpwind-collated/0/maxdt.txt" using 1:2 lw 1.5 ps 1.5 pt 6 lc 2 dt 2 title "cutCell-old", \
-     "`echo $ATMOSTESTS_DIR`/build/mountainAdvection-slantedCell-6000-linearUpwind-collated/0/maxdt.txt" using 1:2 lw 1.5 ps 1.5 pt 8 lc 3 dt 2 title "slantedCell-old"
+     "maxdt-slantedCell.dat" using 1:2 lw 1.5 ps 1.5 pt 8

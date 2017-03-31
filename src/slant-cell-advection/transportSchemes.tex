@@ -9,7 +9,7 @@ The time derivative is discretised using a two-stage, second-order Heun method,
 \begin{align}
 	\phi^\star &= \phi^{(n)} + \Delta t \: g(\phi^{(n)}) \\
 	\phi^{(n+1)} &= \phi^{(n)} + \frac{\Delta t}{2} \left[ g(\phi^{(n)}) + g(\phi^{\star}) \right]
-\end{align}
+\end{align} \label{eqn:heun}
 \end{subequations}
 where \(g(\phi^{(n)}) = - \nabla \cdot (\mathbf{u} \phi^{(n)})\) at time level \(n\).  The same time-stepping method is used for both the cubicFit scheme and the multidimensional linear upwind scheme.
 Although the Heun method is unstable for a linear oscillator \citep{durran2013} and for solving the transport equation using centred, linear differencing, it is stable when it is used for transport schemes with \revtwo{sufficient upwinding}.

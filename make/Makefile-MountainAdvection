@@ -36,9 +36,9 @@ build/fig-mountainAdvection-maxdt/fig-mountainAdvection-maxdt.pdf: \
 $(eval $(call Gnuplot,build/mountainAdvection-maxdt,mountainAdvection-maxdt.tex,src/slant-cell-advection/mountainAdvection-maxdt.plt))
 
 build/mountainAdvection-maxdt/mountainAdvection-maxdt.tex: \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-btf-6000-linearUpwind-collated/0/maxdt.txt \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-slantedCell-6000-linearUpwind-collated/0/maxdt.txt \
-  $(ATMOSTESTS_DIR)/build/mountainAdvection-cutCell-6000-linearUpwind-collated/0/maxdt.txt \
+  src/mountainAdvection/maxdt-btf.dat \
+  src/mountainAdvection/maxdt-cutCell.dat \
+  src/mountainAdvection/maxdt-slantedCell.dat \
 | build/mountainAdvection-maxdt
 
 $(eval $(call MakeDir,build/mountainAdvection-maxdt))

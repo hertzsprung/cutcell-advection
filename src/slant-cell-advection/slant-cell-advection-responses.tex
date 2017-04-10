@@ -102,14 +102,7 @@ In three dimensions, linearUpwind uses 7 multiplies and cubicFit would use 36 mu
     not. (See also the subsequent comment.)
 \end{comment}
 \end{quotation}
-\TODO{
-\begin{itemize}
-	\item The stencil construction procedure already applies to two or three dimensions
-	\item The definition of candidate polynomials also generalises naturally to three dimensions
-	\item Assuming that a 3D mesh comprises prismatic cells arranged in columns then the computational cost in 3D will be three times the computational cost in 2D
-\end{itemize}
-I have cubicFit working in 3D with a blob advected in a 3D diagonal velocity field on a BTF mesh.
-}
+The revised manuscript includes a new section \TODO{2.1.5} that decribes a possible extension of the cubicFit scheme to three dimensions.  The existing procedures for stencil construction and candidate polynomial generation generalise without alteration.  We note that further experiments would be required to properly assess the stabilisation procedure.
 
 \begin{quotation}
 \begin{comment}
@@ -121,8 +114,6 @@ I have cubicFit working in 3D with a blob advected in a 3D diagonal velocity fie
 \TODO{This restriction could be referring to the amount of damping, or the number of polynomial terms that are removed.  To address the latter, I could plot \texttt{polynomialTerms} for faces of a particular mesh (and owner/neighbour choice).}
 
 \TODO{Regarding damping, we did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  Should we try to analyse this?}
-
-\TODO{I'm not sure what to expect regarding stability/accuracy in 3D, especially on distorted meshes.}
 
 \begin{quotation}
 \begin{comment}
@@ -363,7 +354,6 @@ For similar reasons, dimensionally-split schemes have only be used with terrain-
 \item P9, last sentence of section 2.1. Should $w_d$ be $m_d$?
 \end{comment}
 \end{quotation}
-\TODO{}
 Yes, fixed.
 
 \begin{quotation}
@@ -383,8 +373,7 @@ In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cit
 appropriate.
 \end{comment}
 \end{quotation}
-\TODO{Reviewer one also asked us to comment on an extension to 3D.  I've responded to their request for now.}
-
+Reviewer \#1 was also interested in a possible extension to three dimensions, and the revised manuscript includes a new section \TODO{2.1.5} discussing this topic.
 
 \subsection*{Typos, etc}
 

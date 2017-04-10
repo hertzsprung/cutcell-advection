@@ -23,6 +23,8 @@ A least-squares approach is needed because the system of equations is overconstr
 The remainder of this subsection generalises the approximation technique for arbitrary meshes and describes the methods for constructing stencils, performing a least-squares fit with a suitable polynomial, and ensuring numerical stability of the transport scheme.
 
 \subsubsection{Stencil construction}
+\label{sec:stencil}
+
 For every interior face, two stencils are constructed, one for each of the possible upwind cells.
 Stencils are not constructed for boundary faces because values of $\phi$ at boundaries are calculated from prescribed boundary conditions.
 For a given interior face $f$ and upwind cell $c_u$, we find those faces that are connected to $c_u$ and `oppose' face $f$.  These are called the \textit{opposing faces}.
@@ -138,6 +140,7 @@ Again, $a_1$ is a weighted mean of $\bm{\phi}$, where the weights are now $\math
 For faces of a non-rectangular mesh, or faces that are near a boundary, the number of stencil points and number of polynomial terms may differ: a stencil will have one or more cells and, for two-dimensional meshes, its polynomial will have between one and nine terms.  Additionally, the polynomial cannot have more terms than its stencil has cells because this would lead to an underconstrained system of equations.  The procedure for choosing suitable polynomials is discussed next.
 
 \subsubsection{Polynomial generation}
+\label{sec:polyCandidates}
 \begin{figure}
 	\centering
 	\includegraphics{../fig-boundary-stencils/fig-boundary-stencils.pdf}
@@ -161,6 +164,7 @@ More precisely, let
 be the set of all monomials of degree at most \num{3} in $x, y$.
 A subset $S$ of $M(x,y)$ is ``dense'' if, whenever $x^a y^b$ are in $S$, then $x^i y^j$ is also in $S$ for all $0 \leq i \leq a$, $0 \leq j \leq b$.}
 For example, the polynomial $\phi = a_1 + a_2 x + a_3 y + a_4 xy + a_5 x^2 + a_6 x^2 y$ is a dense subset of $M(x,y)$, but $\phi = a_1 + a_2 x + a_3 y + a_4 x^2 y$ is not because $x^2 y$ can be included only if $xy$ and $x^2$ are also included.
+\revother{In total there are 26 dense subsets of the two-dimensional polynomial in equation~\eqref{eqn:fullPoly}.}
 
 Second, a candidate polynomial must have a stencil matrix $\mathbf{B}$ that is full rank.  The matrix is considered full rank if its smallest singular value is greater than \num{1e-9}.
 Using a polynomial with all nine terms and the stencil in figure~\ref{fig:boundaryStencils}b results in a rank-deficient matrix and so the nine-term polynomial is not a candidate polynomial.
@@ -220,3 +224,15 @@ For a one-dimensional cubic polynomial fit, the list of candidate polynomials in
 We begin with the cubic equation~\eqref{eqn:cubicCandidate}.  The multipliers are chosen so that the polynomial passes almost exactly through the upwind and downwind points that are immediately to the left and right of the $y$-axis respectively.
 The constraint on the upwind point is violated because $w_u = 1.822 > 1$ (equation~\ref{eqn:stabilityU}).  Reducing the downwind multiplier does not help to satisfy the constraint, so we start again with the quadratic equation~\eqref{eqn:quadCandidate}, and the new fit is presented in figure~\ref{fig:oscillatory1D}b.
 Again, the multipliers are chosen to force the polynomial through the upwind and downwind points, but this violates the constraint on the downwind point because $w_d = 0.502 > 0.5$ (equation~\ref{eqn:stabilityD}).  This time, however, stable weights are found by reducing \revtwo{$m_d$} to one (figure~\ref{fig:oscillatory1D}c) and these are the weights that will be used to approximate $\phi_F$, where the polynomial intercepts the $y$-axis.
+
+\subsubsection{Future extension to three dimensions}
+\revone{All the procedures used in the cubicFit scheme generalise to three dimensions.  The stencil construction procedure described in section~\ref{sec:stencil} creates a stencil with \num{12} cells for a face in the interior of a two-dimensional rectangular mesh.  In three dimensions, the same procedure creates a stencil with $3 \times 12 = 36$ cells.
+Hence, the computational cost increases three-fold assuming that the three-dimensional mesh is an extrusion of a two-dimensional mesh, having prismatic cells arranged in columns.}
+
+\revone{To extend the least squares fit to three dimensions, the two-dimensional polynomial in equation~\eqref{eqn:fullPoly} is replaced with its three-dimensional counterpart,
+\begin{align}
+	\phi = a_1 + a_2 x + a_3 y + a_4 z + a_5 x^2 + a_6 xy + a_7 y^2 + a_8 xz + a_9 yz + a_{10} z^2 + a_{11} x^3 + a_{12} x^2 y + a_{13} x y^2 + a_{14} x^2 z + a_{15} x z^2 + a_{16} y z^2 + a_{17} y^2 z + a_{18} xyz \text{ .}
+\end{align}
+The procedure for generating candidate polynomials described in section~\ref{sec:polyCandidates} results in 26 dense subsets in two dimensions and 842 dense subsets in three dimensions.  Note that the combinatorial explosion of dense subsets in three dimensions does not increase the computational cost during integration.}
+
+\revone{The stabilisation procedure described in section~\ref{sec:stabilisation} requires further numerical experiments to verify that it is suitable for three-dimensional flows and arbitrary polyhedral meshes.  An initial three-dimensional test with uniform flow and a uniform Cartesian mesh obtained a numerically stable result, but we have not explored the three-dimensional extension of cubicFit any further.}

@@ -200,7 +200,10 @@ In the second step, the most-preferred polynomial is taken from the list of cand
 
 In the third step, we calculate the weights $\mathbf{w}$ and evaluate them against the stability constraints given in equation~\eqref{eqn:stability}.  If any constraint is violated, the value of $m_d$ is halved and the constraints are evaluated with the new weights.  This step is repeated until the weights satisfy the stability constraints, or $m_d$ becomes smaller than one.  In practice, the constraints are satisified when $m_d$ is either small (between 1 and 4) or equal to $2^{10}$.  The upwind multiplier $m_u$ is fixed at $2^{10}$ and the peripheral multipliers $m_p$ are fixed at \num{1}.  If the constraints are still not satisfied, then we start again from the second step with the next polynomial in the candidate list. 
 
-Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.  In our experiments we have not encountered any stencil for which this last resort is required.
+Finally, if no stable weights are found for any candidate polynomial, we revert to an upwind scheme such that $w_u = 1$ and all other weights are zero.
+In our experiments we have not encountered any stencil for which this last resort is required.
+\revone{Furthermore, our experiments show that the stabilisation procedure only modifies the least squares fit for stencils near boundaries and for stencils in distorted mesh regions.
+For stencils in the interior of a uniform rectangular mesh, the least squares fit includes all terms in equation~\eqref{eqn:fullPoly} with $m_u = m_d = 2^{10}$.}
 
 \begin{figure}
 	\centering
@@ -231,8 +234,11 @@ A three-dimensional stencil has three times as many cells as its two-dimensional
 
 \revone{To extend the least squares fit to three dimensions, the two-dimensional polynomial in equation~\eqref{eqn:fullPoly} is replaced with its three-dimensional counterpart,
 \begin{multline}
-	\phi = a_1 + a_2 x + a_3 y + a_4 z + a_5 x^2 + a_6 xy + a_7 y^2 + a_8 xz + a_9 yz + a_{10} z^2 + \\ a_{11} x^3 + a_{12} x^2 y + a_{13} x y^2 + a_{14} x^2 z + a_{15} x z^2 + a_{16} y z^2 + a_{17} y^2 z + a_{18} xyz \text{ .}
+	\phi = a_1 + a_2 x + a_3 y + a_4 z + a_5 x^2 + a_6 xy + a_7 y^2 + a_8 xz + a_9 yz + a_{10} z^2 + \\ a_{11} x^3 + a_{12} x^2 y + a_{13} x y^2 + a_{14} x^2 z + a_{15} x z^2 + a_{16} y z^2 + a_{17} y^2 z + a_{18} xyz \text{ .} \label{eqn:fullPoly3D}
 \end{multline}
 The procedure for generating candidate polynomials described in section~\ref{sec:polyCandidates} results in 26 dense subsets in two dimensions and 842 dense subsets in three dimensions.  Note that the combinatorial explosion of dense subsets in three dimensions does not increase the computational cost during integration.}
 
-\revone{The stabilisation procedure described in section~\ref{sec:stabilisation} requires further numerical experiments to verify that it is suitable for three-dimensional flows and arbitrary polyhedral meshes.  An initial three-dimensional test with uniform flow and a uniform Cartesian mesh obtained a numerically stable result, but we have not explored the three-dimensional extension of cubicFit any further.}
+\revone{The stabilisation procedure described in section~\ref{sec:stabilisation} requires further numerical experiments to verify that it is suitable for three-dimensional flows and arbitrary polyhedral meshes.
+An initial three-dimensional test with uniform flow and a uniform Cartesian mesh obtained a numerically stable result.
+For stencils in the interior of the domain, the least squares fit includes all polynomial terms in equation~\eqref{eqn:fullPoly3D} with $m_u = m_d = 2^{10}$.
+The stabilisation procedure does not modify the least squares fit for these stencils, but we have not explored the three-dimensional extension of cubicFit any further.}

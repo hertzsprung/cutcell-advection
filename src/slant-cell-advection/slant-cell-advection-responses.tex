@@ -108,9 +108,9 @@ The revised manuscript includes a new section \TODO{2.1.5} that decribes a possi
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-\TODO{This restriction could be referring to the amount of damping, or the number of polynomial terms that are removed.  To address the latter, I could plot \texttt{polynomialTerms} for faces of a particular mesh (and owner/neighbour choice).}
+The stability constraints only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortions.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page \TODO{nnn} line \TODO{nnn}.
+It is not known whether the stabilisation procedure is suitable for arbitrary three-dimensional meshes, and we have noted this in the new section \TODO{2.1.5}.
 
-\TODO{Regarding damping, we did trade some accuracy on good-quality meshes for stability on certain poor-quality meshes, so the scheme is more damping than it could be.  Should we try to analyse this?}
 
 \begin{quotation}
 \begin{comment}

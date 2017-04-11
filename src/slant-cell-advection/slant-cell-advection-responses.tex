@@ -286,7 +286,11 @@ $\phi(x_j , t) = \hat{\phi}(t) \mathrm{e}^{i j k \Delta x}$ and form an ODE for
 $\hat{\phi}$, etc. I think the conclusion would be the same.
 \end{comment}
 \end{quotation}
-Yes, the alternative approach using an ODE reaches the same conclusion.  The resulting oscillator equation is $\mathrm{d} \hat{\phi}(t) / \mathrm{d} t = \exp(K\hat{\phi}(t)) + \hat{\phi}(t=0)$ where $K$ is an expression associated with the spatial discretisation.  \TODO{check that's what I got?} If this equation is non-amplifying then $\lvert K \rvert \leq 1$.  However, we feel that the standard approach used in the original manuscript is clearer because it defines an explicit amplification factor that appears throughout the derivation.
+Yes, the alternative approach using an ODE reaches the same conclusion.  The resulting equation is
+\begin{equation*}
+	\hat{\phi}(t) = \hat{\phi}_0 \exp(t K(x))
+\end{equation*}
+where $\hat{\phi}_0$ is the value of $\hat{\phi}$ at $t=0$ and $K(x)$ is an expression associated with the spatial discretisation.  \TODO{I want to double-check this equation}.  If this equation is non-amplifying then $\lvert K \rvert \leq 1$.  However, we feel that the standard approach used in the original manuscript is clearer because it defines an explicit amplification factor that appears throughout the derivation.
 
 \begin{quotation}
 \begin{comment}

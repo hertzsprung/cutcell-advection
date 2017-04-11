@@ -227,12 +227,12 @@ Again, the multipliers are chosen to force the polynomial through the upwind and
 
 \subsubsection{Future extension to three dimensions}
 \revone{All the procedures used in the cubicFit scheme generalise to three dimensions.  The stencil construction procedure described in section~\ref{sec:stencil} creates a stencil with \num{12} cells for a face in the interior of a two-dimensional rectangular mesh.  In three dimensions, the same procedure creates a stencil with $3 \times 12 = 36$ cells.
-Hence, the computational cost increases three-fold assuming that the three-dimensional mesh is an extrusion of a two-dimensional mesh, having prismatic cells arranged in columns.}
+A three-dimensional stencil has three times as many cells as its two-dimensional counterpart if the three-dimensional mesh has prismatic cells arranged in columns.  Hence, the computational cost during integration increases three-fold moving from two dimensions to three dimensions.}
 
 \revone{To extend the least squares fit to three dimensions, the two-dimensional polynomial in equation~\eqref{eqn:fullPoly} is replaced with its three-dimensional counterpart,
-\begin{align}
-	\phi = a_1 + a_2 x + a_3 y + a_4 z + a_5 x^2 + a_6 xy + a_7 y^2 + a_8 xz + a_9 yz + a_{10} z^2 + a_{11} x^3 + a_{12} x^2 y + a_{13} x y^2 + a_{14} x^2 z + a_{15} x z^2 + a_{16} y z^2 + a_{17} y^2 z + a_{18} xyz \text{ .}
-\end{align}
+\begin{multline}
+	\phi = a_1 + a_2 x + a_3 y + a_4 z + a_5 x^2 + a_6 xy + a_7 y^2 + a_8 xz + a_9 yz + a_{10} z^2 + \\ a_{11} x^3 + a_{12} x^2 y + a_{13} x y^2 + a_{14} x^2 z + a_{15} x z^2 + a_{16} y z^2 + a_{17} y^2 z + a_{18} xyz \text{ .}
+\end{multline}
 The procedure for generating candidate polynomials described in section~\ref{sec:polyCandidates} results in 26 dense subsets in two dimensions and 842 dense subsets in three dimensions.  Note that the combinatorial explosion of dense subsets in three dimensions does not increase the computational cost during integration.}
 
 \revone{The stabilisation procedure described in section~\ref{sec:stabilisation} requires further numerical experiments to verify that it is suitable for three-dimensional flows and arbitrary polyhedral meshes.  An initial three-dimensional test with uniform flow and a uniform Cartesian mesh obtained a numerically stable result, but we have not explored the three-dimensional extension of cubicFit any further.}

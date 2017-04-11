@@ -80,7 +80,11 @@ where $\phi$ is the numerical value, $\phi_T$ is the analytic value, $\sum_c$ de
 
 Tests were performed using the linearUpwind and cubicFit schemes at mesh spacings between $\Delta x = \SI{250}{\meter}$ and $\Delta x = \SI{5000}{\meter}$.
 Numerical convergence in the $\ell_2$ and $\ell_\infty$ norms is plotted in figure~\ref{fig:horizontalAdvection-convergence}.
-The linearUpwind and cubicFit schemes are second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.  The cubicFit scheme is more accurate than the linearUpwind scheme at all mesh spacings.
+The linearUpwind and cubicFit schemes are second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
 
-This test demonstrates that cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
+\revone{The cubicFit scheme achieves a given $\ell_2$ error using a mesh spacing that is almost double that needed by the linearUpwind scheme.  Doubling the mesh spacing results in a mesh with four times fewer cells because the $\Delta x \mathbin{:} \Delta z$ aspect ratio is fixed.
+Recall that the stencil for the cubicFit scheme has about twice as many cells as the stencil for the linearUpwind scheme.
+Hence, for a given $\ell_2$ error, the computational cost during integration of the cubicFit scheme is about half the computational cost of the linearUpwind scheme.}
+
+This test demonstrates that cubicFit is second-order convergent in the domain interior irrespective of mesh distortions.  The cubicFit scheme achieves In the next test, we assess the numerical accuracy of the transport schemes near a distorted, mountainous lower boundary.
 

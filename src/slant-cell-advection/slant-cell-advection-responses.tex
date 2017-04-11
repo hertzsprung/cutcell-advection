@@ -87,11 +87,8 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     with the upwind scheme), what is then the difference in runtime?
 \end{comment}
 \end{quotation}
-\TODO{linearUpwind has $n+1$ multiplies where $n$ is the number of cells neighbouring the upwind cell}
-\TODO{In the interior of a two-dimensional quadrilateral mesh, linearUpwind uses 5 multiplies per face per time-step, compared to 12 multiplies for cubicFit.
-In three dimensions, linearUpwind uses 7 multiplies and cubicFit would use 36 multiplies, although it is expected that cells near stencil corners could be excluded without losing too much accuracy.}
-
-\TODO{I also like the idea of comparing computational cost (measured in number of multiplies) for a fixed $\ell_2$ error.  It would be natural to do this for the `minimal' resolution measurement that we've already documented for linearUpwind and cubicFit.}
+The stencil size of the linearUpwind scheme is now mentioned in section \TODO{2.2}.  The linearUpwind stencil has about half the number of cells as the cubicFit stencil.
+For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and computational cost of both schemes for the horizontal transport test in section \TODO{3.1}.
 
 \begin{quotation}
 \begin{comment}

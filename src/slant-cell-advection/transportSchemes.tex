@@ -42,6 +42,8 @@ The gradient $\nabla_c \:\phi$ is calculated using Gauss' theorem:
 \begin{align}
 	\nabla_c\: \phi = \frac{1}{\mathcal{V}_c} \sum_{f\in\:c} \widetilde{\phi}_F \mathbf{S}_f \label{eqn:linearUpwind-grad}
 \end{align}
-where $\widetilde{\phi}_F$ is linearly interpolated from the two neighbouring cells of face $f$.  For cells adjacent to boundaries having zero gradient boundary conditions, the boundary value is set to be equal to the cell centre value before equation~\eqref{eqn:linearUpwind-grad} is evaluated.
+where $\widetilde{\phi}_F$ is linearly interpolated from the two neighbouring cells of face $f$.
+\revone{The resulting stencil comprises all cells sharing a face with the upwind cell, including the upwind cell itself.  For a face in the interior of a two-dimensional rectangular mesh, the stencil for the linearUpwind scheme is a `$+$' shape with 5 cells.  On the same mesh, the stencil for the cubicFit scheme is more than twice the size with 12 cells.}
+For cells adjacent to boundaries having zero gradient boundary conditions, the boundary value is set to be equal to the cell centre value before equation~\eqref{eqn:linearUpwind-grad} is evaluated.
 This implementation of the multidimensional linear upwind scheme is included in the OpenFOAM software distribution \citep{openfoam}.
 

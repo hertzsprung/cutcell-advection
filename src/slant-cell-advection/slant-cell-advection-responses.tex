@@ -347,7 +347,7 @@ when the grid permits it (e.g.\ not a hexagonal grid).
 \end{comment}
 \end{quotation}
 The revised manuscript explains these limitations, ``\revtwo{Dimensionally-split schemes have only been used with quadrilateral meshes where dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,katta2015}.
-For similar reasons, dimensionally-split schemes have only be used with terrain-following coordinate transforms and not cut cells.}''
+For similar reasons, dimensionally-split schemes have only been used with terrain-following coordinate transforms and not cut cells.}''
 
 \begin{quotation}
 \begin{comment}
@@ -470,7 +470,7 @@ We would not expect the stencil topology to change for triangles that are slight
 \end{comment}
 \end{quotation}
 Most swept-area approaches must enforce integral constraints on the polynomial reconstruction.  Unlike swept-area approaches that require one matrix-vector multiply per face per time-stage, a point-wise approximation requires only one vector-vector multiply.
-The introduction has been modified to reinforce this point, saying, ``the cubicFit scheme has \revthree{a computational cost that is lower than most swept-area schemes and more comparable to dimensionally-split schemes}'' (page 3).
+The introduction has been modified to reinforce this point, saying, ``the computational cost of the cubicFit scheme is lower than most swept-area schemes, being more comparable to dimensionally-split schemes'' (page 3).
 
 \begin{quotation}
 \begin{comment}
@@ -503,7 +503,7 @@ computational space. Why is the interpolation/approximation not done in 3 dimens
 physical space.
 \end{comment}
 \end{quotation}
-The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{lashley2002,skamarock-menchaca2010,skamarock-gassmann2011}, and these studies found that accuracy was largely insensitive to the details of the projection method.  The revised manuscript clarifies our implementation, saying, ``\revthree{cell centres are projected perpendicular to a tangent plane is defined at the face centre}'' (section 2.1.2, page 7).
+The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{lashley2002,skamarock-menchaca2010,skamarock-gassmann2011}, and these studies found that accuracy was largely insensitive to the details of the projection method.  The revised manuscript clarifies our implementation, saying, ``\revthree{cell centres are projected perpendicular to a tangent plane at the face centre}'' (section 2.1.2, page 7).
 
 If the approximation was performed in 3D then polynomial terms involving $x$, $y$ and $z$ would be required.  It would no longer be possible to fit higher-order terms with the same, compact stencil because the polynomial would have to include more terms in all three dimensions.
 

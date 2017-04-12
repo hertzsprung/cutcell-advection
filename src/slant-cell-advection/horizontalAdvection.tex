@@ -82,7 +82,7 @@ Tests were performed using the linearUpwind and cubicFit schemes at mesh spacing
 Numerical convergence in the $\ell_2$ and $\ell_\infty$ norms is plotted in figure~\ref{fig:horizontalAdvection-convergence}.
 The linearUpwind and cubicFit schemes are second-order convergent at all but the coarsest mesh spacings where errors are saturated for both schemes.
 
-\revone{The cubicFit scheme achieves a given $\ell_2$ error using a mesh spacing that is almost double that needed by the linearUpwind scheme.  Doubling the mesh spacing results in a mesh with four times fewer cells because the $\Delta x \mathbin{:} \Delta z$ aspect ratio is fixed.
+\revone{The cubicFit scheme achieves a given $\ell_2$ error using a mesh spacing that is almost twice as coarse as that needed by the linearUpwind scheme.  Doubling the mesh spacing results in a coarser mesh with four times fewer cells because the $\Delta x \mathbin{:} \Delta z$ aspect ratio is fixed.
 Recall that the stencil for the cubicFit scheme has about twice as many cells as the stencil for the linearUpwind scheme.
 Hence, for a given $\ell_2$ error, the computational cost during integration of the cubicFit scheme is about half the computational cost of the linearUpwind scheme.}
 

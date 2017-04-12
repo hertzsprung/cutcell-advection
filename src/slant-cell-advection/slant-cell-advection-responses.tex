@@ -13,7 +13,6 @@
 \usepackage{siunitx}
 \usepackage{enumitem}
 
-\newcommand{\TODO}[1]{\textcolor{darkgray}{TODO \textit{#1}}}
 \newcommand{\revone}[1]{\textcolor{purple}{\textbf{#1}}}
 \newcommand{\revtwo}[1]{\textcolor{teal}{\textbf{#1}}}
 \newcommand{\revthree}[1]{\textcolor{olive}{\textbf{#1}}}
@@ -44,9 +43,9 @@ We greatly appreciate the reviewers' detailed comments and questions.  The revis
 	
 The revised manuscript also highlights a small number of additional changes \revother{in orange}.  Notable additions are listed here:
 \begin{enumerate}
-	\item The dense subset definition was incorrect.  The definition has been corrected in the revised manuscript (\TODO{line nnn, page nnn}).
-	\item The revised manuscript mentions a new transport scheme that is designed for cut cell meshes \citep{steppeler-klemp2017} (\TODO{line nnn, page nnn})
-	\item Similar uses of the moving least-squares reconstruction in other disciplines are mentioned in the revised introduction (\TODO{line nnn, page nnn})
+	\item The dense subset definition was incorrect.  The definition has been corrected in the revised manuscript (section 2.1.3, page 8).
+	\item The revised manuscript mentions a new transport scheme that is designed for cut cell meshes \citep{steppeler-klemp2017} (page 2)
+	\item Similar uses of the moving least-squares reconstruction in other disciplines are mentioned in the revised introduction (page 3)
 \end{enumerate}
 \end{abstract}
 \end{frontmatter}
@@ -87,8 +86,8 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     with the upwind scheme), what is then the difference in runtime?
 \end{comment}
 \end{quotation}
-The stencil size of the linearUpwind scheme is now mentioned in section \TODO{2.2}.  The linearUpwind stencil has about half the number of cells as the cubicFit stencil.
-For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and computational cost of both schemes for the horizontal transport test in section \TODO{3.1}.
+The stencil size of the linearUpwind scheme is now mentioned in section 2.2, page 11.  The linearUpwind stencil has about half the number of cells as the cubicFit stencil.
+For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and computational cost of both schemes for the horizontal transport test in section 3.1.
 
 \begin{quotation}
 \begin{comment}
@@ -99,7 +98,7 @@ For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and
     not. (See also the subsequent comment.)
 \end{comment}
 \end{quotation}
-The revised manuscript includes a new section \TODO{2.1.5} that decribes a possible extension of the cubicFit scheme to three dimensions.  The existing procedures for stencil construction and candidate polynomial generation generalise without alteration.  We note that further experiments would be required to properly assess the stabilisation procedure.
+The revised manuscript includes a new section 2.1.5, page 10, that describes a possible extension of the cubicFit scheme to three dimensions.  The existing procedures for stencil construction and candidate polynomial generation generalise without alteration.  We note that further experiments would be required to properly assess the stabilisation procedure.
 
 \begin{quotation}
 \begin{comment}
@@ -108,8 +107,8 @@ The revised manuscript includes a new section \TODO{2.1.5} that decribes a possi
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-The stability constraints only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortions.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page \TODO{nnn} line \TODO{nnn}.
-It is not known whether the stabilisation procedure is suitable for arbitrary three-dimensional meshes, and we have noted this in the new section \TODO{2.1.5}.
+The stability constraints only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortion.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page 9.
+It is not known whether the stabilisation procedure is sufficient for arbitrary three-dimensional meshes, and we have noted this in the new section 2.1.5.
 
 
 \begin{quotation}
@@ -175,7 +174,7 @@ Fixed.
 \end{quotation}
 The original manuscript incorrectly conflated two issues.  In figure 3 and in all test cases, there is no normal flow at the lower boundary and so no boundary condition is required.  A zero gradient boundary condition is applied at the outlet boundary of all two-dimensional tests.
 
-The revised manuscript clarifies that the lower boundary in figure 3 has no normal flux.  The footnote on \TODO{page nnn} no longer mentions the numerical instabilities associated with an inconsistent extrapolation because a Neumann boundary condition should never have been applied to the lower boundary.  The manuscript also clarifies boundary conditions in section 3.1 and section 3.2.
+The revised manuscript clarifies that the lower boundary in figure 3 has no normal flux.  The footnote on page 6 no longer mentions the numerical instabilities associated with an inconsistent extrapolation because a Neumann boundary condition should never have been applied to the lower boundary.  The manuscript also clarifies boundary conditions in section 3.1 and section 3.2.
 
 \begin{quotation}
 \begin{comment}
@@ -203,8 +202,8 @@ Fixed.
     respect to the time step for the considered test cases?
 \end{comment}
 \end{quotation}
-Lauritzen et al. \citep{lauritzen2012} recommend using a `typical' Courant number for transport tests on the sphere, and so we follow their recommendation throughout.  This is now stated \TODO{on page nnn} in the revised manuscript.
-A maximum Courant number of about 0.4 avoids any accuracy and stability issues caused by time-stepping, and ensures that tracer information is always transported between adjacent cells in a single time-step.
+Lauritzen et al. \citep{lauritzen2012} recommend using a `typical' Courant number for transport tests on the sphere, and so we follow their recommendation throughout.  This is now stated on page 12 of the revised manuscript.
+A maximum Courant number of about 0.4 avoids possible accuracy and stability issues caused by time-stepping, and ensures that tracer information is always transported between adjacent cells in a single time-step.
 As requested by reviewer \#2, we have performed additional experiments and found that the stability limit is larger than the original manuscript assumed.  Section 3.2 has been revised accordingly.
 
 \begin{quotation}
@@ -262,7 +261,7 @@ stronger and suggests that these constraints are definitive: ``...stability cons
 ``...must satisfy...'', etc.
 \end{comment}
 \end{quotation}
-A note has been included in the revised introduction to say that the scheme is conditionally stable (\TODO{line nnn, page nnn}).
+A note has been included in the revised introduction to say that the scheme is conditionally stable (page 3).
 Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$}''.
 
 \begin{quotation}
@@ -274,7 +273,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.
+We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability to be between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.
 
 \begin{quotation}
 \begin{comment}
@@ -290,7 +289,7 @@ Yes, the alternative approach using an ODE reaches the same conclusion.  The res
 \begin{equation*}
 	\hat{\phi}(t) = \hat{\phi}_0 \exp(t K(x))
 \end{equation*}
-where $\hat{\phi}_0$ is the value of $\hat{\phi}$ at $t=0$ and $K(x)$ is an expression associated with the spatial discretisation.  \TODO{I want to double-check this equation}.  If this equation is non-amplifying then $\lvert K \rvert \leq 1$.  However, we feel that the standard approach used in the original manuscript is clearer because it defines an explicit amplification factor that appears throughout the derivation.
+where $\hat{\phi}_0$ is the value of $\hat{\phi}$ at $t=0$ and $K(x)$ is an expression associated with the spatial discretisation.  If this equation is non-amplifying then $\lvert K \rvert \leq 1$.  However, we feel that the standard approach used in the original manuscript is clearer because it defines an explicit amplification factor that appears throughout the derivation.
 
 \begin{quotation}
 \begin{comment}
@@ -299,7 +298,7 @@ It would be interesting to know if the weak instability of (2) (noted on p3) aff
 the constraints (57), (58), (63).
 \end{comment}
 \end{quotation}
-Such an analysis should be possible using the techniques in \citep{baldauf2008}.  We have chosen to focus on the spatial discretisation and have not explored in detail the stability or accuracy of cubicFit using different time-stepping methods.  The revised manuscript explains our choices in Appendix A, saying, ``\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section 3.2 demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below the stability limit.}''
+Such an analysis should be possible using the techniques in \citep{baldauf2008}.  However, we have chosen to focus on the spatial discretisation and have not explored in detail the stability or accuracy of the cubicFit scheme using different time-stepping methods.  The revised manuscript explains our choices in Appendix A, saying, ``\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section 3.2 demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below the stability limit.}''
 
 \begin{quotation}
 \begin{comment}
@@ -329,9 +328,9 @@ is second order convergent, might it be possible to use a lower degree polynomia
 and smaller stencil?
 \end{comment}
 \end{quotation}
-Section 2.1 now includes a comment on the choice, saying, ``\revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}'' (\TODO{line nnn, page nnn}).
+Section 2.1 now includes a comment on the choice, saying, ``\revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}'' (page 4).
 
-A previous version of cubicFit was used in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
+A previous version of the cubicFit scheme was used in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
 
 \begin{quotation}
 \begin{comment}
@@ -365,7 +364,6 @@ for the hexagonal-icosahedral mesh should probably be given to Heikes and Randal
 \end{comment}
 \end{quotation}
 The revised manuscript now mentions the three-dimensional semi-Lagrangian finite volume scheme, SLICE-3D \citep{zerroukat-allen2012}.
-
 In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cites the original Heikes and Randall articles \citep{heikes-randall1995a,heikes-randall1995b} on which the hexagonal-icosahedral mesh generator is based.
 
 \begin{quotation}
@@ -374,7 +372,7 @@ In addition to citing Thuburn et al. \citep{thuburn2014}, the manuscript now cit
 appropriate.
 \end{comment}
 \end{quotation}
-Reviewer \#1 was also interested in a possible extension to three dimensions, and the revised manuscript includes a new section \TODO{2.1.5} discussing this topic.
+Reviewer \#1 was also interested in a possible extension to three dimensions, and the revised manuscript includes a new section 2.1.5 discussing this topic.
 
 \subsection*{Typos, etc}
 
@@ -472,7 +470,7 @@ We would not expect the stencil topology to change for triangles that are slight
 \end{comment}
 \end{quotation}
 Most swept-area approaches must enforce integral constraints on the polynomial reconstruction.  Unlike swept-area approaches that require one matrix-vector multiply per face per time-stage, a point-wise approximation requires only one vector-vector multiply.
-The introduction has been modified to reinforce this point, saying, ``the cubicFit scheme has \revthree{a computational cost that is lower than most swept-area schemes and more comparable to dimensionally-split schemes}'' (\TODO{line nnn, page nnn}).
+The introduction has been modified to reinforce this point, saying, ``the cubicFit scheme has \revthree{a computational cost that is lower than most swept-area schemes and more comparable to dimensionally-split schemes}'' (page 3).
 
 \begin{quotation}
 \begin{comment}
@@ -480,7 +478,7 @@ The introduction has been modified to reinforce this point, saying, ``the cubicF
 \end{comment}
 \end{quotation}
 We tried some experiments using the ratio of smallest to largest singular values and found some sensitivities to this calculation, but it was not clear which choice resulted in more accurate simulations.
-For consistency, we have retained the original calculations in both parts of the implementation.  The revised manuscript includes a footnote on \TODO{line nnn, page nnn} that describes our findings.
+For consistency, we have retained the original calculations in both parts of the implementation.  The revised manuscript includes a footnote on page 9 that describes our findings.
 
 \begin{quotation}
 \begin{comment}
@@ -505,7 +503,7 @@ computational space. Why is the interpolation/approximation not done in 3 dimens
 physical space.
 \end{comment}
 \end{quotation}
-The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{lashley2002,skamarock-menchaca2010,skamarock-gassmann2011}, and these studies found that accuracy was largely insensitive to the details of the projection method.  The revised manuscript clarifies our implementation, saying, ``\revthree{cell centres are projected perpendicular to a tangent plane is defined at the face centre}'' (\TODO{line nnn, page nnn}).
+The tangent-plane projection has been used in existing method-of-lines transport schemes \citep{lashley2002,skamarock-menchaca2010,skamarock-gassmann2011}, and these studies found that accuracy was largely insensitive to the details of the projection method.  The revised manuscript clarifies our implementation, saying, ``\revthree{cell centres are projected perpendicular to a tangent plane is defined at the face centre}'' (section 2.1.2, page 7).
 
 If the approximation was performed in 3D then polynomial terms involving $x$, $y$ and $z$ would be required.  It would no longer be possible to fit higher-order terms with the same, compact stencil because the polynomial would have to include more terms in all three dimensions.
 

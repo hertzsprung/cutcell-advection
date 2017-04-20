@@ -230,7 +230,7 @@ Again, the multipliers are chosen to force the polynomial through the upwind and
 
 \subsubsection{Future extension to three dimensions}
 \revone{All the procedures used in the cubicFit scheme generalise to three dimensions.  The stencil construction procedure described in section~\ref{sec:stencil} creates a stencil with \num{12} cells for a face in the interior of a two-dimensional rectangular mesh.  In three dimensions, the same procedure creates a stencil with $3 \times 12 = 36$ cells.
-A three-dimensional stencil has three times as many cells as its two-dimensional counterpart if the mesh has prismatic cells arranged in columns.  Hence, the computational cost during integration increases three-fold moving from two dimensions to three dimensions.}
+A three-dimensional stencil has three times as many cells as its two-dimensional counterpart if the mesh has prismatic cells arranged in columns.  Hence, the computational cost during integration increases three-fold when moving from two dimensions to three dimensions.}
 
 \revone{To extend the least squares fit to three dimensions, the two-dimensional polynomial in equation~\eqref{eqn:fullPoly} is replaced with its three-dimensional counterpart,
 \begin{multline}

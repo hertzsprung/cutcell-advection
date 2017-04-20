@@ -1,5 +1,5 @@
 \section*{Appendix A: One-dimensional von Neumann stability analysis}
-Two analyses are performed in order to find stability constraints on the weights $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ as appear in equation~\eqref{eqn:weightedPinv}.  The first analysis uses a two-cell approximation to derive separate constraints on the upwind weight $w_u$ and downwind weight $w_d$.  The second analysis uses three cells to derive a constraint that considers all weights in a stencil.
+Two analyses are performed in order to find stability \revother{conditions that are used to constrain} the weights $\mathbf{w} = \mathbf{\tilde{b}_1^+} \cdot \mathbf{m}$ as appear in equation~\eqref{eqn:weightedPinv}.  The first analysis uses a two-cell approximation to derive separate \revother{stability conditions involving} the upwind weight $w_u$ and downwind weight $w_d$.  The second analysis uses three cells to derive a \revother{stability condition that involves} all weights in a stencil.
 
 \subsection*{Two-cell analysis}
 We start with the conservation equation for a dependent variable $\phi$ that is discrete-in-space and continuous-in-time
@@ -54,7 +54,7 @@ Additionally, we do not want more damping than a first-order upwind scheme (wher
 %
 	\alpha_u - \alpha_d &\leq 1 \text{ .} \label{eqn:twopoint-upper}
 \end{align}
-Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$) then, using equations~\eqref{eqn:twopoint-lower} and \eqref{eqn:twopoint-upper},
+Now, knowing that $\alpha_u + \alpha_d = 1$ (or $\alpha_d = 1 - \alpha_u$) then, using equations~\eqref{eqn:twopoint-lower} and \eqref{eqn:twopoint-upper}, \revother{we obtain the first two stability conditions,}
 \begin{align}
 	0.5 \leq \alpha_u &\leq 1 \text{ and} \label{eqn:vn:upwind} \\
 	0 \leq \alpha_d &\leq 0.5 \label{eqn:vn:downwind} \text{ .}
@@ -79,11 +79,11 @@ If $k\Delta x = \pi$ then $\cos k\Delta x = -1$ and $\cos 2k\Delta x = 1$ and $\
 \begin{align}
 	\alpha_u - \alpha_d &\geq \left\lvert\alpha_{uu}\right\rvert \label{eqn:uuConstraint} \text{ .}
 %
-	\intertext{When the same analysis is performed with four cells, $\alpha_{uuu}$, $\alpha_{uu}$, $\alpha_u$ and $\alpha_d$, by varying $k \Delta x$ we find that equation~\eqref{eqn:uuConstraint} holds replacing $\left\lvert \alpha_{uu} \right\rvert$ with $\max(\left\lvert\alpha_{uu}\right\rvert, \left\lvert\alpha_{uuu}\right\rvert)$.  Hence, we generalise equation~\eqref{eqn:uuConstraint} to find the final stability constraint}
+	\intertext{When the same analysis is performed with four cells, $\alpha_{uuu}$, $\alpha_{uu}$, $\alpha_u$ and $\alpha_d$, by varying $k \Delta x$ we find that equation~\eqref{eqn:uuConstraint} holds replacing $\left\lvert \alpha_{uu} \right\rvert$ with $\max(\left\lvert\alpha_{uu}\right\rvert, \left\lvert\alpha_{uuu}\right\rvert)$.  Hence, we generalise equation~\eqref{eqn:uuConstraint} to \revother{obtain} the final stability \revother{condition}}
 %
 	\alpha_u - \alpha_d &\geq \max_{p\:\in\:P} |\alpha_p|
 \end{align}
 where the peripheral cells $P$ is the set of all stencil cells except for the upwind cell and downwind cell, and $\alpha_p$ is the weight for a given peripheral cell $p$.
-We hypothesise that the three stability constraints (equations~\ref{eqn:vn:upwind}, \ref{eqn:vn:downwind} and \ref{eqn:uuConstraint}) are necessary but not sufficient for a transport scheme on arbitrary meshes.
+We hypothesise that the three stability \revother{conditions} (equations~\ref{eqn:vn:upwind}, \ref{eqn:vn:downwind} and \ref{eqn:uuConstraint}) are necessary but not sufficient for a transport scheme on arbitrary meshes.
 
 \revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section~\ref{sec:mountainAdvection} demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below a stability limit.}

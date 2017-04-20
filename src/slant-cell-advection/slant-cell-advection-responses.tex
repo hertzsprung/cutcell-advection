@@ -109,7 +109,7 @@ The revised manuscript includes a new section 2.1.5, page 10, that describes a p
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-The stability constraints only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortion.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page 9.
+The stability conditions only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortion.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page 9.
 It is not known whether the stabilisation procedure is sufficient for arbitrary three-dimensional meshes, and we have noted this in the new section 2.1.5.
 
 
@@ -263,8 +263,9 @@ stronger and suggests that these constraints are definitive: ``...stability cons
 ``...must satisfy...'', etc.
 \end{comment}
 \end{quotation}
+The revised manuscript uses the term `stability condition' in place of `stability constraint' because the conditions are not definitively necessary or sufficient.
 A note has been included in the revised introduction to say that the scheme is conditionally stable (page 3).
-Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$}''.
+Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability conditions on the weights $\mathbf{w}$}''.
 
 \begin{quotation}
 \begin{comment}
@@ -275,7 +276,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability to be between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.
+We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability to be between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.  The discussion of the multidimensional Courant number in section 2, page 4, now states that ``$\mathrm{Co}_c$ \revtwo{is less than or equal to some constant that depends upon the spatial and temporal discretisation}''.
 
 \begin{quotation}
 \begin{comment}

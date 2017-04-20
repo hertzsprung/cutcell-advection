@@ -70,7 +70,7 @@ where $A_x = \SI{25}{\kilo\meter}$, $A_z = \SI{3}{\kilo\meter}$ are the horizont
 	\label{fig:horizontalAdvection-convergence}
 \end{figure}
 
-Tests are integrated for \SI{10000}{\second} using time-steps chosen for each mesh so that the maximum Courant number is about \num{0.4}.  \revone{This choice is yields a time-step that is well below the stability limit of \num{1.0}, as recommended by Lauritzen et al. \citep{lauritzen2012}.}  By the end of integration the tracer is positioned downwind of the mountain.
+Tests are integrated for \SI{10000}{\second} using time-steps chosen for each mesh so that the maximum Courant number is about \num{0.4}.  \revone{This choice yields a time-step that is well below any stability limit, as recommended by Lauritzen et al. \citep{lauritzen2012}.}  By the end of integration the tracer is positioned downwind of the mountain.
 The analytic solution at $t = \SI{10000}{\second}$ is centred at $(x_0, z_0) = (\SI{50}{\kilo\meter}, \SI{12}{\kilo\meter})$.  Error norms are calculated by subtracting the analytic solution from the numerical solution,
 \begin{align}
 	\ell_2 &= \sqrt{\frac{\sum_c \left(\phi - \phi_T \right)^2 \mathcal{V}_c}{\sum_c \left(\phi_T^2 \mathcal{V}_c \right)}} \label{eqn:l2-error} \\

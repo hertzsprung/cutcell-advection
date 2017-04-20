@@ -20,10 +20,10 @@ A huge variety of transport schemes have been developed for atmospheric models, 
 Such errors can be reduced by explicitly accounting for transverse fluxes when combining fluxes \citep{leonard1996}, but splitting errors are still apparent in flows over steep terrain where meshes are highly distorted and metric terms in a terrain-following coordinate transform are large \citep{weller2017}.
 
 Transport schemes are often classified as dimensionally-split or multidimensional.
-Dimensionally-split schemes such as \citep{lin-rood1996,katta2015} calculate transport in each dimension separately before the flux contributions are combined.  Such schemes are computationally efficient and allow existing one-dimensional high-order methods to be used.
+Dimensionally-split schemes such as \citep{lin-rood1996,guo2014} calculate transport in each dimension separately before the flux contributions are combined.  Such schemes are computationally efficient and allow existing one-dimensional high-order methods to be used.
 \revtwo{
-Dimensionally-split schemes have only been used with quadrilateral meshes where dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,katta2015}.
-For similar reasons, dimensionally-split schemes have only been used with terrain-following coordinate transforms and not cut cells.
+When dimensionally-split schemes are used for horizontal transport, quadrilateral meshes are needed because the mesh dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,guo2014}.
+Dimensional splitting is often used for vertical transport and, for similar reasons, dimensionally-split schemes have only been used with terrain-following coordinate transforms and not cut cells.
 }
 Perhaps confusingly, dimensionally-split schemes are sometimes called multidimensional, too, because they use one-dimensional techniques for multidimensional transport.
 
@@ -55,7 +55,7 @@ The three-dimensional \revother{method-of-lines} scheme developed by Weller and 
 This least-squares approach has been applied previously to shallow water flows \citep{cuetofelgueroso2006}, aeronautic \citep{cuetofelgueroso2007} and porous media \citep{white2017} simulations.}
 
 In this paper, we present a new multidimensional method-of-lines scheme, `cubicFit', that improves the stability of the Weller and Shahrokhi scheme \citep{weller-shahrokhi2014} and avoids all splitting errors.  To reconstruct values at cell faces, the scheme fits \revtwo{a multidimensional cubic polynomial over an upwind-biased stencil} using a least-squares approach.  The implementation uses constraints derived from a von Neumann stability analysis to select appropriate polynomial fits for stencils in highly-distorted mesh regions.  Almost all of the least-squares procedure depends upon the mesh geometry only and reconstruction weights can be precomputed without knowledge of the velocity field or tracer field.
-Hence, \revthree{the computational cost of the cubicFit scheme is lower than most swept-area schemes, being more comparable to dimensionally-split schemes}, requiring only $n$ multiplies per cell face per \revtwo{time-stage} where $n$ is the size of the stencil.  \revtwo{Based on numerical experiments, the scheme is found to be conditionally stable up to maximum Courant numbers of about \num{1.3} to \num{3.3}.}
+Hence, \revthree{the computational cost of the cubicFit scheme is lower than most swept-area schemes that require a matrix-vector multiply per face per time-stage.  Instead, the computational cost is more comparable to dimensionally-split schemes}, with the cubicFit scheme requiring only $n$ multiplies per face per \revtwo{time-stage} where $n$ is the size of the stencil.  \revtwo{Based on numerical experiments, the scheme is found to be conditionally stable up to maximum Courant numbers of about \num{1.3} to \num{3.3}.}
 
 The remainder of this paper is organised as follows.
 Section~\ref{sec:transport} starts by discretising the transport equation using a method-of-lines approach before describing the cubicFit transport scheme and a multidimensional linear upwind transport scheme.

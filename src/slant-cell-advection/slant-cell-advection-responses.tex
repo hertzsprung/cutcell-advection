@@ -98,7 +98,7 @@ For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and
     not. (See also the subsequent comment.)
 \end{comment}
 \end{quotation}
-The revised manuscript includes a new section 2.1.5, page 10, that describes a possible extension of the cubicFit scheme to three dimensions.  The existing procedures for stencil construction and candidate polynomial generation generalise without alteration.  We note that further experiments would be required to properly assess the stabilisation procedure.
+The revised manuscript includes a new section 2.1.5, page 10, that describes a possible extension of the cubicFit scheme to three dimensions.  The existing procedures for stencil construction and candidate polynomial generation generalise without alteration.  An initial experiment demonstrates that the cubicFit scheme works for a uniform flow on a uniform mesh, but we note that further experiments would be required to properly assess the stabilisation procedure for more complex flows and arbitrary meshes.
 
 \begin{quotation}
 \begin{comment}
@@ -298,7 +298,7 @@ It would be interesting to know if the weak instability of (2) (noted on p3) aff
 the constraints (57), (58), (63).
 \end{comment}
 \end{quotation}
-Such an analysis should be possible using the techniques in \citep{baldauf2008}.  However, we have chosen to focus on the spatial discretisation and have not explored in detail the stability or accuracy of the cubicFit scheme using different time-stepping methods.  The revised manuscript explains our choices in Appendix A, saying, ``\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section 3.2 demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below the stability limit.}''
+Such an analysis should be possible using the techniques in \citep{baldauf2008}.  However, we have chosen to focus on the spatial discretisation and have not explored in detail the stability or accuracy of the cubicFit scheme using different time-stepping methods.  The revised manuscript explains our choices in Appendix A, saying, ``\revtwo{The stability of the one-dimensional transport equation discretised in space and time could be analysed using existing techniques \citep{baldauf2008}, but we have only analysed the spatial stability of the cubicFit scheme.  Numerical experiments presented in section 3.2 demonstrate that the cubicFit scheme is generally insensitive to the time-step, provided that it is below a stability limit.}''
 
 \begin{quotation}
 \begin{comment}

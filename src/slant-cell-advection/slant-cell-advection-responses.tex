@@ -86,8 +86,10 @@ I recommend acceptance of the paper subject to minor revisions by the authors.
     with the upwind scheme), what is then the difference in runtime?
 \end{comment}
 \end{quotation}
-The stencil size of the linearUpwind scheme is now mentioned in section 2.2, page 11.  The linearUpwind stencil has about half the number of cells as the cubicFit stencil.
-For a given $\ell_2$ error, the revised manuscript compares the mesh spacing and computational cost of both schemes for the horizontal transport test in section 3.1.
+The computational cost of the cubicFit scheme is lower than most swept-area schemes because the cubicFit scheme requires a vector-vector multiply, not a matrix-vector multiply, per face per time-stage.  The revised manuscript reinforces this idea in the penultimate paragraph of the introduction (page 3).
+The stencil size of the linearUpwind scheme is now mentioned in section 2.2, page 11.  The linearUpwind stencil has about half the number of cells as the cubicFit stencil.  Hence, the computational cost of the cubicFit scheme is about twice that of linearUpwind. 
+
+The revised manuscript compares the mesh spacing and computational cost of both schemes for the horizontal transport test in section 3.1.  We find that, for a given $\ell_2$ error, the computational cost of the cubicFit scheme is about half the computational cost of linearUpwind.
 
 \begin{quotation}
 \begin{comment}
@@ -107,7 +109,7 @@ The revised manuscript includes a new section 2.1.5, page 10, that describes a p
     serious issue in 3D configurations?
 \end{comment}
 \end{quotation}
-The stability constraints only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortion.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page 9.
+The stability conditions only remove polynomial terms for stencils near boundaries, or for stencils in regions of mesh distortion.  No polynomial terms are removed for stencils in the interior of two-dimensional or three-dimensional rectangular meshes.  The revised manuscript clarifies this on page 9.
 It is not known whether the stabilisation procedure is sufficient for arbitrary three-dimensional meshes, and we have noted this in the new section 2.1.5.
 
 
@@ -261,8 +263,9 @@ stronger and suggests that these constraints are definitive: ``...stability cons
 ``...must satisfy...'', etc.
 \end{comment}
 \end{quotation}
+The revised manuscript uses the term `stability condition' in place of `stability constraint' because the conditions are not definitively necessary or sufficient.
 A note has been included in the revised introduction to say that the scheme is conditionally stable (page 3).
-Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability constraints on the weights $\mathbf{w}$}''.
+Section 2.1.4 has been reworded to say, ``\revtwo{To avoid numerical instabilities, a simplified, one-dimensional von Neumann analysis was performed, presented in appendix A.  The analysis is used to impose three stability conditions on the weights $\mathbf{w}$}''.
 
 \begin{quotation}
 \begin{comment}
@@ -273,7 +276,7 @@ at least some empirical investigation of the stability limit should be discussed
 to confirm that it is indeed (exactly or approximately) $\mathrm{Co}=1$.
 \end{comment}
 \end{quotation}
-We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability to be between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.
+We had incorrectly assumed that the stability would be $\mathrm{Co} = 1.0$ but, after further experimentation, we have found the limit of stability to be between about $\mathrm{Co} = 1.3$ and $\mathrm{Co} = 3.3$ depending on the type of mesh.  Section 3.2 and figure 10 have been revised to present the maximum time-steps that have been now been found experimentally.  The discussion of the multidimensional Courant number in section 2, page 4, now states that ``$\mathrm{Co}_c$ \revtwo{is less than or equal to some constant that depends upon the spatial and temporal discretisation}''.
 
 \begin{quotation}
 \begin{comment}
@@ -330,7 +333,7 @@ and smaller stencil?
 \end{quotation}
 Section 2.1 now includes a comment on the choice, saying, ``\revtwo{The stencil is upwind-biased to improve numerical stability, and the multidimensional cubic polynomial is chosen to improve accuracy in the direction of flow \citep{leonard1993}.}'' (page 4).
 
-A previous version of the cubicFit scheme was used in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} in order to correctly simulation Sch\"ar mountain waves \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between advection schemes were not presented in the paper.
+A previous version of the cubicFit scheme was used in the dynamical core developed by Weller and Shahrokhi \citep{weller-shahrokhi2014} for the Sch\"ar mountain waves test case \citep{schaer2002}.  They found that smaller stencils and lower degree polynomials produced incorrect results, although comparisons between transport schemes were not presented in the paper.
 
 \begin{quotation}
 \begin{comment}
@@ -346,8 +349,8 @@ The term `quadrilateral' has been removed from these paragraphs since it is suff
 when the grid permits it (e.g.\ not a hexagonal grid).
 \end{comment}
 \end{quotation}
-The revised manuscript explains these limitations, ``\revtwo{Dimensionally-split schemes have only been used with quadrilateral meshes where dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,katta2015}.
-For similar reasons, dimensionally-split schemes have only been used with terrain-following coordinate transforms and not cut cells.}''
+The revised manuscript explains these limitations, ``\revtwo{When dimensionally-split schemes are used for horizontal transport, quadrilateral meshes are needed because the mesh dimensions are inherently separable.  Special treatment is required at the corners of cubed-sphere panels where local coordinates differ \citep{putman-lin2007,guo2014}.
+Dimensional splitting is often used for vertical transport and, for similar reasons, dimensionally-split schemes have only been used with terrain-following coordinate transforms and not cut cells.}''
 
 \begin{quotation}
 \begin{comment}
@@ -470,7 +473,8 @@ We would not expect the stencil topology to change for triangles that are slight
 \end{comment}
 \end{quotation}
 Most swept-area approaches must enforce integral constraints on the polynomial reconstruction.  Unlike swept-area approaches that require one matrix-vector multiply per face per time-stage, a point-wise approximation requires only one vector-vector multiply.
-The introduction has been modified to reinforce this point, saying, ``the computational cost of the cubicFit scheme is lower than most swept-area schemes, being more comparable to dimensionally-split schemes'' (page 3).
+The introduction has been modified to reinforce this point, saying, ``\revthree{the computational cost of the cubicFit scheme is lower than most swept-area schemes \ldots the computational cost is more comparable to dimensionally-split schemes}'' (page 3).
+Using a point-wise approximation with a larger stencil also avoids having many Gauss points within each cell, which would increase computational cost.
 
 \begin{quotation}
 \begin{comment}

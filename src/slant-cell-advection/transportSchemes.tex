@@ -25,7 +25,7 @@ This discretisation is applicable to arbitrary meshes.  A necessary condition fo
 \begin{align}
 	\mathrm{Co}_c = \frac{\Delta t}{2 \mathcal{V}_c} \sum_{f \in\: c} \lvert \mathbf{u} \cdot \mathbf{S}_f \rvert \label{eqn:co}
 \end{align}
-such that $\mathrm{Co}_c \leq 1$ for all cells $c$ in the domain.  Hence, stability is constrained by the maximum Courant number of any cell in the domain.
+such that, for all cells $c$ in the domain, $\mathrm{Co}_c$ \revtwo{is less than or equal to some constant that depends upon the spatial and temporal discretisation}.  Hence, stability is constrained by the maximum Courant number of any cell in the domain.
 
 The accurate approximation of the dependent variable at the face, $\phi_F$, is key to the overall accuracy of the transport scheme. The cubicFit scheme and multidimensional linear upwind scheme differ in their approximations, and these approximation \revone{methods are described} next.
 

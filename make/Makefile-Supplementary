@@ -22,3 +22,6 @@ build/slant-cell-advection/high-order-correction.pdf: \
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,motivation))
 
 $(eval $(call LaTeXWithBibTeX,src/slant-cell-advection,build,slant-cell-advection-responses))
+
+build/slant-cell-advection-responses/slant-cell-advection-responses.pdf: \
+  src/slant-cell-advection/references.bib

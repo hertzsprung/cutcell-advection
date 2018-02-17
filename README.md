@@ -1,11 +1,11 @@
-A multidimensional method-of-lines transport scheme for atmospheric flows over steep terrain using arbitrary meshes
-===================================================================================================================
+Multidimensional method-of-lines transport for atmospheric flows over steep terrain using arbitrary meshes
+==========================================================================================================
 [Shaw](http://www.datumedge.co.uk/), 
 [Weller](http://www.met.reading.ac.uk/~sws02hs/), 
 [Methven](http://www.met.rdg.ac.uk/~swrmethn/), 
 [Davies](http://www.metoffice.gov.uk/research/our-scientists/dynamics/terry-davies) 2017
 
-In prep. for Journal of Computational Physics
+[Published in Journal of Computational Physics](https://doi.org/10.1016/j.jcp.2017.04.061)
 
 Reproducing test results
 ------------------------
